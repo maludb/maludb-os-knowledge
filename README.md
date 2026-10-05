@@ -34,4 +34,4 @@ code text is ever committed to this repository.
 - **The plan:** `docs/knowledge-design.md` (Phase 0, 2026-10-05, revised the same day for the regulatory corpus — awaiting the
   owner's twenty decisions, §13; three answers recorded, §15).
 - **The build:** `CLAUDE.md` — the order, the rules, the handoff to the worker model.
-- Status: plan written; nothing built yet.
+- Status: plan approved; K25 (the catalog seed) next, nothing of the application built yet.

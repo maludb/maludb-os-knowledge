@@ -17,8 +17,8 @@ standards they reference.
    what pauses (§5), the memory model (§6 — the parsers and the effective provision, how guidelines and areas compile into
    the engine, `kn_ask()`, the tables, the shared-schema decisions), the question inventory with every tool named (§7), the
    kernel's part, the API and K7 (§8), the screens (§9), the build order (§10), Extended (§11), what the kernel, MaluDB and
-   the siblings owe (§12 — K24, K25, M1–M4, HD2), **the twenty decisions the owner is asked for (§13)**, ports and files (§14),
-   the owner's answers (§15 — A1–A3 given), the state (§16).
+   the siblings owe (§12 — K24, K25, M1–M4, HD2), **the twenty decisions (§13), answered 2026-10-05 as D1–D20 (§15)**, ports and files (§14),
+   the owner's answers (§15 — A1–A3 and D1–D20), the state (§16).
 2. The plugin `maludb-os-integration` (`~/maludb-os-integration`, skill `os-integration` and its references, `shared-schema.md`
    included). The MaluDB API (`~/maludb-python-api-server`: README, `app/routers/memory.py`, `graph.py`, `projects.py`,
    `agent_memory.py`, `attributes.py`) and `~/maludb-core/docs/principal-scoping.md`, `memory-extraction-json-contract.md`.
@@ -80,7 +80,7 @@ standards they reference.
   the installed application; the installer's `plan` (`php /var/www/bin/app_install.php plan /srv/apps/knowledge`) runs at the
   end of every phase.
 
-## Build order and the handoff (proposed — design §13.16, to be confirmed by the owner)
+## Build order and the handoff (proposed — design D16, decided 2026-10-05)
 
 The Spaces division: a **planning-class model** builds what the database enforces, the parsers against their fixtures, the
 engine proof, the specs and the exemplars; a **worker model (Sonnet 5.5)** replicates every other slice from a spec, stopping

@@ -724,15 +724,33 @@ in scope** (the owner holds the licences). The sixteen below stand, four more jo
 | A2 | **The proof corpus is the fire codes of the City of Chicago (IFC 2018 as Title 14F, with Title 15) and of Cook County (IFC 2021 with Chapter 102)** | §0.0; §10 Phase 5 |
 | A3 | **Referenced standards (NFPA) are in scope** — the owner holds the licences; each standard is a base of its own, shared so the codes' references resolve | §0.0; §13.18, §13.20 |
 
-*Awaiting the owner's answers to §13's twenty decisions. Each becomes a rule here, D1–D20, with where it lives.*
+Every recommendation of §13 was taken on 2026-10-05, with three tightenings (D15, D18, D20).
+
+| # | Decision | Where it lives |
+|---|---|---|
+| D1 | **"Knowledge", key `knowledge`**, `knowledge.<domain>`, databases `<tenant>_knowledge` and `<tenant>_knowledge_memory`, roles `knowledge_rw` / `_records_ro` / `_activity_ro`, prefix `kn_` | `maludb-os.json`; §14 |
+| D2 | **Four roles**: Reader, Member (`user`), Curator, Knowledge admin; the admin sees private bases, logged `base.admin_view` | §3; `kn_roles`; `app_roles` |
+| D3 | **A memory database of its own**, one namespace `kb:<id>` per base, made by `ROOT_STEPS.sh`. **Owed before Phase 5: settle the pgaudit setting** (it logs every MaluDB query and the disk has filled once) | §6; §14 |
+| D4 | **MaluDB does extraction, embedding and answering**; answers through **M1**, metering through **K24**; M1 is scheduled **before slice 5**, K24 may follow it; until M1 the window shows the quoted provisions and the expert | §6.3; §12 |
+| D5 | **Private or internal bases**, shared to members, departments, everyone, agents and applications; guests may be Readers; **regulatory bases default to private**; no site scope | §3; `base_members` |
+| D6 | **Sources**: files first (PDF with a text layer, Word and Office, HTML, Markdown, text, CSV, JSON), pasted text, one page per URL, notes, feeds; **50 MB per file, a setting**; no OCR in v1 | §6.1; `kn_settings` |
+| D7 | **Five guideline kinds, two moments, shipped by template**; every form previews on a provision | §6.2; slice 3 |
+| D8 | **Focus areas are MaluDB projects**; chapters propose them for a code, communities for a plain corpus | §6.2; slice 3 |
+| D9 | **Auto-extract new sources**; a person starts rebuilds after an estimate; **50 MB of text per base per month**; one build per base at a time | §6.2; `builds` |
+| D10 | **Every answer quotes or declines**; gaps logged; three turns of conversation; pins become `note` sources | §6.3; slice 5 |
+| D11 | **Question log** with asker, as-of date and facts; curators see their base's; 365 days | §6.3; `questions` |
+| D12 | **API and siblings**: keys per base at 30/min and 2,000/day with 24 h rotation overlap; `ask`, `search`, `bases`, `provisions/{number}`; K7 shares `ask`, `search`, `bases_index` | §8; slice 7 |
+| D13 | **Expert and Archivist** hired on install; the pause list of §5 | §5; `agents[]` |
+| D14 | **No source, provision or question text in any log**; sensitivity passed to the engine; the MaluDB token read in one file | §6.4; `engine.php` |
+| D15 | **On request, not a default; K25, K24, M1–M4, K16, HD2 approved. Tightened: the repository stays private until the owner has reviewed the parser fixtures, then goes public** | §12; the org |
+| D16 | **Ports 8187 / 8835 / 8836**, scratch 8501–8507; the Spaces division: the planning model builds K25, K24, Phase 0 second half, Phase 1, Phase 2, slice 1 and the exemplars (slice 2 the parsers, slice 5 ask, with 3 and 4 between); Sonnet 5.5 builds slices 6–9 and Phases 4–5 | §14; `CLAUDE.md` |
+| D17 | **A base is one jurisdiction's adopted edition**, layered, asked as of a date; a new edition is a new base that supersedes the old | §6.3; `jurisdiction_bases` |
+| D18 | **Amendments are parser-proposed and curator-confirmed**; the graph learns effective provisions only; standards are bases of their own. **Tightened: bulk confirm never covers a delete or an amend that changes a number** | §6.1; slice 2 |
+| D19 | **Quote-only answers** for regulatory bases; M1 verifies every quote is a substring of its cited document; computed applicability is Extended | §6.2; §12 M1 |
+| D20 | **The owner supplies the corpus** from the licences held; never fetched, never committed; Phase 0 uses short excerpts and synthetic fixtures. **Tightened: before Phase 5 the owner confirms the ICC and NFPA licences allow machine processing and quotation through an API.** Next standards: NFPA 1 and 25; 101 and 110 later | §0.0; §10 Phase 5 |
 
 ## 16. State
 
-**2026-10-05 — the plan written, revised the same day for the regulatory corpus, awaiting the owner's twenty answers.** The
-field researched (§0.2–0.5), MaluDB 0.106.0 / API 0.3.1 read route by route (§0.6), **the proof corpus established** (§0.0:
-Chicago's Title 14F on IFC 2018 with Title 15, on American Legal Publishing; Cook County's IFC 2021 with Chapter 102, on
-Municode; both publishers refuse robots, so files are the first door) and the structure of a code written down for the
-parsers (§0.1); the owner's three answers recorded (§15, A1–A3); the repository `maludb/maludb-os-knowledge` created in the
-org (private) and cloned to `/srv/apps/knowledge`; this document, `CLAUDE.md` and `README.md` committed. **Next: the owner's
-answers → §15 → K25 and K24 in the kernel, M1 in MaluDB's API → Phase 0's second half (the schema, the parser fixtures from
-excerpts the owner supplies, the engine proof).**
+**2026-10-05 — the plan approved.** The owner answered all twenty decisions of §13 the same day, every recommendation taken
+with three tightenings (§15, D1–D20). **Next: K25 in the kernel (db/170, the catalog seed), then K24 and M1, then Phase 0's
+second half** (the schema, the parser fixtures from excerpts and synthetic text, the engine proof against the live MaluDB API).

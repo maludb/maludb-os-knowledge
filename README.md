@@ -1,36 +1,31 @@
 # maludb-os-knowledge — Knowledge
 
-MaluDB Business OS application: **Knowledge** — the business's knowledge bases, **built first for laws, codes and
-regulations**. A person **uploads documents** (PDF, Office and Word exports, HTML, Markdown, text, pasted text, a web page, a
-sibling application's pages or articles as a feed), the application **parses a code into its provisions** (chapters,
-sections, exceptions, tables, definitions, cross-references) and layers the jurisdiction's **amendments** over the model
-edition with precedence and effective dates (the parser proposes, a curator confirms), the person writes **guidelines** (a
-shipped template for codes: what to extract, what the words mean, what never to say, how to answer, for whom) and names
-**focus areas** (a code's chapters), and the application builds a **knowledge graph in MaluDB** — one document per effective
-provision, subjects, statements, communities — that is asked three ways:
+MaluDB Business OS application: **Knowledge** — the business's knowledge bases. **Upload documents** (PDF, Word and Office, HTML,
+Markdown, text, pasted text, a web page, a sibling application's pages or articles as a feed), optionally write **guidelines**
+(what to extract, what the words mean, what to ignore, how to answer, for whom) and name **focus areas**, and the application
+cuts the documents into sections and builds a **knowledge graph in MaluDB** — subjects, statements, communities — that is asked
+three ways:
 
-- an **ask-me-anything window** — as of a date, with the facts a code question needs; every answer **quotes the provision
-  verbatim** with its number, edition and jurisdiction, lists the exceptions, flags the amendments, keeps thresholds exact,
-  ends with "confirm with the authority having jurisdiction", or declines and logs a gap; a citation opens the provision with
-  its amendment chain; thumbs; curators pin verified answers,
-- a **token API** (`POST /api/v1/ask`, `/search`, `GET /provisions/{number}`) with keys bound to one base, rate-limited,
+- an **ask-me-anything window**: every answer **cites the exact words it relies on**, verified against the sources by the
+  engine; a citation opens the section and page; weak evidence is a plain "nothing on this" and a logged gap; thumbs; curators
+  pin verified answers,
+- a **token API** (`POST /api/v1/ask`, `/search`) with keys bound to one base, rate-limited,
 - the kernel's **agents** (the command bar, a mention in Spaces) and the **siblings** (Help Desk's expert answering a ticket
   from the manuals) through K7 shares — only for bases shared with them.
 
-Two shipped agents: the **expert** (answers with quotations, asks for missing facts, proposes focus areas from the chapters,
-drafts guidelines from a sample) and the **Archivist** (a Monday report per base: unreviewed amendments, unresolved
-references to standards not held, failed and stale sources, the questions nobody could answer, pins due for review).
+The easy path is three steps: create a base, drop documents in, ask. Guidelines and areas improve the graph and are never
+required; after a first build the expert **proposes focus areas** from the graph's communities and **drafts guidelines** from a
+sample. Two shipped agents: the **expert** and the **Archivist** (a Monday report per base: failed and stale sources, changed
+URLs, the questions nobody could answer, unverified answers, pins due for review).
 
-The proof corpus: the fire codes of the **City of Chicago** (the 2018 International Fire Code as Title 14F with Chicago's
-amendments, and Title 15) and of **Cook County** (the 2021 IFC with the Chapter 102 amendments), with the NFPA standards they
-reference as bases of their own. A general template (NotebookLM-shaped: sections, communities, citations by heading and page)
-ships beside the regulatory one.
+The content does not matter: the first plan was written around laws and fire codes, and that design (a code parsed into
+provisions with amendments, editions and effective dates) is kept as the Extended **structured-documents** module.
 
 An optional application installed beside [maludb-os-core](https://github.com/maludb/maludb-os-core) on request. Built with
 `htmx-php-builder`, fitted to `maludb-os-integration` 0.7.0, served as `knowledge.<domain>`; catalog key `knowledge`. The
-engine is MaluDB (`maludb_core` 0.106.0, the MaluDB API) in a memory database of its own, one namespace per base. No licensed
-code text is ever committed to this repository.
+engine is MaluDB (`maludb_core` 0.106.0, the MaluDB API with its answer route) in a memory database of its own, one namespace
+per base; the engine's model calls are metered through the kernel's ledger proxy.
 
-- **The plan:** `docs/knowledge-design.md` (Phase 0, 2026-10-05, approved the same day, decisions D1–D20 in §15).
+- **The plan:** `docs/knowledge-design.md` (Phase 0, 2026-10-05, general product, decisions D1–D16 and rulings R1–R3 in §15) and `docs/structured-documents-extended.md` (the Extended module).
 - **The build:** `CLAUDE.md` — the order, the rules, the handoff to the worker model.
-- Status: plan approved; K25 (db/170 in the kernel) done; K24 and M1, then Phase 0 second half; nothing of the application built yet.
+- Status: plan approved; K24, K25 and M1 built (M1 awaits the owner's merge); Phase 0's second half next; nothing of the application built yet.

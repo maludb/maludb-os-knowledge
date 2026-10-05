@@ -611,7 +611,7 @@ example questions with expected provisions run as an eval suite by the kernel's 
 | # | Item | Why the application cannot do it | Until then |
 |---|---|---|---|
 | **K24** | **An application credential on the ledger proxy**: minted on the application's Overview like the application token, accepted by `ledger_proxy.py` beside run and judge keys, every call priced and posted to the open statement with `application_id` set and no run — so MaluDB's provider `base_url` can point at the proxy and extraction, embedding and answer calls are on the AI statement | the ledger and the proxy are the kernel's; the owner's rule is token accounting for every model call | MaluDB's own provider key; `ai_usage` counts here |
-| **K25** | **Catalog entry `knowledge` (kind `ours`) seeded by a migration** in `maludb-os-core`, business area **Operations**, category `knowledge`, icon `feather-book-open`, criticality `medium` | the catalog is the kernel's (db/169 came the same way) | `application_catalog_save` by hand |
+| **K25** | **Catalog entry `knowledge` (kind `ours`) seeded by a migration** in `maludb-os-core`, business area **Operations**, category `documents`, icon `feather-book-open`, criticality `medium` | the catalog is the kernel's (db/169 came the same way) | `application_catalog_save` by hand |
 | **M1** | **`POST /v1/memory/answer`** in the MaluDB API: `{namespace, project?, question, facts?, history[], system, max_evidence, max_tokens}` → retrieve (graph seeds + walk, recall over the namespace, the project's subjects first, semantic entity search when the embed model is real) and compose with the namespace's chat model → `{answer_md, confidence, citations[{document_id, chunk_id, quote, statement_ids}], evidence[], usage}`; refuses to compose below a threshold (`no_evidence`); **quotes only from the retrieved documents** (the system prompt enforces it; the route verifies each quote is a substring of its cited document) | composing an answer needs a model; the application holds no key; the engine knows its own retrieval best | evidence-only answers and the expert's turn |
 | **M2** | **Usage on every model-calling response** (`/v1/memory/documents`, `/ingest`, `/reindex/run`, `/embeddings/run`, M1) | the engine makes the call | characters counted here |
 | M3 | `recall` and `graph/query` accept a **`project`** filter; `recall` exposes `maludb_semantic_search` beside the compartment rail | the facades are the engine's | the application intersects the project's subjects with the seeds itself |
@@ -704,7 +704,7 @@ in scope** (the owner holds the licences). The sixteen below stand, four more jo
 - Units: `knowledge-records-mcp`, `knowledge-activity-mcp`, `knowledge-activity-ingest` (+ timer), `knowledge-directory-sync`
   (+ timer), `knowledge-worker` (+ timer, every minute: text extraction and parsing, builds, reindex and embeddings, feeds,
   URL checks, the outbox, rate-counter pruning, retention, dispatch retries).
-- `maludb-os.json`: `catalog_key knowledge`, `name "Knowledge"`, `business_area "Operations"`, `category knowledge`, `icon
+- `maludb-os.json`: `catalog_key knowledge`, `name "Knowledge"`, `business_area "Operations"`, `category documents`, `icon
   feather-book-open`, `criticality medium`, `vhost.label knowledge`, no `scopes`, `sso`, `directory {reads: true, writes:
   false}`, `assistant {command_bar: true, agent: expert}`, `agents [expert, archivist]` each `hired_on_install: true`,
   `approvals` (§5), endpoints, services, `shares` (three), `reads` (three).
@@ -751,6 +751,6 @@ Every recommendation of §13 was taken on 2026-10-05, with three tightenings (D1
 
 ## 16. State
 
-**2026-10-05 — the plan approved.** The owner answered all twenty decisions of §13 the same day, every recommendation taken
+**2026-10-05 — the plan approved; K25 done (kernel db/170, category `documents` because the catalog admits no "knowledge").** The owner answered all twenty decisions of §13 the same day, every recommendation taken
 with three tightenings (§15, D1–D20). **Next: K25 in the kernel (db/170, the catalog seed), then K24 and M1, then Phase 0's
 second half** (the schema, the parser fixtures from excerpts and synthetic text, the engine proof against the live MaluDB API).

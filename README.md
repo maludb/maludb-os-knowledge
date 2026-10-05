@@ -31,7 +31,6 @@ An optional application installed beside [maludb-os-core](https://github.com/mal
 engine is MaluDB (`maludb_core` 0.106.0, the MaluDB API) in a memory database of its own, one namespace per base. No licensed
 code text is ever committed to this repository.
 
-- **The plan:** `docs/knowledge-design.md` (Phase 0, 2026-10-05, revised the same day for the regulatory corpus — awaiting the
-  owner's twenty decisions, §13; three answers recorded, §15).
+- **The plan:** `docs/knowledge-design.md` (Phase 0, 2026-10-05, approved the same day, decisions D1–D20 in §15).
 - **The build:** `CLAUDE.md` — the order, the rules, the handoff to the worker model.
-- Status: plan approved; K25 (the catalog seed) next, nothing of the application built yet.
+- Status: plan approved; K25 (db/170 in the kernel) done; K24 and M1, then Phase 0 second half; nothing of the application built yet.

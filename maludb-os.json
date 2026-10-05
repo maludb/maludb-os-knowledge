@@ -1,0 +1,477 @@
+{
+  "schema": "maludb-os.application/1",
+  "catalog_key": "knowledge",
+  "name": "Knowledge",
+  "description": "The business's knowledge bases \u2014 upload documents (PDF, Word, slides, sheets, web pages, text), write guidelines in plain words, and ask questions that are answered only with citations to the passage they came from. Sources are cut into sections by their own structure and built into a MaluDB knowledge graph, one per base; focus areas narrow a question; a token API with keys lets outside systems ask one base; sibling applications ask the bases shared with them through the kernel. The Knowledge Expert answers in the command bar; the Archivist reports every Monday what the bases cannot answer.",
+  "business_area": "Operations",
+  "category": "documents",
+  "icon": "feather-book-open",
+  "version": "0.1.0",
+  "criticality": "medium",
+  "vhost": {
+    "label": "knowledge",
+    "document_root": "html",
+    "internal_port_env": "APP_INTERNAL_PORT"
+  },
+  "database": {
+    "suffix": "knowledge",
+    "migrations": "db",
+    "roles": {
+      "rw": "knowledge_rw",
+      "records_ro": "knowledge_records_ro",
+      "activity_ro": "knowledge_activity_ro"
+    }
+  },
+  "env": {
+    "required": [
+      "APP_NAME",
+      "APP_URL",
+      "DB_HOST",
+      "DB_PORT",
+      "DB_NAME",
+      "DB_USER",
+      "DB_PASSWORD",
+      "MCP_RECORDS_DB_USER",
+      "MCP_RECORDS_DB_PASSWORD",
+      "MCP_ACTIVITY_DB_USER",
+      "MCP_ACTIVITY_DB_PASSWORD",
+      "APP_INTERNAL_PORT",
+      "MCP_RECORDS_PORT",
+      "MCP_ACTIVITY_PORT",
+      "ACTION_TOKEN_KEY",
+      "ACTIONS_RELAY_KEY",
+      "OS_APPLICATION_TOKEN",
+      "OS_INTERNAL_URL",
+      "OS_LAUNCHER_URL",
+      "APP_KEY",
+      "MALUDB_API_URL",
+      "MALUDB_API_TOKEN"
+    ],
+    "optional": [
+      "MALUMAIL_API_KEY",
+      "MAIL_FROM",
+      "MAIL_FROM_NAME",
+      "ATTACHMENT_MAX_BYTES",
+      "KN_URL_FETCH",
+      "KN_PDFTOTEXT",
+      "MALUDB_KB_API_URL",
+      "MALUDB_KB_API_TOKEN"
+    ]
+  },
+  "services": [
+    "deploy/knowledge-records-mcp.service",
+    "deploy/knowledge-activity-mcp.service",
+    "deploy/knowledge-activity-ingest.service",
+    "deploy/knowledge-activity-ingest.timer",
+    "deploy/knowledge-directory-sync.service",
+    "deploy/knowledge-directory-sync.timer",
+    "deploy/knowledge-worker.service",
+    "deploy/knowledge-worker.timer"
+  ],
+  "endpoints": [
+    {
+      "name": "Web UI",
+      "kind": "ui",
+      "path": "/",
+      "auth_kind": "none",
+      "agent_reachable": false
+    },
+    {
+      "name": "Health",
+      "kind": "http_api",
+      "path": "/api/v1/health",
+      "auth_kind": "none",
+      "agent_reachable": false
+    },
+    {
+      "name": "Questions API",
+      "kind": "http_api",
+      "path": "/api/v1/",
+      "auth_kind": "bearer",
+      "agent_reachable": false
+    },
+    {
+      "name": "Records MCP",
+      "kind": "mcp",
+      "path": "/mcp/records",
+      "auth_kind": "bearer",
+      "agent_reachable": true
+    },
+    {
+      "name": "Activity MCP",
+      "kind": "mcp",
+      "path": "/mcp/activity",
+      "auth_kind": "bearer",
+      "agent_reachable": true
+    }
+  ],
+  "actions": {
+    "manifest": "docs/knowledge-action-manifest.md",
+    "registry": "mcp/action_registry.json",
+    "base_url_env": "APP_INTERNAL_PORT"
+  },
+  "skills": [
+    "skills/knowledge-basics",
+    "skills/writing-guidelines",
+    "skills/asking-well",
+    "skills/reading-the-graph",
+    "skills/propose-focus-areas",
+    "skills/draft-guidelines-from-a-sample",
+    "skills/answer-with-citations",
+    "skills/monday-base-report",
+    "skills/merge-duplicate-subjects"
+  ],
+  "sso": {
+    "path": "/sso",
+    "logout_path": "/sso/logout"
+  },
+  "directory": {
+    "reads": true,
+    "writes": false
+  },
+  "assistant": {
+    "command_bar": true,
+    "agent": "expert"
+  },
+  "roles": [
+    {
+      "key": "reader",
+      "name": "Reader",
+      "description": "Asks the bases shared with them, reads sources, sections and the graph, rates answers.",
+      "capability": "read",
+      "is_admin": false,
+      "rights": [
+        "bases.read",
+        "answers.rate"
+      ]
+    },
+    {
+      "key": "user",
+      "name": "Member",
+      "description": "A Reader who may create a base of their own and add sources where given curate.",
+      "capability": "write",
+      "is_admin": false,
+      "rights": [
+        "bases.read",
+        "answers.rate",
+        "bases.create",
+        "sources.add",
+        "questions.own"
+      ]
+    },
+    {
+      "key": "curator",
+      "name": "Curator",
+      "description": "Runs bases they own or curate: sources, guidelines, areas, builds, sharing, keys, pinned answers, the question log, feeds.",
+      "capability": "write",
+      "is_admin": false,
+      "rights": [
+        "bases.read",
+        "answers.rate",
+        "bases.create",
+        "sources.add",
+        "questions.own",
+        "base.manage",
+        "sources.manage",
+        "builds.run",
+        "base.share",
+        "keys.manage",
+        "answers.pin",
+        "questions.review",
+        "feeds.manage"
+      ]
+    },
+    {
+      "key": "admin",
+      "name": "Knowledge admin",
+      "description": "Every base, the settings, the model configuration, limits, retention, every key and the costs. Sees private bases, logged.",
+      "capability": "admin",
+      "is_admin": true,
+      "rights": [
+        "bases.read",
+        "answers.rate",
+        "bases.create",
+        "sources.add",
+        "questions.own",
+        "base.manage",
+        "sources.manage",
+        "builds.run",
+        "base.share",
+        "keys.manage",
+        "answers.pin",
+        "questions.review",
+        "feeds.manage",
+        "settings.manage",
+        "model.manage",
+        "limits.manage",
+        "retention.manage",
+        "keys.all",
+        "costs.read",
+        "agents.settings",
+        "base.admin_view"
+      ]
+    }
+  ],
+  "shares": [
+    {
+      "tool": "ask",
+      "description": "A cited answer from a base shared with the requesting application: {base, question, focus_area?} -> answer, confidence, citations to sections, or no_evidence (os.knowledge-answer/1)",
+      "scoped": false
+    },
+    {
+      "tool": "search",
+      "description": "The evidence a shared base holds on a query: passages and statements with their sections, no composed answer (os.knowledge-evidence/1)",
+      "scoped": false
+    },
+    {
+      "tool": "bases_index",
+      "description": "The bases shared with the requesting application: key, name, focus areas, last built (os.knowledge-bases/1)",
+      "scoped": false
+    }
+  ],
+  "reads": [
+    {
+      "app": "spaces",
+      "tool": "pages_index",
+      "why": "List the pages of a space so a curator can follow it as a feed of sources (owed by Spaces' installation; absent, the feed shows no_connection)"
+    },
+    {
+      "app": "spaces",
+      "tool": "page_markdown",
+      "why": "Read one page as Markdown to ingest it as a source section by section"
+    },
+    {
+      "app": "helpdesk",
+      "tool": "articles_published",
+      "why": "Follow Help Desk's published articles as a feed of sources (HD2 \u2014 owed by Help Desk)"
+    }
+  ],
+  "agents": [
+    {
+      "key": "expert",
+      "job_description": "os/expert.md",
+      "access_capability": "write",
+      "hired_on_install": true,
+      "roles": [
+        "user"
+      ],
+      "tool_grants": {
+        "Records MCP": [
+          "find_bases",
+          "get_base",
+          "get_settings",
+          "find_templates",
+          "find_sources",
+          "get_source",
+          "source_outline",
+          "get_section",
+          "source_page",
+          "source_excerpt",
+          "section_graph",
+          "source_graph",
+          "sections_for_subject",
+          "find_focus_areas",
+          "get_focus_area",
+          "graph_stats",
+          "communities",
+          "community_members",
+          "get_subject",
+          "subject_neighbors",
+          "subject_statements",
+          "graph_path",
+          "god_nodes",
+          "surprises",
+          "graph_query",
+          "ask",
+          "search",
+          "suggested_questions",
+          "my_questions",
+          "get_question",
+          "pinned_answers",
+          "pins_due",
+          "base_members",
+          "find_feeds",
+          "find_guidelines",
+          "guideline_versions",
+          "extraction_preview",
+          "find_vocabulary",
+          "unused_terms",
+          "unassigned_sources",
+          "empty_areas",
+          "build_progress",
+          "find_builds",
+          "build_estimate",
+          "base_usage",
+          "duplicate_subjects",
+          "questions",
+          "question_feedback",
+          "question_gaps",
+          "find_keys",
+          "base_readers",
+          "archivist_proposals"
+        ],
+        "Activity MCP": [
+          "record_history",
+          "actor_timeline",
+          "recent_activity",
+          "activity_search"
+        ],
+        "Actions MCP": [
+          "focus_area_propose",
+          "focus_area_save",
+          "guideline_save",
+          "vocabulary_save",
+          "answer_pin",
+          "build_start",
+          "source_add",
+          "base_share",
+          "key_mint",
+          "source_remove"
+        ]
+      },
+      "skills": [
+        "skills/knowledge-basics",
+        "skills/writing-guidelines",
+        "skills/asking-well",
+        "skills/reading-the-graph",
+        "skills/propose-focus-areas",
+        "skills/draft-guidelines-from-a-sample",
+        "skills/answer-with-citations"
+      ]
+    },
+    {
+      "key": "archivist",
+      "job_description": "os/archivist.md",
+      "access_capability": "write",
+      "hired_on_install": true,
+      "roles": [
+        "user"
+      ],
+      "duty": {
+        "name": "The Monday base report",
+        "schedule_cron": "45 6 * * 1"
+      },
+      "tool_grants": {
+        "Records MCP": [
+          "find_bases",
+          "get_base",
+          "get_settings",
+          "find_sources",
+          "get_source",
+          "source_outline",
+          "find_feeds",
+          "find_guidelines",
+          "guideline_versions",
+          "find_focus_areas",
+          "get_focus_area",
+          "unassigned_sources",
+          "empty_areas",
+          "build_progress",
+          "find_builds",
+          "base_usage",
+          "graph_stats",
+          "questions",
+          "question_feedback",
+          "question_gaps",
+          "pinned_answers",
+          "pins_due",
+          "duplicate_subjects",
+          "base_members",
+          "archivist_proposals"
+        ],
+        "Activity MCP": [
+          "record_history",
+          "recent_activity"
+        ],
+        "Actions MCP": [
+          "archivist_propose",
+          "notification"
+        ]
+      },
+      "skills": [
+        "skills/knowledge-basics",
+        "skills/reading-the-graph",
+        "skills/monday-base-report",
+        "skills/merge-duplicate-subjects"
+      ]
+    }
+  ],
+  "approvals": [
+    {
+      "action": "base_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "base_member_remove",
+      "category": "other"
+    },
+    {
+      "action": "base_share_application",
+      "category": "external_send"
+    },
+    {
+      "action": "base_share_guest",
+      "category": "external_send"
+    },
+    {
+      "action": "base_visibility_set",
+      "category": "external_send"
+    },
+    {
+      "action": "build_rebuild_all",
+      "category": "other"
+    },
+    {
+      "action": "feed_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "focus_area_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "guideline_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "key_mint",
+      "category": "external_send"
+    },
+    {
+      "action": "key_revoke",
+      "category": "deletion"
+    },
+    {
+      "action": "key_rotate",
+      "category": "external_send"
+    },
+    {
+      "action": "limits_save",
+      "category": "other"
+    },
+    {
+      "action": "model_config_save",
+      "category": "other"
+    },
+    {
+      "action": "question_purge",
+      "category": "deletion"
+    },
+    {
+      "action": "retention_set",
+      "category": "other"
+    },
+    {
+      "action": "settings_save",
+      "category": "other"
+    },
+    {
+      "action": "source_remove",
+      "category": "deletion"
+    },
+    {
+      "action": "vocabulary_delete",
+      "category": "deletion"
+    }
+  ]
+}

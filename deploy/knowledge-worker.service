@@ -1,0 +1,10 @@
+[Unit]
+Description=Knowledge worker: text extraction and sectioning, builds, reindex and embeddings, feeds, URL checks, the outbox, rate-counter pruning, retention, dispatch retries (one pass)
+After=network.target postgresql.service
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory={{APP_DIR}}
+ExecStart=/usr/bin/php {{APP_DIR}}/bin/worker.php

@@ -34,7 +34,7 @@ and **templates** that ship a written set for a kind of corpus.
 **GraphRAG and LightRAG** — entities and relationships extracted by a model, clustered into communities; local questions
 (an entity's neighbourhood) answered differently from global ones (themes); prompt tuning writes a domain's extraction prompt.
 *Kept:* local/global (a question scoped to a focus area or asked of the whole base; the explorer shows communities, god nodes
-and surprises); prompt tuning *is* what guidelines and vocabulary are; **a community proposes a focus area**. *Changed:*
+and surprises); prompt tuning *is* what guidelines and vocabulary are; **the graph proposes a focus area** (communities once MaluDB computes them). *Changed:*
 community reports are written on request by the expert.
 
 **Glean, Guru, Notion AI, and the hosted RAG builders** (OpenAI file search, Pinecone Assistant, Dify, AnythingLLM) — answers
@@ -52,7 +52,7 @@ answers with an owner and a review date; thumbs; gaps as a report; the API of ex
 | Vocabulary | subjects with aliases and a type; the extractor is handed the known names | **vocabulary terms are seeded as subjects before a build** |
 | Asking | `graph/query`, `memory/recall`, `graph/{neighbors,walk,path,god-nodes,surprises,stats}`, `communities` | the explorer and the evidence step |
 | **Answering in words** | **`POST /v1/memory/answer` (M1, API 0.4.0)**: retrieve in a namespace (a project's subjects when named), compose with the host's guidelines, **verify every quote against the evidence it cites**, withhold what cannot be verified, call no model when there is no evidence, report usage | **`kn_ask()`** — the one function behind every door |
-| Keeping it fresh | `/v1/memory/reindex/run`, `/v1/memory/embeddings/run` | the worker, after a build |
+| Keeping it fresh | `/v1/memory/embeddings/run` (only with a real embedder) | not needed: the documents route embeds; **reindex is not used** (it re-extracts with the generic prompt) |
 | Metering | the provider's base URL can be the kernel's ledger proxy with an application credential (**K24, built**) | every extraction, embedding and answer call on the AI statement |
 | Who may read | principals and scopes (`X-MaluDB-Principal`…) | v1 enforces reach in the application; per-member principals Extended |
 
@@ -60,6 +60,22 @@ What the application adds that MaluDB does not have: files and **text extraction
 section and a page), the five guideline kinds and their compilation, templates, areas as a person sees them, builds with
 progress and a rebuild rule, the question log with gaps and pins, bases and who may read them, API keys with rate limits, the
 K7 shares, and the two agents. An application never holds a model key: MaluDB holds the provider key, and the kernel meters.
+
+**What the engine proof found (2026-10-05, `tests/phase0/engine.sh`, 134 checks against the real API on a scratch tenant)** —
+where MaluDB differs from what this plan first assumed, and what the design now does about it:
+
+| Finding | Consequence in this design |
+|---|---|
+| `POST /v1/subjects` and `/v1/projects` allocate ids as `MAX+1` outside the table's sequence; the next extraction then fails with a duplicate key — after the model was already paid for | `engine.php` never calls them: terms and focus-area projects are created by posting a section whose edges the caller supplies (no model call) and forgetting it at once. **API defect, owed upstream (M7).** |
+| No route stores **subject aliases** (the column exists, the core resolves it at ingest) | aliases travel in the subject's description and as `ALIAS: x => y` lines in the compiled prompt; the question is expanded with the canonical term (`kn_engine_expand_aliases`). **M7: an `aliases` field on `POST/PATCH /v1/subjects`.** |
+| `/v1/memory/documents` expects `{"candidate_edges":[{subject_text, subject_type, verb_text, predicate[], source_span, confidence}]}`, takes **no hints**, and turns each edge's `source_span` into a searchable chunk | the compiled prompt asks for **verbatim spans**; hints become the document's subject tags |
+| `/v1/memory/ingest {preview:true}` calls no model and **ignores the namespace prompt** (it returns the generic ingest prompt) | "preview on a section" shows the base's own prompt filled with the section's text (`documents_prompt`) — a dry run of the *prompt*, not of the model. **M5: a documents dry-run that extracts with the namespace prompt and writes nothing.** |
+| **No community detector**: communities exist only when written (`graph/import`, `maludb_community_replace`) | "a community proposes a focus area" cannot work yet: **the expert proposes areas from the graph's most connected subjects and the subject clusters it reads through the graph tools**, and communities are used the day MaluDB computes them. **M6: community detection over a namespace.** |
+| `graph/query?namespace=` filters by a name prefix, `graph/stats` and `god-nodes` cover the whole tenant, subjects and projects are shared by every base in the memory database | `engine.php` stamps each section with `document_type = kb:<id>` and filters graph results to that base's documents; chunks, recall, answers and communities are isolated by namespace and are proven so. A base's *graph explorer* is therefore filtered in the application until MaluDB scopes these routes (M3) |
+| `reindex` re-extracts with the tenant's `extract` task and the **generic** prompt, not the base's | **the worker does not run reindex**; the documents route already embeds; an admin must never set a tenant `extract` model on this memory database |
+| `GET /v1/documents/{id}` returns no metadata | the application maps a document back to its section through its own `maludb_document_id`; only the answer route's evidence carries `document.metadata` |
+| README §2 omits `GRANT maludb_secret_consumer TO <role>` — without it the namespace's provider secret cannot be read | added to `deploy/ROOT_STEPS.sh` |
+| Only the answer route reports usage | as the design said: extraction cost shows through K24's ledger |
 
 ## 1. What Knowledge is, and is not
 
@@ -74,8 +90,8 @@ manuals, policies, contracts, a client's filings, research, any pile of document
   add a page), *ask* (the window). Guidelines and focus areas improve the graph and are never required: a base answers from the
   moment its first build finishes, using its template's shipped guidelines.
 - **Guidelines are first-class and typed** (§6); three change the graph and mark the base "needs a rebuild", two change only the
-  answers. The first build of a base **proposes** areas from its communities and drafts guidelines from a sample, which the
-  expert offers and a person accepts.
+  answers. After a first build the expert **proposes** areas from the graph (its most connected subjects and their clusters; MaluDB's
+  communities when it computes them) and drafts guidelines from a sample, which a person accepts.
 - **Every answer cites or declines.** An answer carries the exact words it relies on, verified against the sources by the
   engine, and a citation that opens the section and page; weak evidence is a plain "the knowledge base holds nothing on this"
   and a logged gap — never a guess.
@@ -225,12 +241,13 @@ exactly what the source taught. Sectioning is deterministic PHP — never a mode
 | an **answering** guideline ("two paragraphs, plain English, say when the sources disagree") and an **audience** guideline ("field technicians on a phone") — **apply at once, no rebuild** | `guidelines` kinds `answering`, `audience` | M1's `system` field, and the expert's turn |
 | a **focus area** ("Warranty — coverage, exclusions, claims; terms: warranty, claim; ask: how long is the battery warranty?") | `focus_areas` | a **project** (`classifier_md` = the description, linked subjects = the seed terms); a question scoped to it retrieves from the project's subjects |
 | a **source** | `sources` + its text, pages and sections | one `POST /v1/memory/documents` per section (title, text, `namespace`, `projects[]`, `metadata`) → `maludb_document_id` kept; **removal** = `DELETE /v1/documents/{id}` (forgets) |
-| a **build** | `builds` + `build_items` (one per section) | the ingest calls; then `/v1/memory/reindex/run` and `/v1/memory/embeddings/run`; counts from `/v1/graph/stats` cached |
+| a **build** | `builds` + `build_items` (one per section) | the ingest calls (the documents route embeds as it goes; **reindex is never run**); counts from the base's own documents, cached |
 
 A change to an **extraction, vocabulary or exclusion** guideline bumps `knowledge_bases.guideline_version`; sections built under
 an older version show **stale**; `build_start` re-extracts new and stale sections under the base's monthly limit;
-`build_rebuild_all` is a person's. **`preview`** runs one section through `POST /v1/memory/ingest {preview: true}` with the
-compiled prompt and shows what it would extract — the try-before-you-spend every guideline form offers.
+`build_rebuild_all` is a person's. **Preview** shows the base's own compiled prompt filled with one section's text — the try-before-you-spend every guideline
+form offers — and, with the engine's own `preview` route, the generic ingest prompt it would otherwise use; a true dry run of the
+model's extraction is M5.
 
 **Templates** (`base_templates`, seeded, versioned): **`general`** — a light extraction prompt (entities, relationships,
 dates, amounts, owners), default exclusions (headers, footers, page numbers, boilerplate), the answering guideline (answer
@@ -510,7 +527,10 @@ with expected citations run as an eval suite by the kernel's runner before and a
 | K16 | **K8 (wake an agent from an application)** — owed to four siblings | the chat-turn dispatch until then |
 | HD2 | **Help Desk shares `articles_published`**; Spaces' `pages_index` + `page_markdown` are in its plan | a curator uploads |
 | HD3 / SP2 / P3 | Help Desk's, Spaces' and Projects' experts gain `reads[]` on `knowledge.ask` / `search` / `bases_index` | nothing reads us yet |
-| **API defect** | `DELETE /v1/projects/{id}` leaves the project's subject links, and a reused id inherits them (found proving M1; `docs/memory-answer.md` there) | owed upstream; a focus area's delete here unlinks first |
+| **M5** | A documents **dry run**: extract one text with the namespace's prompt and model and write nothing | owed upstream; the preview shows the prompt |
+| **M6** | **Community detection** over a namespace (communities exist only when written today) | owed upstream; the expert proposes areas from the graph |
+| **M7** | **Subject routes**: allocate ids from the table's sequence (today `MAX+1`, which breaks a later extraction) and an `aliases` field on `POST/PATCH /v1/subjects` | owed upstream; `engine.php` works around both |
+| **API defect** | `DELETE /v1/projects/{id}` leaves the project's subject links, and a reused id inherits them (found proving M1; `docs/memory-answer.md` there) | owed upstream; `engine.php` unlinks first and clears stale links on a reused id (proven) |
 
 ## 13. The decisions
 
@@ -556,7 +576,7 @@ Every recommendation of the first plan was taken on 2026-10-05; the later ruling
 | D5 | **Private or internal bases**, shared to members, departments, everyone, agents and applications; guests may be Readers; **a new base is private**; no site scope | §3; `base_members` |
 | D6 | **Sources**: files first (PDF with a text layer, Word and Office, HTML, Markdown, text, CSV, JSON), pasted text, one page per URL, notes, feeds; **50 MB per file, a setting**; no OCR in v1 | §6.1; `kn_settings` |
 | D7 | **Five guideline kinds, two moments, shipped by template**; every form previews on a section | §6.2; slice 3 |
-| D8 | **Focus areas are MaluDB projects**, proposed from the communities after a first build | §6.2; slice 3 |
+| D8 | **Focus areas are MaluDB projects**, proposed by the expert from the graph after a first build (communities when MaluDB computes them — M6) | §6.2; slice 3 |
 | D9 | **Auto-extract new sources**; a person starts rebuilds after an estimate; **50 MB of text per base per month**; one build per base at a time | §6.2; `builds` |
 | D10 | **Every answer cites or declines**; M1 verifies every quote; gaps logged; three turns of conversation; pins become `note` sources | §6.3; slice 5 |
 | D11 | **Question log** with asker; curators see their base's; 365 days | §6.3; `questions` |

@@ -10,8 +10,8 @@ description: How to ask a knowledge base and read what comes back — local ques
   "What is the notice period in the Acme contract?". Use `ask`. Name the thing; keep one question to one point.
 - A **global** question needs the shape of the whole base: "What are the main themes?", "Which policies conflict?", "What do we
   know about returns across all documents?". Do not expect one passage to answer it. Start from the graph: `graph_stats`,
-  `communities`, `community_members`, `god_nodes`; then `ask` per community or per subject, and combine the cited answers
-  yourself, citing each.
+  `god_nodes` and `graph_query` (the most connected subjects and the clusters around them; `communities` and `community_members`
+  when MaluDB computes communities); then `ask` per cluster or per subject, and combine the cited answers yourself, citing each.
 - A **relationship** question ("how is X related to Y?") is `graph_path` and `subject_neighbors`, then `ask` to check the sections.
 - A **list** question ("every deadline in the handbook") is `search` plus `sections_for_subject`; say how many passages you read.
 

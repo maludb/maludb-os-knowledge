@@ -117,10 +117,11 @@ echo "== 5. MANUAL — K24: the engine's credential at the ledger proxy"
 echo "   php $KERNEL/bin/application_model_credential.php mint --app knowledge --models <chat-model-key>,<embedding-model-key>,<answer-model-key> [--budget <monthly dollars>]"
 #    (c) The printed appm_ credential becomes the engine's PROVIDER API KEY, and the provider base URL becomes
 #        http://127.0.0.1:8816/openai (or http://127.0.0.1:8816/anthropic for an Anthropic model). Set them with
-#        POST /v1/memory/config against the memory database (bearer = MALUDB_KB_API_TOKEN), by hand or from the admin's
-#        model screen once built; the engine's own docs (docs/memory-answer.md and the config route) name the fields.
+#        POST /v1/memory/config against the memory database (bearer = MALUDB_KB_API_TOKEN) for the REFERENCE namespace "kb:0"
+#        (slice specs: each base's own namespace copies the connection from kb:0), by hand or from the admin's model screen
+#        once built; the engine's own docs (docs/memory-answer.md and the config route) name the fields.
 echo "   then: the appm_ credential is the engine's provider API key; the provider base URL is http://127.0.0.1:8816/openai (or /anthropic);"
-echo "         set with POST /v1/memory/config against $MEMDB. Put the credential nowhere else."
+echo "         set with POST /v1/memory/config (namespace kb:0) against $MEMDB. Put the credential nowhere else."
 #    (d) The runner must be restarted once to serve the credential route:
 echo "   sudo systemctl restart certstudy-agent-runner        # K24 — the owner's"
 

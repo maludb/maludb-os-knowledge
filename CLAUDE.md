@@ -79,8 +79,7 @@ The Spaces division: a **planning-class model** builds what the database enforce
 engine proof, the specs and the exemplars; a **worker model (Sonnet 5.5)** replicates every other slice from a spec, stopping
 and escalating on any ambiguity.
 
-**Done in the kernel and MaluDB:** K25 (db/170), K24 (db/171), M1 (branch `feat/memory-answer-m1`, awaiting the owner's merge and
-deploy).
+**Done:** K25 (db/170), K24 (db/171), M1 (branch `feat/memory-answer-m1`, awaiting the owner's merge and deploy); **Phase 0 complete** (schema db/001–015, engine module, sectioner, kit, manifest, agents, skills, deploy); **Phase 1 written** (tool surface, action manifest and registry, the compile and sectioning specs, ten slice specs, `docs/phase1-consistency.md`) — **awaiting the owner's checkpoint**. Owed: K26 (kernel).
 
 **Before the handoff:** (1) **Phase 0, second half**: `db/001`–`0NN`, the read functions and `mcp_*` views,
 `db/proof/phase0_proof.sql`, the kit from Consultant Tracking proven without a kernel, the sectioner's fixtures,

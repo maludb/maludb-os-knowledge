@@ -1,0 +1,21 @@
+{
+  "schema": "maludb-os.registry/1",
+  "app_key": "knowledge",
+  "name": "Knowledge",
+  "note": "The installer (bin/app_install.php, step 'registry') writes mcp/registries/knowledge.json in the kernel from this file's `resolve` block plus mcp/action_registry.json. Each resolve tool answers a plain LIST of rows carrying id_field and label_field when given `q` alone (docs/knowledge-mcp-tool-surface.md, the resolution table). The tools are the Phase 1 tool surface's names; Phase 4 builds them (mcp/records_server.py). section, build, base_member, dispatch, notification, token and subject_id are ids only, never resolved by name. A repeated param (areas, seed_terms, groups) is never resolved. The `key` param of base_create/base_update is a base's slug, not a resolver: an API key is `api_key`.",
+  "resolve": {
+    "base":          {"tool": "find_bases",          "query_param": "q", "id_field": "base_id",          "label_field": "name",           "params": ["base"]},
+    "focus_area":    {"tool": "find_focus_areas",    "query_param": "q", "id_field": "focus_area_id",    "label_field": "name",           "params": ["focus_area", "area"]},
+    "source":        {"tool": "find_sources",        "query_param": "q", "id_field": "source_id",        "label_field": "title",          "params": ["source"]},
+    "guideline":     {"tool": "find_guidelines",     "query_param": "q", "id_field": "guideline_id",     "label_field": "title",          "params": ["guideline"]},
+    "term":          {"tool": "find_vocabulary",     "query_param": "q", "id_field": "term_id",          "label_field": "canonical_name", "params": ["term"]},
+    "question":      {"tool": "my_questions",        "query_param": "q", "id_field": "question_id",      "label_field": "question",       "params": ["question"]},
+    "pinned_answer": {"tool": "pinned_answers",      "query_param": "q", "id_field": "pinned_answer_id", "label_field": "title",          "params": ["pinned_answer", "pin"]},
+    "api_key":       {"tool": "find_keys",           "query_param": "q", "id_field": "key_id",           "label_field": "label",          "params": ["api_key"]},
+    "proposal":      {"tool": "archivist_proposals", "query_param": "q", "id_field": "proposal_id",      "label_field": "title",          "params": ["proposal"]},
+    "feed":          {"tool": "find_feeds",          "query_param": "q", "id_field": "feed_id",          "label_field": "tool",           "params": ["feed"]},
+    "member":        {"tool": "find_members",        "query_param": "q", "id_field": "member_id",        "label_field": "display_name",   "params": ["member", "person", "owner", "agent", "guest", "expert", "archivist"]},
+    "department":    {"tool": "find_departments",    "query_param": "q", "id_field": "department_id",    "label_field": "name",           "params": ["department"]},
+    "template":      {"tool": "find_templates",      "query_param": "q", "id_field": "template_key",     "label_field": "name",           "params": ["template"]}
+  }
+}

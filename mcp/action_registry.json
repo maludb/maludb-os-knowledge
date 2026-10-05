@@ -1,0 +1,2673 @@
+{
+    "generated_from": "docs/knowledge-action-manifest.md",
+    "generated_at": "2026-10-05T18:26:29+00:00",
+    "screens": {
+        "home": {
+            "screen": "home",
+            "url": "/",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "when": "home: a new person's one button (Create a knowledge base); otherwise my bases, builds running, my recent questions, pins due for review, the Archivist's last note; a curator's gaps and thumbs-down this week; the admin's usage, failed builds, pending dispatches and open proposals",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
+        "activity": {
+            "screen": "activity",
+            "url": "/activity",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "when": "my own activity trail, or a record's history",
+            "params": [
+                "base",
+                "entity_type",
+                "entity_id",
+                "since"
+            ],
+            "built": true,
+            "stub": false
+        },
+        "notifications": {
+            "screen": "notifications",
+            "url": "/notifications",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "when": "what the bell holds, and to mark it read",
+            "params": [
+                "unread"
+            ],
+            "built": true,
+            "stub": false
+        },
+        "settings": {
+            "screen": "settings",
+            "url": "/settings/",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "when": "how I am told: email, texts, which kinds, my time zone",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
+        "tokens": {
+            "screen": "tokens",
+            "url": "/settings/tokens/",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "when": "my own MCP tokens: mint one, revoke one",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
+        "base-list": {
+            "screen": "base-list",
+            "url": "/bases",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "the bases I may read as cards: status, visibility, my level, sources and sections, last built, needs a rebuild",
+            "params": [
+                "q",
+                "status",
+                "mine",
+                "archived"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "base-add": {
+            "screen": "base-add",
+            "url": "/bases/new",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "to make a knowledge base: a name and a template, done",
+            "params": [
+                "template"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "base-view": {
+            "screen": "base-view",
+            "url": "/bases/{id}",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "a base at a glance: description, counts, areas, the last build, the curators, an ask box; an empty base's first action is Add documents",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "base-edit": {
+            "screen": "base-edit",
+            "url": "/bases/{id}/edit",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "to change a base's name, key, description or template (the template only while it is empty)",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "base-share": {
+            "screen": "base-share",
+            "url": "/bases/{id}/share",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "who may read or curate a base and why; share with a person, an agent, a department, a guest or an application; make it internal",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "base-settings": {
+            "screen": "base-settings",
+            "url": "/bases/{id}/settings",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "a base's auto-extract, sensitivity, language and monthly text limit",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "admin-settings": {
+            "screen": "admin-settings",
+            "url": "/admin/settings",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "the application's settings, limits and retention, each its own form",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "templates": {
+            "screen": "templates",
+            "url": "/admin/templates",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "when": "the templates and the guidelines each ships, read-only",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "sources": {
+            "screen": "sources",
+            "url": "/bases/{id}/sources",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "when": "a base's sources as cards: kind, status, sections, pages, areas, stale or failed or no text",
+            "params": [
+                "kind",
+                "status",
+                "area",
+                "q"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "source-add": {
+            "screen": "source-add",
+            "url": "/sources/new",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "when": "to add documents: drop many files, paste text or add a page by its address",
+            "params": [
+                "base",
+                "tab"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "source-view": {
+            "screen": "source-view",
+            "url": "/sources/{id}",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "when": "one source: origin, status and its error in words, the outline, the pages, its areas, what it taught the graph; edit, replace, remove, retry",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "source-edit": {
+            "screen": "source-edit",
+            "url": "/sources/{id}/edit",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "when": "to change a source's title or language",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "source-replace": {
+            "screen": "source-replace",
+            "url": "/sources/{id}/replace",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "when": "to replace a source with a new version: its sections are forgotten and the new one is read afresh, its areas kept",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "section-view": {
+            "screen": "section-view",
+            "url": "/sections/{id}",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "when": "one section: its heading path, its words, its page, previous and next; a citation's quote marked",
+            "params": [
+                "quote",
+                "back"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "guidelines": {
+            "screen": "guidelines",
+            "url": "/bases/{id}/guidelines",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "a base's guidelines by the five kinds, the version the graph is built under, what needs a rebuild",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "guideline-add": {
+            "screen": "guideline-add",
+            "url": "/guidelines/new",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to write a guideline beside its kind's examples and preview it on a section",
+            "params": [
+                "base",
+                "kind",
+                "section"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "guideline-edit": {
+            "screen": "guideline-edit",
+            "url": "/guidelines/{id}/edit",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to change a guideline and preview it on a section",
+            "params": [
+                "section"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "guideline-view": {
+            "screen": "guideline-view",
+            "url": "/guidelines/{id}",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "a guideline's versions and the one the graph was built under",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "guidelines-compiled": {
+            "screen": "guidelines-compiled",
+            "url": "/bases/{id}/compiled",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "what the engine is told: the compiled extraction prompt, the answer guidelines, the terms",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "vocabulary": {
+            "screen": "vocabulary",
+            "url": "/bases/{id}/vocabulary",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "a base's terms, aliases and types, alias conflicts and the terms the graph never met",
+            "params": [
+                "q",
+                "never"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "term-add": {
+            "screen": "term-add",
+            "url": "/vocabulary/new",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to add a vocabulary term with its aliases and type",
+            "params": [
+                "base",
+                "canonical_name",
+                "aliases"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "term-edit": {
+            "screen": "term-edit",
+            "url": "/vocabulary/{id}/edit",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to change or delete a vocabulary term",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "vocabulary-import": {
+            "screen": "vocabulary-import",
+            "url": "/bases/{id}/vocabulary-import",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to import terms from a CSV: check first, then import",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "areas": {
+            "screen": "areas",
+            "url": "/bases/{id}/areas",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "a base's focus areas as cards; the proposed ones to accept or dismiss; sources in no area and areas with no source",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "area-add": {
+            "screen": "area-add",
+            "url": "/areas/new",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to name a focus area: description, seed terms, example questions",
+            "params": [
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "area-edit": {
+            "screen": "area-edit",
+            "url": "/areas/{id}/edit",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "to change a focus area",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "area-view": {
+            "screen": "area-view",
+            "url": "/areas/{id}",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "when": "one focus area: its terms, example questions, sources and its engine link",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "builds": {
+            "screen": "builds",
+            "url": "/bases/{id}/builds",
+            "section": "The build (slice 4)",
+            "when": "what a build would do now against the month's limit, start it, rebuild everything, the builds so far",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "build-view": {
+            "screen": "build-view",
+            "url": "/builds/{id}",
+            "section": "The build (slice 4)",
+            "when": "one build's progress, counts, usage, failed sections with their reasons, the items; cancel",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "ask": {
+            "screen": "ask",
+            "url": "/ask",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "when": "to ask a base a question and get an answer with citations that open their sections, or a plain nothing on this",
+            "params": [
+                "base",
+                "area",
+                "c",
+                "q"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "conversations": {
+            "screen": "conversations",
+            "url": "/ask/conversations",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "when": "my conversations with the bases",
+            "params": [
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "question-view": {
+            "screen": "question-view",
+            "url": "/questions/{id}",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "when": "one question in full: the answer, its citations, the evidence, the feedback, pin or unpin",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "questions": {
+            "screen": "questions",
+            "url": "/bases/{id}/questions",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "when": "the base's question log for curators: who or which key asked, answered or not, rated how",
+            "params": [
+                "status",
+                "door",
+                "key",
+                "area",
+                "asker",
+                "since",
+                "q",
+                "page"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "gaps": {
+            "screen": "gaps",
+            "url": "/bases/{id}/gaps",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "when": "what the base could not answer, clustered, and the thumbs-down answers",
+            "params": [
+                "since"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "pinned": {
+            "screen": "pinned",
+            "url": "/pinned",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "when": "the pinned answers across my bases and which are due for review",
+            "params": [
+                "base",
+                "due"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "graph": {
+            "screen": "graph",
+            "url": "/bases/{id}/graph",
+            "section": "The graph explorer (slice 6)",
+            "when": "a base's graph: its size, the most connected subjects, communities when MaluDB has them, surprising links, a search; a curator's duplicates",
+            "params": [
+                "q"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "subject-view": {
+            "screen": "subject-view",
+            "url": "/bases/{id}/subject",
+            "section": "The graph explorer (slice 6)",
+            "when": "one subject: its statements, neighbours and the sections behind it; ask about it",
+            "params": [
+                "name"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "community-view": {
+            "screen": "community-view",
+            "url": "/bases/{id}/community",
+            "section": "The graph explorer (slice 6)",
+            "when": "one community and its members",
+            "params": [
+                "community"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "path": {
+            "screen": "path",
+            "url": "/bases/{id}/path",
+            "section": "The graph explorer (slice 6)",
+            "when": "how two subjects are related inside the base",
+            "params": [
+                "from",
+                "to"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "keys": {
+            "screen": "keys",
+            "url": "/bases/{id}/keys",
+            "section": "The token API, keys and K7 (slice 7)",
+            "when": "a base's API keys: label, area, limits, today's count, last use; mint, edit, rotate, revoke",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "key-add": {
+            "screen": "key-add",
+            "url": "/keys/new",
+            "section": "The token API, keys and K7 (slice 7)",
+            "when": "to mint an API key for a base: label, area, limits",
+            "params": [
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "key-edit": {
+            "screen": "key-edit",
+            "url": "/keys/{id}/edit",
+            "section": "The token API, keys and K7 (slice 7)",
+            "when": "to change a key's label, area or limits",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "connections": {
+            "screen": "connections",
+            "url": "/admin/connections",
+            "section": "The token API, keys and K7 (slice 7)",
+            "when": "which sibling applications read which bases, the shares and the reads, the last share calls; the K26 notice while the kernel does not name the consumer",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "proposals": {
+            "screen": "proposals",
+            "url": "/bases/{id}/proposals",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "when": "the Archivist's proposals for a base: accept with its effect or dismiss",
+            "params": [
+                "status",
+                "kind"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin-proposals": {
+            "screen": "admin-proposals",
+            "url": "/admin/proposals",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "when": "every base's proposals",
+            "params": [
+                "base",
+                "status",
+                "kind"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "feeds": {
+            "screen": "feeds",
+            "url": "/bases/{id}/feeds",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "when": "the feeds a base follows from sibling applications and how each last synced",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "feed-add": {
+            "screen": "feed-add",
+            "url": "/feeds/new",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "when": "to follow a feed: a Spaces space or Help Desk's published articles",
+            "params": [
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "feed-edit": {
+            "screen": "feed-edit",
+            "url": "/feeds/{id}/edit",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "when": "to change a feed's arguments, area, interval or whether it is enabled",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "dispatches": {
+            "screen": "dispatches",
+            "url": "/admin/dispatches",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "when": "every request to the agents: pending, answered, refused, failed; retry a failed one",
+            "params": [
+                "status",
+                "kind",
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin": {
+            "screen": "admin",
+            "url": "/admin/",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "the admin area: settings, templates, the model, usage, every base, every key, the agents, connections, proposals, dispatches, purge",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "admin-purge": {
+            "screen": "admin-purge",
+            "url": "/admin/purge",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "to purge questions older than N days now, after seeing how many would go",
+            "params": [
+                "days"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin-model": {
+            "screen": "admin-model",
+            "url": "/admin/model",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "the engine's model and embedding model, its health, a base's namespace; change the model; test a base's prompt on a section",
+            "params": [
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin-usage": {
+            "screen": "admin-usage",
+            "url": "/admin/usage",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "the text extracted and the engine calls by base and kind for a month",
+            "params": [
+                "month",
+                "base"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin-bases": {
+            "screen": "admin-bases",
+            "url": "/admin/bases",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "every base, the private ones marked (opening one logs the admin's look)",
+            "params": [
+                "visibility",
+                "status",
+                "archived"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin-keys": {
+            "screen": "admin-keys",
+            "url": "/admin/keys",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "every API key of every base; revoke",
+            "params": [
+                "base",
+                "status"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "admin-agents": {
+            "screen": "admin-agents",
+            "url": "/admin/agents",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "when": "the agents this application declares, the agent members here, which is the expert and which the Archivist, their dispatches",
+            "params": [],
+            "built": false,
+            "stub": false
+        }
+    },
+    "actions": {
+        "prefs_save": {
+            "action": "prefs_save",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "endpoint": "/settings/prefs.php",
+            "params": [
+                {
+                    "name": "email_enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "text_enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "kinds",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "text_kinds",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "prefs.save",
+            "who": "own",
+            "agent": true,
+            "record_id": "the member",
+            "built": true
+        },
+        "notification_read": {
+            "action": "notification_read",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "endpoint": "/settings/notifications/read.php",
+            "params": [
+                {
+                    "name": "notification",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "empty marks all"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "notification.read",
+            "who": "own",
+            "agent": true,
+            "record_id": "the notification",
+            "built": true
+        },
+        "token_mint": {
+            "action": "token_mint",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "endpoint": "/settings/tokens/mint.php",
+            "params": [
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "scope",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "mcp"
+                }
+            ],
+            "undo": "token_revoke",
+            "confirm": false,
+            "approval": null,
+            "log_event": "token.mint",
+            "who": "own",
+            "agent": false,
+            "record_id": "the token",
+            "built": true
+        },
+        "token_revoke": {
+            "action": "token_revoke",
+            "section": "Home, me and the shell (Phase 2 and slice 9)",
+            "endpoint": "/settings/tokens/revoke.php",
+            "params": [
+                {
+                    "name": "token",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "token.revoke",
+            "who": "own",
+            "agent": true,
+            "record_id": "the token",
+            "built": true
+        },
+        "base_create": {
+            "action": "base_create",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/save.php",
+            "params": [
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "template",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a template key — general by default"
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "key",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "lower-case letters digits and dashes — blank gives kb-id"
+                }
+            ],
+            "undo": "base_archive",
+            "confirm": false,
+            "approval": null,
+            "log_event": "base.create",
+            "who": "bases.create",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "base_update": {
+            "action": "base_update",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "template",
+                    "repeated": false,
+                    "hint": "a template key — general by default"
+                },
+                {
+                    "required": false,
+                    "name": "description",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "key",
+                    "repeated": false,
+                    "hint": "lower-case letters digits and dashes — blank gives kb-id"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "base.update",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the base",
+            "built": false,
+            "partial": true
+        },
+        "base_settings_save": {
+            "action": "base_settings_save",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/settings-save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "auto_extract",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "sensitivity",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "standard or confidential or restricted"
+                },
+                {
+                    "name": "language",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an ISO code such as en"
+                },
+                {
+                    "name": "monthly_text_mb_limit",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "megabytes — limits.manage only"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "base.update",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "base_visibility_set": {
+            "action": "base_visibility_set",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/visibility.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "visibility",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "private or internal"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": true,
+            "approval": "external_send",
+            "log_event": "base.visibility_set",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "base_share": {
+            "action": "base_share",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/members/add.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "member",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "one of these is required"
+                },
+                {
+                    "name": "department",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "one of these is required"
+                },
+                {
+                    "name": "level",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "read or curate or own — own from the owner or an admin"
+                }
+            ],
+            "undo": "base_member_remove",
+            "confirm": false,
+            "approval": null,
+            "log_event": "base.share",
+            "who": "base.share on a curated base",
+            "agent": true,
+            "record_id": "the share row",
+            "built": false
+        },
+        "base_share_guest": {
+            "action": "base_share_guest",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/members/add-guest.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "guest",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "an external member holding Reader — reads only"
+                }
+            ],
+            "undo": "base_member_remove",
+            "confirm": true,
+            "approval": "external_send",
+            "log_event": "base.share_guest",
+            "who": "base.share on a curated base",
+            "agent": true,
+            "record_id": "the share row",
+            "built": false
+        },
+        "base_share_application": {
+            "action": "base_share_application",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/members/add-application.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "application",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a catalog key such as helpdesk — reads only"
+                }
+            ],
+            "undo": "base_member_remove",
+            "confirm": true,
+            "approval": "external_send",
+            "log_event": "base.share_application",
+            "who": "base.share on a curated base",
+            "agent": true,
+            "record_id": "the share row",
+            "built": false
+        },
+        "base_member_remove": {
+            "action": "base_member_remove",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/members/remove.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "base_member",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the share row from base_members — never the everyone row"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "other",
+            "log_event": "base.unshare",
+            "who": "base.share on a curated base",
+            "agent": true,
+            "record_id": "the share row",
+            "built": false
+        },
+        "base_archive": {
+            "action": "base_archive",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/archive.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "stays readable and takes no new source or build"
+                }
+            ],
+            "undo": "base_restore",
+            "confirm": true,
+            "approval": null,
+            "log_event": "base.archive",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "base_restore": {
+            "action": "base_restore",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/restore.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "base_archive",
+            "confirm": false,
+            "approval": null,
+            "log_event": "base.restore",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "base_delete": {
+            "action": "base_delete",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/bases/delete.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "confirm_name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the base's name typed"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "base.delete",
+            "who": "base.manage at own level",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "settings_save": {
+            "action": "settings_save",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/admin/settings/save.php",
+            "params": [
+                {
+                    "name": "business_name",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "url_fetch_allowed",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "evidence_threshold",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "0 to 1"
+                },
+                {
+                    "name": "max_evidence",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 to 50"
+                },
+                {
+                    "name": "max_question_chars",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "100 to 20000"
+                },
+                {
+                    "name": "conversation_turns",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "0 to 20"
+                },
+                {
+                    "name": "pin_review_months",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 or 3 or 6 or 12"
+                },
+                {
+                    "name": "section_target_chars",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "section_max_chars",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "limit_warn_pct",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 to 100"
+                },
+                {
+                    "name": "timezone",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "settings.save",
+            "who": "settings.manage",
+            "agent": true,
+            "record_id": "the settings",
+            "built": false
+        },
+        "limits_save": {
+            "action": "limits_save",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/admin/settings/limits.php",
+            "params": [
+                {
+                    "name": "default_monthly_text_mb",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 to 100000"
+                },
+                {
+                    "name": "max_source_bytes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "url_fetch_max_bytes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "key_rate_per_minute",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "key_rate_per_day",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "key_rotation_overlap_hours",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "0 to 168"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "limits.save",
+            "who": "limits.manage",
+            "agent": true,
+            "record_id": "the settings",
+            "built": false
+        },
+        "retention_set": {
+            "action": "retention_set",
+            "section": "Bases, templates, sharing and settings (slice 1)",
+            "endpoint": "/admin/settings/retention.php",
+            "params": [
+                {
+                    "name": "question_retention_days",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "1 to 3650"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "retention.set",
+            "who": "retention.manage",
+            "agent": true,
+            "record_id": "the settings",
+            "built": false
+        },
+        "source_add": {
+            "action": "source_add",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "endpoint": "/sources/add.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "file or text or url — an agent sends text or url"
+                },
+                {
+                    "name": "title",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "up to 300 characters"
+                },
+                {
+                    "name": "text",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the pasted text up to 2 MB"
+                },
+                {
+                    "name": "url",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "one public page"
+                },
+                {
+                    "name": "files",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "multipart up to 20 a request — people only"
+                }
+            ],
+            "undo": "source_remove",
+            "confirm": false,
+            "approval": null,
+            "log_event": "source.add",
+            "who": "sources.add on a curated base",
+            "agent": true,
+            "record_id": "the first source (records: every id)",
+            "built": false
+        },
+        "source_update": {
+            "action": "source_update",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "endpoint": "/sources/update.php",
+            "params": [
+                {
+                    "name": "source",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "title",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "up to 300 characters"
+                },
+                {
+                    "name": "language",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an ISO code"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "source.update",
+            "who": "sources.manage on a curated base",
+            "agent": true,
+            "record_id": "the source",
+            "built": false
+        },
+        "source_replace": {
+            "action": "source_replace",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "endpoint": "/sources/replace.php",
+            "params": [
+                {
+                    "name": "source",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a live source not fed by a feed"
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "file or text or url"
+                },
+                {
+                    "name": "title",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "text",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "url",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "files",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "source.replace",
+            "who": "sources.manage on a curated base",
+            "agent": true,
+            "record_id": "the new source",
+            "built": false
+        },
+        "source_remove": {
+            "action": "source_remove",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "endpoint": "/sources/remove.php",
+            "params": [
+                {
+                    "name": "source",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "its sections are forgotten in the engine within the minute"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "source.remove",
+            "who": "sources.manage on a curated base",
+            "agent": true,
+            "record_id": "the source",
+            "built": false
+        },
+        "source_retry": {
+            "action": "source_retry",
+            "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
+            "endpoint": "/sources/retry.php",
+            "params": [
+                {
+                    "name": "source",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a failed one"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "source.retry",
+            "who": "sources.add on a curated base",
+            "agent": true,
+            "record_id": "the source",
+            "built": false
+        },
+        "guideline_save": {
+            "action": "guideline_save",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/guidelines/save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "extraction or vocabulary or exclusion or answering or audience"
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "up to 20000 characters"
+                },
+                {
+                    "name": "title",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "up to 200 characters"
+                },
+                {
+                    "name": "is_active",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no — an agent's draft is no"
+                },
+                {
+                    "name": "position",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "guideline",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "guideline.save",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the guideline",
+            "built": false
+        },
+        "guideline_delete": {
+            "action": "guideline_delete",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/guidelines/delete.php",
+            "params": [
+                {
+                    "name": "guideline",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "guideline.delete",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the guideline",
+            "built": false
+        },
+        "vocabulary_save": {
+            "action": "vocabulary_save",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/vocabulary/save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "canonical_name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "up to 200 characters"
+                },
+                {
+                    "name": "aliases",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "at most 20"
+                },
+                {
+                    "name": "subject_type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "lower-case letters and underscores"
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "up to 2000 characters"
+                },
+                {
+                    "name": "term",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "vocabulary.save",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the term",
+            "built": false
+        },
+        "vocabulary_delete": {
+            "action": "vocabulary_delete",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/vocabulary/delete.php",
+            "params": [
+                {
+                    "name": "term",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "vocabulary.delete",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the term",
+            "built": false
+        },
+        "vocabulary_import": {
+            "action": "vocabulary_import",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/vocabulary/import.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "csv",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the CSV text or file — at most 500 rows"
+                },
+                {
+                    "name": "step",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "check writes nothing and apply writes"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "vocabulary.save",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "focus_area_save": {
+            "action": "focus_area_save",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "up to 120 characters"
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "it becomes the area's classifier"
+                },
+                {
+                    "name": "seed_terms",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "at most 30"
+                },
+                {
+                    "name": "example_questions",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "at most 10"
+                },
+                {
+                    "name": "position",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "active or archived"
+                },
+                {
+                    "name": "focus_area",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.save",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "focus_area_propose": {
+            "action": "focus_area_propose",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/propose.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "proposal_note",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "why — up to 1000 characters"
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "seed_terms",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "example_questions",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": "focus_area_dismiss",
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.propose",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "focus_area_accept": {
+            "action": "focus_area_accept",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/accept.php",
+            "params": [
+                {
+                    "name": "focus_area",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a proposed one"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.accept",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "focus_area_dismiss": {
+            "action": "focus_area_dismiss",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/dismiss.php",
+            "params": [
+                {
+                    "name": "focus_area",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a proposed one"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.dismiss",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "focus_area_link": {
+            "action": "focus_area_link",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/link.php",
+            "params": [
+                {
+                    "name": "focus_area",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "links it in the engine now"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.save",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "focus_area_delete": {
+            "action": "focus_area_delete",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/delete.php",
+            "params": [
+                {
+                    "name": "focus_area",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "its engine project is removed first"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "focus_area.delete",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "focus_area_assign": {
+            "action": "focus_area_assign",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/areas/assign.php",
+            "params": [
+                {
+                    "name": "focus_area",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "source",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "assigned",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no — yes by default"
+                }
+            ],
+            "undo": "focus_area_assign",
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.assign",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the area",
+            "built": false
+        },
+        "source_areas_set": {
+            "action": "source_areas_set",
+            "section": "Guidelines, vocabulary and focus areas (slice 3)",
+            "endpoint": "/sources/areas.php",
+            "params": [
+                {
+                    "name": "source",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "areas",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "the full set of its areas — ids"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "focus_area.assign",
+            "who": "base.manage on a curated base",
+            "agent": true,
+            "record_id": "the source",
+            "built": false
+        },
+        "build_start": {
+            "action": "build_start",
+            "section": "The build (slice 4)",
+            "endpoint": "/builds/start.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "new and stale and failed sections — an agent's build must fit the month"
+                }
+            ],
+            "undo": "build_cancel",
+            "confirm": false,
+            "approval": null,
+            "log_event": "build.start",
+            "who": "builds.run on a curated base",
+            "agent": true,
+            "record_id": "the build",
+            "built": false
+        },
+        "build_rebuild_all": {
+            "action": "build_rebuild_all",
+            "section": "The build (slice 4)",
+            "endpoint": "/builds/rebuild-all.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "confirm",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "yes — every live section is forgotten and read again"
+                }
+            ],
+            "undo": "build_cancel",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "build.rebuild_all",
+            "who": "builds.run on a curated base",
+            "agent": true,
+            "record_id": "the build",
+            "built": false
+        },
+        "build_cancel": {
+            "action": "build_cancel",
+            "section": "The build (slice 4)",
+            "endpoint": "/builds/cancel.php",
+            "params": [
+                {
+                    "name": "build",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a queued or running one"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "build.cancel",
+            "who": "builds.run on a curated base",
+            "agent": true,
+            "record_id": "the build",
+            "built": false
+        },
+        "question_ask": {
+            "action": "question_ask",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "endpoint": "/ask/send.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "question",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "1 to 2000 characters"
+                },
+                {
+                    "name": "area",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a focus area of the base"
+                },
+                {
+                    "name": "c",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the conversation to continue"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "question.ask",
+            "who": "bases.read and the base's reach",
+            "agent": true,
+            "record_id": "the question",
+            "built": false
+        },
+        "question_feedback": {
+            "action": "question_feedback",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "endpoint": "/questions/feedback.php",
+            "params": [
+                {
+                    "name": "question",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "rating",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "up or down"
+                },
+                {
+                    "name": "comment",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "up to 2000 characters"
+                }
+            ],
+            "undo": "question_feedback",
+            "confirm": false,
+            "approval": null,
+            "log_event": "question.feedback",
+            "who": "answers.rate and the question visible",
+            "agent": true,
+            "record_id": "the question",
+            "built": false
+        },
+        "answer_pin": {
+            "action": "answer_pin",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "endpoint": "/questions/pin.php",
+            "params": [
+                {
+                    "name": "question",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "an answered one — an evidence_only answer has no words to pin"
+                },
+                {
+                    "name": "title",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "up to 300 characters"
+                }
+            ],
+            "undo": "answer_unpin",
+            "confirm": false,
+            "approval": null,
+            "log_event": "question.pin",
+            "who": "answers.pin on a curated base",
+            "agent": true,
+            "record_id": "the pinned answer",
+            "built": false
+        },
+        "answer_unpin": {
+            "action": "answer_unpin",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "endpoint": "/pinned/unpin.php",
+            "params": [
+                {
+                    "name": "pinned_answer",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "an active one — its note source is forgotten"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "question.unpin",
+            "who": "answers.pin on a curated base",
+            "agent": false,
+            "record_id": "the pinned answer",
+            "built": false
+        },
+        "answer_pin_review": {
+            "action": "answer_pin_review",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "endpoint": "/pinned/review.php",
+            "params": [
+                {
+                    "name": "pinned_answer",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "verified again from today"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "question.pin",
+            "who": "answers.pin on a curated base",
+            "agent": true,
+            "record_id": "the pinned answer",
+            "built": false
+        },
+        "question_expert": {
+            "action": "question_expert",
+            "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
+            "endpoint": "/questions/expert.php",
+            "params": [
+                {
+                    "name": "question",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "an evidence_only one of mine or of a base I curate"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "agent.dispatch",
+            "who": "bases.read and the question visible",
+            "agent": false,
+            "record_id": "the dispatch",
+            "built": false
+        },
+        "key_mint": {
+            "action": "key_mint",
+            "section": "The token API, keys and K7 (slice 7)",
+            "endpoint": "/keys/mint.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "what will use the key — up to 80 characters"
+                },
+                {
+                    "name": "focus_area",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an active area of the base — empty for the whole base"
+                },
+                {
+                    "name": "rate_per_minute",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "blank for the default"
+                },
+                {
+                    "name": "rate_per_day",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "blank for the default"
+                }
+            ],
+            "undo": "key_revoke",
+            "confirm": true,
+            "approval": "external_send",
+            "log_event": "key.mint",
+            "who": "keys.manage on a curated base",
+            "agent": true,
+            "record_id": "the key (its value once, as key)",
+            "built": false
+        },
+        "key_save": {
+            "action": "key_save",
+            "section": "The token API, keys and K7 (slice 7)",
+            "endpoint": "/keys/save.php",
+            "params": [
+                {
+                    "name": "api_key",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "label",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "focus_area",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "rate_per_minute",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "rate_per_day",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "key.save",
+            "who": "keys.manage on a curated base",
+            "agent": true,
+            "record_id": "the key",
+            "built": false
+        },
+        "key_rotate": {
+            "action": "key_rotate",
+            "section": "The token API, keys and K7 (slice 7)",
+            "endpoint": "/keys/rotate.php",
+            "params": [
+                {
+                    "name": "api_key",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a live one — the old key keeps working for the overlap"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "external_send",
+            "log_event": "key.rotate",
+            "who": "keys.manage on a curated base",
+            "agent": true,
+            "record_id": "the new key (its value once, as key)",
+            "built": false
+        },
+        "key_revoke": {
+            "action": "key_revoke",
+            "section": "The token API, keys and K7 (slice 7)",
+            "endpoint": "/keys/revoke.php",
+            "params": [
+                {
+                    "name": "api_key",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "key.revoke",
+            "who": "keys.manage on a curated base",
+            "agent": true,
+            "record_id": "the key",
+            "built": false
+        },
+        "archivist_propose": {
+            "action": "archivist_propose",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/proposals/save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "area or merge or gap or stale_source or failed_source or review_pin or unassigned or unverified or feed_stopped or limit_near or url_changed"
+                },
+                {
+                    "name": "title",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "up to 300 characters"
+                },
+                {
+                    "name": "reason",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "subject_type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "source or question or pinned_answer or focus_area or feed or base"
+                },
+                {
+                    "name": "subject_id",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "payload",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a JSON object up to 16 KB"
+                }
+            ],
+            "undo": "archivist_proposal_dismiss",
+            "confirm": false,
+            "approval": null,
+            "log_event": "archivist.propose",
+            "who": "the base's reach",
+            "agent": true,
+            "record_id": "the proposal",
+            "built": false
+        },
+        "archivist_proposal_accept": {
+            "action": "archivist_proposal_accept",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/proposals/accept.php",
+            "params": [
+                {
+                    "name": "proposal",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a proposed one — its effect runs"
+                },
+                {
+                    "name": "groups",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "a merge's ticked groups by number"
+                },
+                {
+                    "name": "name",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an area's name as edited"
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "seed_terms",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "example_questions",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "archivist.accept",
+            "who": "questions.review on a curated base",
+            "agent": false,
+            "record_id": "the proposal",
+            "built": false
+        },
+        "archivist_proposal_dismiss": {
+            "action": "archivist_proposal_dismiss",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/proposals/dismiss.php",
+            "params": [
+                {
+                    "name": "proposal",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "why — up to 500 characters"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "archivist.dismiss",
+            "who": "questions.review on a curated base",
+            "agent": false,
+            "record_id": "the proposal",
+            "built": false
+        },
+        "notification": {
+            "action": "notification",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/notifications/send.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "title",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "up to 200 characters"
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "Markdown up to 4000 characters"
+                },
+                {
+                    "name": "kind",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "monday_note"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "notification.send",
+            "who": "an agent reading the base or settings.manage",
+            "agent": true,
+            "record_id": "the base",
+            "built": false
+        },
+        "feed_save": {
+            "action": "feed_save",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/feeds/save.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "provider",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "spaces or helpdesk"
+                },
+                {
+                    "name": "tool",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "pages_index or articles_published"
+                },
+                {
+                    "name": "arguments",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a JSON object such as the space key"
+                },
+                {
+                    "name": "focus_area",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "every_minutes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "5 to 10080 — 60 by default"
+                },
+                {
+                    "name": "enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "feed",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "feed.save",
+            "who": "feeds.manage on a curated base",
+            "agent": true,
+            "record_id": "the feed",
+            "built": false
+        },
+        "feed_sync": {
+            "action": "feed_sync",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/feeds/sync.php",
+            "params": [
+                {
+                    "name": "feed",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "synced on the next worker pass"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "feed.sync",
+            "who": "feeds.manage on a curated base",
+            "agent": true,
+            "record_id": "the feed",
+            "built": false
+        },
+        "feed_delete": {
+            "action": "feed_delete",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/feeds/delete.php",
+            "params": [
+                {
+                    "name": "feed",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "its sources are forgotten first"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "feed.delete",
+            "who": "feeds.manage on a curated base",
+            "agent": true,
+            "record_id": "the feed",
+            "built": false
+        },
+        "dispatch_retry": {
+            "action": "dispatch_retry",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/admin/dispatches/retry.php",
+            "params": [
+                {
+                    "name": "dispatch",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a failed or refused one"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "agent.dispatch",
+            "who": "agents.settings",
+            "agent": true,
+            "record_id": "the dispatch",
+            "built": false
+        },
+        "areas_propose_request": {
+            "action": "areas_propose_request",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/agents/propose-areas.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "one with an extracted section"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "agent.dispatch",
+            "who": "base.manage on a curated base",
+            "agent": false,
+            "record_id": "the dispatch",
+            "built": false
+        },
+        "guidelines_draft_request": {
+            "action": "guidelines_draft_request",
+            "section": "Agents, proposals and feeds (slice 8)",
+            "endpoint": "/agents/draft-guidelines.php",
+            "params": [
+                {
+                    "name": "base",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "one with an extracted section"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "agent.dispatch",
+            "who": "base.manage on a curated base",
+            "agent": false,
+            "record_id": "the dispatch",
+            "built": false
+        },
+        "question_purge": {
+            "action": "question_purge",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "endpoint": "/admin/purge.php",
+            "params": [
+                {
+                    "name": "days",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "1 to 3650 — the retention setting by default"
+                },
+                {
+                    "name": "confirm",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "yes — answers behind an active pin are kept"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "question.purge",
+            "who": "retention.manage",
+            "agent": true,
+            "record_id": "the settings",
+            "built": false
+        },
+        "model_config_save": {
+            "action": "model_config_save",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "endpoint": "/admin/model.php",
+            "params": [
+                {
+                    "name": "model_alias",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the provider's model id"
+                },
+                {
+                    "name": "embedding_model",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "rebuild_confirmed",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes — required when the embedding model changes"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "model_config.save",
+            "who": "model.manage",
+            "agent": true,
+            "record_id": "the settings",
+            "built": false
+        },
+        "agents_settings_save": {
+            "action": "agents_settings_save",
+            "section": "Home, admin, usage and tokens (slice 9)",
+            "endpoint": "/admin/agents.php",
+            "params": [
+                {
+                    "name": "expert",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an agent member — empty for none"
+                },
+                {
+                    "name": "archivist",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an agent member — empty for none"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "agents_settings.save",
+            "who": "agents.settings",
+            "agent": true,
+            "record_id": "the settings",
+            "built": false
+        }
+    }
+}

@@ -1,6 +1,6 @@
 ---
 name: propose-focus-areas
-description: Runbook for proposing focus areas after a base's first build — read the communities, name each area with its terms and three example questions, check overlap, save them as proposed for a curator to accept. Use when a build has finished on a base with no areas, or when asked to organise a base.
+description: Runbook for proposing focus areas after a base's first build — read the graph's most connected subjects and clusters (MaluDB's communities when it computes them), name each area with its terms and three example questions, check overlap, save them as proposed for a curator to accept. Use when a build has finished on a base with no areas, or when asked to organise a base.
 kind: runbook
 ---
 
@@ -11,18 +11,20 @@ kind: runbook
 or dismisses; you do not activate them.
 
 ## 1. Check the base is ready
-`get_base` (status `ready`, last built), `graph_stats` (nodes, communities), `find_focus_areas` (do any exist; do not duplicate).
-If the base is `building` or has no communities, stop and say so.
+`get_base` (status `ready`, last built), `graph_stats` (size), `find_focus_areas` (do any exist; do not duplicate).
+If the base is `building` or has no built sections, stop and say so.
 
-## 2. Read the communities
-`communities` for the list. For each of the larger ones, `community_members` and `god_nodes`; read one or two sections behind its
-main subjects (`sections_for_subject`, `get_section`). Name the community by what the sources call it, in two or three words.
-Skip communities of a handful of subjects; note them as "too small".
+## 2. Read the graph's clusters
+You propose areas from the graph's most connected subjects and clusters; MaluDB's communities when it computes them (today
+`communities` usually answers empty with a note — MaluDB M6). `god_nodes` for the most connected subjects; for each of the strong ones,
+`subject_neighbors` and `graph_query` on its name to see the cluster around it; when `communities` does answer, use its members too
+(`community_members`). Read one or two sections behind each cluster's main subjects (`sections_for_subject`, `get_section`). Name the
+cluster by what the sources call it, in two or three words. Skip clusters of a handful of subjects; note them as "too small".
 
 ## 3. Draft each area
 - **Name**: what a reader would look for ("Warranty", "Onboarding", "Fire alarm testing").
 - **Description**: one sentence of what the area covers and what it does not.
-- **Terms**: five to twelve subject names or aliases that anchor it (the community's central subjects).
+- **Terms**: five to twelve subject names or aliases that anchor it (the cluster's central subjects).
 - **Example questions**: three real questions a reader would ask, each answerable from the area (check one with `search`).
 
 ## 4. Check overlap and gaps

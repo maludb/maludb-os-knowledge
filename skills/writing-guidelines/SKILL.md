@@ -6,8 +6,9 @@ description: How to write the five kinds of guideline for a base — extraction,
 # Writing guidelines
 
 A guideline is one instruction, in plain words, of one kind. A curator writes it; you may draft and save it
-(`guideline_save`, `vocabulary_save`). **Preview before you save**: `extraction_preview` runs one real section through the
-compiled prompt and shows what would be extracted, without spending a build.
+(`guideline_save`, `vocabulary_save`). **Preview before you save**: `extraction_preview` puts one real section into the compiled
+prompt — with your draft in place (`draft`) — and shows exactly what the model will be told, without spending a build. It is a dry run of
+the prompt, not of the model (MaluDB M5), so judge whether the instructions say what you mean.
 
 ## The five kinds
 | Kind | It tells the engine | Takes effect |
@@ -50,7 +51,8 @@ answering: "Say how many sources support a claim; flag claims from one source on
 ## Working method
 1. Read two or three real sections (`get_section`) first.
 2. Draft one guideline of each kind that the corpus needs; the template's shipped set is the starting point (`find_guidelines`).
-3. `extraction_preview` on a typical section and an awkward one; adjust until the preview matches what a person would pull out.
+3. `extraction_preview` with your draft on a typical section and an awkward one; adjust until the prompt asks for what a person would
+   pull out.
 4. Save; then `build_estimate`; then `build_start` for the stale sections only.
 
-More: `references/vocabulary-terms.md`. See also the runbook `draft-guidelines-from-a-sample`.
+See also the runbook `draft-guidelines-from-a-sample`.

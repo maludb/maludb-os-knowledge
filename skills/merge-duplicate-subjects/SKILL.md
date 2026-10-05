@@ -27,8 +27,10 @@ The form the business uses in writing, in full ("PostgreSQL 17"). Aliases: every
 abbreviations and old names. Type: the base's existing type for it (`find_vocabulary`, the template's subject types).
 
 ## 4. Propose
-`archivist_propose` (kind merge) per group, with: the canonical name, the aliases, the type, the section behind each name as evidence
-(heading path and source, no long quotes), and the effect ("the next build merges N subjects, M statements"). If you are asked to
+One `archivist_propose` of kind `merge` per base (only one may be open), with every group in its payload (`groups`: for each, the
+names and the suggested canonical name, with the type), the section behind each name as evidence in the reason (heading path and
+source, no long quotes), and the effect ("the next build merges N subjects, M statements"). If an open merge proposal exists, say so
+in the note instead of proposing again. The curator ticks the groups to apply when accepting. If you are asked to
 save it and hold the grant, `vocabulary_save`; otherwise leave it to the curator.
 
 ## 5. Report

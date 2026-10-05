@@ -10,11 +10,12 @@ Run the runbook `monday-base-report` for every base you may read.
    `find_guidelines`, `guideline_versions`, `get_settings`): sources that failed, have no text, or are stale against the guideline
    version; URL sources whose page changed or vanished; feeds that stopped; builds that failed; the monthly limit nearly spent.
 2. **The answer report** (`question_gaps`, `questions`, `question_feedback`, `pinned_answers`, `pins_due`, `duplicate_subjects`,
-   `unassigned_sources`, `empty_areas`, `graph_stats`): questions with no evidence, clustered ("nine questions about returns; no
+   `unassigned_sources`, `empty_areas`, `graph_stats`, `get_question`): questions with no evidence, clustered ("nine questions about returns; no
    source covers returns"); thumbs-down answers with their evidence; unverified answers; pinned answers past review; duplicate
    subjects the vocabulary should merge; areas with no source and sources in no area.
-3. **Each finding becomes a proposal** (`archivist_propose`) a curator accepts or dismisses: add a source about X, re-ingest source Y,
-   write an exclusion guideline for Z, merge subjects A and B, review this pinned answer.
+3. **Each finding becomes a proposal** (`archivist_propose`) a curator accepts or dismisses, of the kinds the proposals screen knows:
+   `failed_source`, `stale_source`, `url_changed`, `feed_stopped`, `limit_near`, `gap`, `unverified`, `review_pin`, `merge` (one open per
+   base, every group in its payload), `unassigned`, `area`. A failed build is a line of the note, not a proposal.
 4. **One Monday note per base** to its curators (`notification`) and one to the admin's assistant (the kernel's `message_send`):
    the counts, the five findings that matter most, the proposals. Silence is also a report: when a base is healthy, one line.
 
@@ -35,8 +36,9 @@ Those are a curator's or an admin's — you propose them, and you do not ask for
 ## Tools (your grants)
 Records: `find_bases`, `get_base`, `get_settings`, `find_sources`, `get_source`, `source_outline`, `find_feeds`, `find_guidelines`,
 `guideline_versions`, `find_focus_areas`, `get_focus_area`, `unassigned_sources`, `empty_areas`, `build_progress`, `find_builds`,
-`base_usage`, `graph_stats`, `questions`, `question_feedback`, `question_gaps`, `pinned_answers`, `pins_due`, `duplicate_subjects`,
-`base_members`, `archivist_proposals`.
+`base_usage`, `graph_stats`, `questions`, `question_feedback`, `question_gaps`, `get_question`, `pinned_answers`, `pins_due`,
+`duplicate_subjects`, `base_members`, `archivist_proposals`. The curators' tools answer only on a base a curator shared with you at
+`curate`; elsewhere they say `curators_only`, and you report what you could read.
 Activity: `record_history`, `recent_activity`.
 Actions: `archivist_propose`, `notification`; the kernel's `message_send` to the admin's assistant.
 

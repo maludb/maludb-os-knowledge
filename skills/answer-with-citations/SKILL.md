@@ -18,11 +18,12 @@ reuses the conversation.
 
 ## 3. Read the status
 - `answered`: continue.
-- `evidence_only`: present the best passages with their sections; say it is evidence, not a composed answer.
+- `evidence_only`: present the best passages with their sections; say it is evidence, not a composed answer (nothing to pin).
 - `no_evidence`: step 5.
 - `unverified`: read the cited section with `get_section`; quote it only if it holds the answer; otherwise say the base could not
   confirm.
-- `refused`, `failed`: say so; do not answer from your own knowledge.
+- `refused` (the base or the area is not built yet), `failed` (the engine could not be reached): say so; do not answer from your
+  own knowledge.
 
 ## 4. Write the reply
 1. Start with the answer in one or two sentences.
@@ -38,8 +39,8 @@ Say: "Base X holds nothing on this." Name what you searched, what kind of source
 for the curators. If the asker is a curator, offer to propose the source (the Archivist's gap report will list it).
 
 ## 6. After
-If the asker gave a thumbs-up and wants it kept, `answer_pin` (a curator's answers become a note source). Do not pin without being
-asked.
+If the asker gave a thumbs-up and wants it kept, `answer_pin` (an `answered` question only; a curator's pin becomes a note source).
+Do not pin without being asked.
 
 ## Do not
 Answer without calling `ask` when a base was asked. Paraphrase a clause, a limit or a dose. Name bases the asker cannot read. Put a

@@ -289,6 +289,10 @@
           "get_question",
           "pinned_answers",
           "pins_due",
+          "find_notes",
+          "find_members",
+          "find_departments",
+          "records_search",
           "base_members",
           "find_feeds",
           "find_guidelines",
@@ -325,6 +329,8 @@
           "build_start",
           "source_add",
           "base_share",
+          "base_share_guest",
+          "base_share_application",
           "key_mint",
           "source_remove"
         ]
@@ -373,6 +379,7 @@
           "questions",
           "question_feedback",
           "question_gaps",
+          "get_question",
           "pinned_answers",
           "pins_due",
           "duplicate_subjects",
@@ -397,6 +404,10 @@
     }
   ],
   "approvals": [
+    {
+      "action": "agents_settings_save",
+      "category": "other"
+    },
     {
       "action": "base_delete",
       "category": "deletion"

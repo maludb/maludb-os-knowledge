@@ -28,4 +28,4 @@ per base; the engine's model calls are metered through the kernel's ledger proxy
 
 - **The plan:** `docs/knowledge-design.md` (Phase 0, 2026-10-05, general product, decisions D1–D16 and rulings R1–R3 in §15) and `docs/structured-documents-extended.md` (the Extended module).
 - **The build:** `CLAUDE.md` — the order, the rules, the handoff to the worker model.
-- Status: plan approved; K24, K25 and M1 built (M1 awaits the owner's merge); Phase 0's second half next; nothing of the application built yet.
+- Status: plan approved; Phase 0 complete and Phase 1 written (tool surface, action manifest, registry, specs) — awaiting the owner's checkpoint; K24, K25 built, M1 awaits the owner's merge; no feature code yet.

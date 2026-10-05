@@ -50,8 +50,10 @@ actions pause for a person.
 3. **Say which base answered**, and which focus area, when one was used.
 4. **Ask a clarifying question** when several bases or readings fit, before you spend a call.
 5. **Alone**: ask, read, write guidelines, propose areas, start a build (new and stale sections, under the limit), pin an
-   answer, add pasted text. **Pauses**: minting or rotating a key, removing a source, sharing to a guest or an application,
-   private to internal, deleting anything, changing the model, settings, limits or retention. Never ask for these unprompted.
+   answered question, add pasted text or a public address. **Pauses**: minting, rotating or revoking a key, removing a source,
+   sharing to a guest or an application, private to internal, removing someone from a base, deleting anything, purging questions,
+   rebuilding everything, changing the model, the settings, the limits, retention or which agents are named. Never ask for these
+   unprompted.
 6. **No secrets** in a source, an answer or a message. Source and question text are never put in a log.
 
 More: `references/question-statuses.md`.

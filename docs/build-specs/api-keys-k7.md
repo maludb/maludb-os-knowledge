@@ -17,15 +17,14 @@ refuses the 31st call and the day the 2,001st (a burst never eats the day), rota
 expired key or one whose minter lost access resolves to nothing.
 
 ## Divergences from the design
-1. **K7 does not tell a provider who is asking — K26, owed by the kernel (design §12, not built).** The design's share gate is "only for bases shared with the
-   consumer application" (`kn_application_base_ids(<consumer>)`). The kernel's `application_read()` (`/var/www/app/features/applications/
-   services.php`) calls the provider with `mcp_call_tool_as_kernel()` and a kernel token whose payload names **the provider**, and passes "nothing
-   but the arguments and the site" — the consumer's catalog key never crosses. **Resolution:** the kernel sets a reserved argument `consumer`
-   (the consumer application's catalog key) on every K7 call, after removing any `consumer` the caller sent — exactly as it already strips and
-   sets `scope_id`; or, equivalently, a fourth part of the kernel token's payload. Until that lands the three share functions **fail closed**:
-   with no `consumer` they answer `{"error": {"code": "consumer_unknown", "message": "The kernel did not say which application is asking."}}` and
-   share nothing. This is a kernel item for the owner to order (a one-line change in `application_read()` plus the token's verifier here); the
-   share functions take the consumer as a parameter so nothing changes here when it lands.
+1. **K7 tells a provider who is asking — K26, approved and built by the kernel 2026-10-06 (db/173).** The design's share gate is "only for bases shared
+   with the consumer application" (`kn_application_base_ids(<consumer>)`). The kernel's `application_read()` now sends two HTTP headers on every
+   message of its MCP call, set from the consumer's own registration: `X-OS-Consumer` (its catalog key) and `X-OS-Consumer-Agent` (its expert
+   agent's member id, when it has one) — headers, not an argument, because the siblings' share models forbid extra arguments — and strips any
+   `consumer`, `consumer_agent_id`, `as_agent` or `scope_id` the consumer sent. **Here (Phase 4):** the records server's kernel-token gate reads
+   the two headers beside `Authorization` into request-scoped variables and hands `consumer` to the share functions, which take it as a parameter;
+   a kernel call with no `X-OS-Consumer` **fails closed**: `{"error": {"code": "consumer_unknown", "message": "The kernel did not say which
+   application is asking."}}` and nothing shared. `ask` and `search` declare `timeout_seconds: 60` in `maludb-os.json` (`bases_index` keeps 8).
 2. **A key's rating is its minter's.** `question_feedback` has no token column and is unique per `(question_id, member_id)`: a rating posted with
    a key is stored as the key's minter's (the trigger fills `member_id` from `app.member_id`, which `api_authenticate()` sets to the minter), so a
    key's rating replaces the minter's own on that question. The log row carries the `token_id`, so a curator can tell them apart in the history.
@@ -109,9 +108,10 @@ and `share_bases` with an `application` caller — this slice adds those three o
   is shared with this application."}}` — the same words for a base that does not exist, and a normal result, not an MCP error, so the kernel
   passes it back.
 - `kn_share_search(PDO, ?string $consumer, array $args): array` → `os.knowledge-evidence/1` via `kn_search()` with door `share` (`limit` ≤ 20).
-- **Time**: the kernel waits 8 s per MCP post; the bridge budgets a share's engine call at 7 s (tool surface) — a slower M1 answer comes back
-  `failed`, `error_code: engine_timeout`, `message: "call search for the passages"`; K26 also asks the kernel for a longer per-share timeout.
-- **The gate**: `$consumer` null → `consumer_unknown` (divergence 1); a consumer key not matching `^[a-z0-9_]{1,60}$` → `invalid`; then the
+- **Time**: the kernel waits a share's own `timeout_seconds` (K26): `ask` and `search` declare 60, so the bridge budgets a share's engine call at
+  50 s — a slower M1 answer comes back `failed`, `error_code: engine_timeout`, `message: "call search for the passages"`; `bases_index` answers
+  from the records alone inside the default 8.
+- **The gate**: `$consumer` (from `X-OS-Consumer`) null → `consumer_unknown` (divergence 1); a consumer key not matching `^[a-z0-9_]{1,60}$` → `invalid`; then the
   `application` principal — `kn_application_base_ids()` — is the only thing that opens a base: an internal base is **not** shared with an
   application unless it is named, a guest's or an agent's share counts for nothing here.
 - **`share.read`** — every call, answered or refused, logs `share.read` (`source application`, `actor_member_id` NULL, `base_id` when one was

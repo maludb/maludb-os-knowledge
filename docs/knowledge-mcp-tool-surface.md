@@ -306,15 +306,17 @@ Nothing is stored. `search` logs nothing for a person (a read). As a share it lo
 
 ## The shares, for the kernel's token alone (K7, design §8)
 
-**None of the three shares answers a sibling today.** The kernel does not yet tell a provider which application is asking: that is
-**K26, owed to the kernel** (design §12; Divergences 3). Until K26 lands every share call answers `consumer_unknown` and shares nothing;
-the window, the token API and the agents are unaffected.
+**Who is asking comes from the kernel (K26, built 2026-10-06, kernel db/173).** The kernel's call carries two HTTP headers set from the
+consumer's registration — `X-OS-Consumer` (its catalog key) and `X-OS-Consumer-Agent` (its expert agent's member id, when it has one) — and
+strips any `consumer`, `consumer_agent_id` or `as_agent` the consumer put in the arguments. The records server's kernel-token gate reads the
+headers into request-scoped variables (Phase 4) and passes `consumer` to the three share functions; a call with no `X-OS-Consumer` (not the
+kernel's) answers `consumer_unknown` and shares nothing. `ask` and `search` declare `timeout_seconds: 60` in `maludb-os.json`; `bases_index` keeps 8.
 
 | Tool | Document | Arguments (flat from the kernel) | Answers |
 |---|---|---|---|
-| `ask` | `os.knowledge-answer/1` | `base` (key), `question`, `focus_area?` (slug), `conversation_id?`, **`consumer`** (set by the kernel; see K26) | `kn_ask()` as the application principal: door `share`, `application_key = consumer`, no member |
-| `search` | `os.knowledge-evidence/1` | `base`, `query`, `focus_area?`, `limit?` (≤ 20), `consumer` | evidence over that base |
-| `bases_index` | `os.knowledge-bases/1` | `q?` (name ILIKE), `consumer` | the bases shared with the consumer |
+| `ask` | `os.knowledge-answer/1` | `base` (key), `question`, `focus_area?` (slug), `conversation_id?` — the consumer from the header `X-OS-Consumer` (K26), never an argument | `kn_ask()` as the application principal: door `share`, `application_key = consumer`, no member |
+| `search` | `os.knowledge-evidence/1` | `base`, `query`, `focus_area?`, `limit?` (≤ 20) | evidence over that base |
+| `bases_index` | `os.knowledge-bases/1` | `q?` (name ILIKE) | the bases shared with the consumer |
 
 - **The gate is the application principal:** `base_members.principal_kind = 'application' AND principal_ref = consumer` through
   `kn_application_base_ids(consumer)` (db/006, archived bases excluded). A base not in that set answers `{"schema", "application",
@@ -478,12 +480,11 @@ Each tool answers the resolver's plain list when called with `q` alone: digits a
    engine's evidence and cannot be a SQL tool. *Resolution:* `search` stays Q2 and the K7 share under its fixed name. The contract's
    guarded SELECT is `records_search`. On the activity server ACT5 keeps `activity_search` (a phrase search), and the guarded SELECT is
    `activity_query`. That makes six activity tools, as the design counts them.
-3. **The K7 shares cannot know their consumer today.** `application_read()` calls the provider with `mint_kernel_token(provider)`,
-   which carries the provider's key, not the consumer's, and the kernel passes no consumer argument. Without the consumer,
-   `kn_application_base_ids()` cannot be applied. *Resolution:* the kernel owes **K26** (design §12, not built). `application_read()` sets
-   `arguments.consumer = <the consumer's app_key>`, overwriting anything sent, as it already does for `scope_id`. It also owes a
-   per-share timeout above the 8 s `mcp_http_post` default for a share declared slow (`ask`). **Until K26, the three shares answer
-   `{"error": {"code": "consumer_unknown"}}`: fail closed, never all bases.**
+3. **The K7 shares know their consumer from the kernel's headers (K26, built 2026-10-06).** `application_read()` once passed a provider nothing
+   but the arguments and the site, so `kn_application_base_ids()` could not be applied. *Resolution, as built:* the kernel sends `X-OS-Consumer`
+   and `X-OS-Consumer-Agent` on every message of its call (headers, not arguments — the siblings' argument models forbid extras) and strips a
+   consumer-supplied `consumer`, `consumer_agent_id` or `as_agent`; a share declares `timeout_seconds` (`ask` and `search`: 60). The gate reads
+   the headers beside the token; **a call with no `X-OS-Consumer` answers `{"error": {"code": "consumer_unknown"}}`: fail closed, never all bases.**
 4. **`graph_stats` is base-confined, not the engine's.** `graph/stats` is tenant-wide and would leak the size of other bases.
    *Resolution:* the cached counts on `knowledge_bases`, the live document count from the engine and the confined god nodes.
 5. **`duplicate_subjects` has no engine route.** No MaluDB route lists a namespace's subjects. *Resolution:* the bridge walks up to

@@ -530,7 +530,7 @@ with expected citations run as an eval suite by the kernel's runner before and a
 | **M5** | A documents **dry run**: extract one text with the namespace's prompt and model and write nothing | owed upstream; the preview shows the prompt |
 | **M6** | **Community detection** over a namespace (communities exist only when written today) | owed upstream; the expert proposes areas from the graph |
 | **M7** | **Subject routes**: allocate ids from the table's sequence (today `MAX+1`, which breaks a later extraction) and an `aliases` field on `POST/PATCH /v1/subjects` | owed upstream; `engine.php` works around both |
-| **K26** | **K7 tells a provider who is asking**: the kernel sets a reserved `consumer` argument (the caller's catalog key, overwriting anything sent) as it already does for `scope_id`, and allows a **per-share timeout** (today 8 s per MCP post; an `ask` that calls a model needs up to 60 s) | **owed to the kernel (not built).** Until it lands the three shares refuse with `consumer_unknown` and share nothing; the window, the API and the agents are unaffected |
+| **K26** | **K7 tells a provider who is asking**, and a share may ask for a longer call | **BUILT 2026-10-06 (kernel db/173).** Not an argument (the siblings' models forbid extras): two HTTP headers on the kernel's call, `X-OS-Consumer` (the consumer's catalog key) and `X-OS-Consumer-Agent` (its expert's member id), set from the consumer's registration; `consumer`, `consumer_agent_id`, `as_agent`, `scope_id` stripped from what the consumer sent; `shares[].timeout_seconds` (1–60, default 8) — `ask` and `search` declare 60. The gate reads the headers beside the token (Phase 4); no header → `consumer_unknown`, nothing shared |
 | **API defect** | `DELETE /v1/projects/{id}` leaves the project's subject links, and a reused id inherits them (found proving M1; `docs/memory-answer.md` there) | owed upstream; `engine.php` unlinks first and clears stale links on a reused id (proven) |
 
 ## 13. The decisions
@@ -600,12 +600,12 @@ the repository with no errors or warnings. Phase 1: `docs/knowledge-mcp-tool-sur
 `docs/knowledge-action-manifest.md` (61 screens, 62 actions, 20 paused for an agent), `mcp/action_registry.json` (123 entries),
 the guidelines-compile and sectioning specs and ten slice specs (sso-shell + nine); `docs/phase1-consistency.md` records every
 cross-document reconciliation. **Owed to the owner:** approve Phase 1 as a whole; merge M1 and restart `maludb-api`; restart the
-runner (K24); settle pgaudit before Phase 5; rule on K26 (the kernel tells a K7 provider who is asking, and a per-share timeout —
-until then the three shares refuse). **Next:** Phase 2 (`/sso`, the mirror and the shell on Apache) and slices 1–5.
+runner (K24); settle pgaudit before Phase 5; rule on K26 (ruled and built 2026-10-06, see below). **Next:** Phase 2 (`/sso`, the mirror and the shell on Apache) and slices 1–5.
 
 **2026-10-06 — Phase 1 APPROVED by the owner; Phase 2 built and proven.** The shell is whole on Apache: the four placeholders for the
 slices' menu items (a page naming the slice, 501 for JSON and a POST, marked `stub` in the registry), the proofs `tests/phase2/` — 163 checks
 under php -S and 165 under a real Apache serving the rendered deploy vhost (browser 70 at 375 × 740 and 1280 × 800 with Playwright, gates 61,
 vhost 31/33, the registry in step), Phase 0's 92 re-run green, the installer's `plan` clean (49 steps). One defect found and fixed: the
-first-run button overflowed a phone's width. **Next:** slice 1 (bases, templates, sharing, settings), then slice 2 (sources and sectioning,
+first-run button overflowed a phone's width. **K26 approved and built the same day** (kernel db/173: the consumer's identity in the headers
+`X-OS-Consumer` / `X-OS-Consumer-Agent`, `shares[].timeout_seconds`; `ask` and `search` declare 60 in `maludb-os.json`; plugin 0.8.0). **Next:** slice 1 (bases, templates, sharing, settings), then slice 2 (sources and sectioning,
 THE FIRST EXEMPLAR), slices 3 and 4, slice 5 (ask, THE SECOND) — the handoff point.

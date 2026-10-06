@@ -142,3 +142,7 @@ approvals, 0 warnings).
   behaviour stands (a person is told, not lost; the registry marks the screen `stub`, so no agent is offered it) and the spec now says so.
 - **A centred empty state stacks.** The kit's `.empty-state` is a row (avatar beside text, right for the placeholder cards); the first-run home's
   `text-center` variant is a column, because at 375 px the row pushed the button past the edge. Found by the browser proof, fixed in `app-overrides.css`.
+- **K26 built (2026-10-06, kernel db/173).** The design and Phase 1 asked for a `consumer` argument; the kernel built it as two headers
+  (`X-OS-Consumer`, `X-OS-Consumer-Agent`) because six providers' argument models forbid extras. The share functions' `$consumer` parameter
+  is unchanged; Phase 4's gate reads the header. `ask` and `search` declare `timeout_seconds: 60`. Divergence 1 of `api-keys-k7.md`, the
+  tool surface's share section and divergence 3, and design §12 say so.

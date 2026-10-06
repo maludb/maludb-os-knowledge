@@ -250,7 +250,7 @@ Screens:
 | `keys` | `/bases/{id}/keys` | a base's API keys: label, area, limits, today's count, last use; mint, edit, rotate, revoke |
 | `key-add` | `/keys/new` | to mint an API key for a base: label, area, limits (params: `base`) |
 | `key-edit` | `/keys/{id}/edit` | to change a key's label, area or limits |
-| `connections` | `/admin/connections` | which sibling applications read which bases, the shares and the reads, the last share calls; the K26 notice while the kernel does not name the consumer |
+| `connections` | `/admin/connections` | which sibling applications read which bases, the shares and the reads, the last share calls (K26 built 2026-10-06: the kernel names the consumer in `X-OS-Consumer`) |
 
 Actions (base `/keys/`):
 

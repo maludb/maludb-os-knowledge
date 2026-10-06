@@ -216,12 +216,14 @@
     {
       "tool": "ask",
       "description": "A cited answer from a base shared with the requesting application: {base, question, focus_area?} -> answer, confidence, citations to sections, or no_evidence (os.knowledge-answer/1)",
-      "scoped": false
+      "scoped": false,
+      "timeout_seconds": 60
     },
     {
       "tool": "search",
       "description": "The evidence a shared base holds on a query: passages and statements with their sections, no composed answer (os.knowledge-evidence/1)",
-      "scoped": false
+      "scoped": false,
+      "timeout_seconds": 60
     },
     {
       "tool": "bases_index",

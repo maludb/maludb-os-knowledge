@@ -602,3 +602,10 @@ the guidelines-compile and sectioning specs and ten slice specs (sso-shell + nin
 cross-document reconciliation. **Owed to the owner:** approve Phase 1 as a whole; merge M1 and restart `maludb-api`; restart the
 runner (K24); settle pgaudit before Phase 5; rule on K26 (the kernel tells a K7 provider who is asking, and a per-share timeout —
 until then the three shares refuse). **Next:** Phase 2 (`/sso`, the mirror and the shell on Apache) and slices 1–5.
+
+**2026-10-06 — Phase 1 APPROVED by the owner; Phase 2 built and proven.** The shell is whole on Apache: the four placeholders for the
+slices' menu items (a page naming the slice, 501 for JSON and a POST, marked `stub` in the registry), the proofs `tests/phase2/` — 163 checks
+under php -S and 165 under a real Apache serving the rendered deploy vhost (browser 70 at 375 × 740 and 1280 × 800 with Playwright, gates 61,
+vhost 31/33, the registry in step), Phase 0's 92 re-run green, the installer's `plan` clean (49 steps). One defect found and fixed: the
+first-run button overflowed a phone's width. **Next:** slice 1 (bases, templates, sharing, settings), then slice 2 (sources and sectioning,
+THE FIRST EXEMPLAR), slices 3 and 4, slice 5 (ask, THE SECOND) — the handoff point.

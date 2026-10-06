@@ -134,3 +134,11 @@ approvals, 0 warnings).
   and `plan` now counts 15 migrations.
 - `plan`'s other lines (ports not yet pinned in `config/.env`, `MCP_*_PORT` unknown, no DNS) concern `deploy/ROOT_STEPS.sh` step 0, not
   these documents.
+
+## Phase 2 (2026-10-06)
+
+- **Placeholders answer 200, not 404.** `sso-shell.md` first said the unbuilt menu items (`/ask`, `/bases`, `/pinned`, `/admin/`) answer 404 until their slice;
+  the kit's `render_nav_stub()` (Phase 0) answers a page naming the slice after the login and the right, 501 for JSON and for a POST. The function's
+  behaviour stands (a person is told, not lost; the registry marks the screen `stub`, so no agent is offered it) and the spec now says so.
+- **A centred empty state stacks.** The kit's `.empty-state` is a row (avatar beside text, right for the placeholder cards); the first-run home's
+  `text-center` variant is a column, because at 375 px the row pushed the button past the edge. Found by the browser proof, fixed in `app-overrides.css`.

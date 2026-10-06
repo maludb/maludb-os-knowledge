@@ -79,7 +79,7 @@ The Spaces division: a **planning-class model** builds what the database enforce
 engine proof, the specs and the exemplars; a **worker model (Sonnet 5.5)** replicates every other slice from a spec, stopping
 and escalating on any ambiguity.
 
-**Done:** K25 (db/170), K24 (db/171), M1 (branch `feat/memory-answer-m1`, awaiting the owner's merge and deploy); **Phase 0 complete** (schema db/001–015, engine module, sectioner, kit, manifest, agents, skills, deploy); **Phase 1 written** (tool surface, action manifest and registry, the compile and sectioning specs, ten slice specs, `docs/phase1-consistency.md`) — **awaiting the owner's checkpoint**. Owed: K26 (kernel).
+**Done:** K25 (db/170), K24 (db/171), M1 (branch `feat/memory-answer-m1`, awaiting the owner's merge and deploy); **Phase 0 complete** (schema db/001–015, engine module, sectioner, kit, manifest, agents, skills, deploy); **Phase 1 APPROVED by the owner 2026-10-06** (tool surface, action manifest and registry, the compile and sectioning specs, ten slice specs, `docs/phase1-consistency.md`); **Phase 2 built and proven 2026-10-06** (the placeholders, `tests/phase2/run.sh` — 163 checks under php -S, 165 under Apache with `KN_APP=apache`; Phase 0's 92 green; `plan` clean). **Next: slice 1**, then slice 2 (THE FIRST EXEMPLAR), 3, 4, slice 5 (THE SECOND) — the handoff point. Owed: K26 (kernel).
 
 **Before the handoff:** (1) **Phase 0, second half**: `db/001`–`0NN`, the read functions and `mcp_*` views,
 `db/proof/phase0_proof.sql`, the kit from Consultant Tracking proven without a kernel, the sectioner's fixtures,

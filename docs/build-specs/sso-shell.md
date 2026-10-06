@@ -51,9 +51,14 @@ Schema it runs on (db/001–014, never modified): `members` (with the generated 
   from `bin/make_brand_images.php`).
 - `bin/{directory_sync,dev_handoff,mint_mcp_token,make_brand_images,worker}.php`, `bin/dev_directory.json`, `mcp/{activity_ingest.py,db.py,
   requirements.txt}`, `tests/{dev_router,fake_kernel,fake_maludb,fake_malumail}.php`, `tests/phase0/{run.sh,probe.php}`.
-**Phase 2 adds:** the placeholders for the menu items whose screens are slices' (`/ask`, `/bases`, `/pinned`, `/admin/` answer 404 until their
-slice — `render_nav_stub()` in `nav.php` is available and `NAV_SLICES` names who builds each), the registry builder
-(`bin/build_action_registry.php`, copied then), the vhost allow-list proof under Apache, the browser proof at 375 and 1280.
+**Phase 2 adds (built 2026-10-06):** the four placeholders for the menu items whose screens are slices' — `html/ask.php`, `html/bases/index.php`,
+`html/pinned.php`, `html/admin/index.php`, each one line calling `render_nav_stub()` (`NAV_SLICES` names who builds each): after the login and the
+right, a page in the shell with one dashed card saying which slice builds it (200; the HTMX partial carries `HX-Title` and `X-Screen`, so the tab
+highlight and the command bar's context follow), 501 `not_built` for a JSON caller and 501 for a POST — not a 404, so a person who taps Ask
+before slice 5 is told, not lost; the registry marks them `stub`, never `built`, so the voice surface never offers them (removing the call is the
+slice's first step). Also the proofs below: `tests/setup_dev.sh`, `tests/phase2/` (the servers script with its Apache mode, gates, vhost, the
+browser proof, the seed). A defect found by the browser proof and fixed: the kit's `.empty-state` row pushed the first-run button past the right
+edge at 375 px — a centred empty state now stacks (`app-overrides.css`).
 
 ## Knowledge is not Spaces
 - **No presence, no status line, no right pane, no sidebar tree.** `members` has no `last_seen_at` or `status_*`; the sidebar is Home · Ask ·
@@ -153,8 +158,31 @@ Re-run: `bash /srv/apps/knowledge/tests/phase0/run.sh` — 92 PASS/FAIL checks, 
   first and `base_id`/`token_id` in the payload; MaluMail sends through the fake API and raises a catchable error without a key.
 - [x] **the kernel's word**: the sign-out notice ends the session (204, `ended_by kernel`); a bad notice changes nothing; a revoked grant in the feed shuts the
   door within one sync (`ended_by directory`); a hand-off whose claims carry no grant is refused; Knowledge's own sign-out goes to the launcher.
-- [ ] **owed to Phase 2** (needs a browser and Apache): the vhost allow-list (`/`, `/sso`, `/api/v1/health`, the MCP proxies 502 until Phase 4, `/files/1` 401),
-  the shell at 375 × 740 and 1280 × 800 (tab bar, offcanvas, bell, command bar answering the fake kernel, every control ≥ 44 px, no horizontal scroll,
-  no console errors), the registry `--check`.
+- [x] **Phase 2 (`tests/phase2/run.sh`; `KN_APP=apache tests/phase2/run.sh` for a real Apache serving the rendered deploy vhost on :8501/:8507)** — 163 checks
+  under php -S and 165 under Apache, green 2026-10-06, Phase 0's 92 re-run green:
+  - **browser (70, Playwright from the kernel's `web/node_modules`, screenshots in `$SHOTS`)**: at 375 × 740 a member with no bases (the tab bar on the
+    bottom edge with Home · Ask · Bases · Me, the command bar just above it, every tab and control ≥ 44 px, the one button inside the screen and nothing past
+    the right edge, the badge, the offcanvas from the menu button with Home · Ask · Bases · Pinned and Me and no Admin, the Me tab swapping `#page-content`
+    and pushing `/settings/` with the title, the highlight and the `data-screen` stamp, prefs saved with the notice, the Ask tab opening the placeholder,
+    the command bar answering the fake expert with Send shown only while typing, no sideways scroll on any screen, no console errors); a guest (Reader badge,
+    told nothing is shared, no button, no bases, no Admin); then the two SMOKE bases seeded — a curator (two cards the width of the phone, the Create button
+    in the list's header, Your bases in the sidebar), a reader (the internal base alone, no button); at 1280 × 800 the admin (no tab bar, the sidebar with
+    Your bases — the private one too — and Admin, the command bar right of the sidebar, cards side by side, HTMX navigation to `/admin/` with the highlight,
+    the browser's back button, a token minted and shown once then revoked with the confirm, the bell with no count, a navigate from the command bar);
+    JavaScript off (the cards in the server-rendered page, the tabs and a card's name plain links carrying `?back=`); installable (the manifest, the icons,
+    no service worker, no installability error).
+  - **gates (61)**: 9 screens × 5 roles answer 200 or 403 as the rights say (`/admin/` the admin's alone, in words); the badge per role; the four
+    placeholders (the card and the slice, 501 for JSON and POST, the HTMX partial's headers, screen.view logged, the registry's `stub` flags); the menu and
+    the tab bar per role; no session (the launcher with `?app=knowledge`, 401 for JSON); the home's JSON and its lists once bases exist (the owner both,
+    a member and a reader the internal one, a guest none and told so, the admin every one; cards and sidebar entries by id; `?back=` on a card's name);
+    the person-own screens as JSON; the command bar (the reply, the log with the length and never the words, the acting person seen by the kernel, CSRF,
+    the kernel's 404 and 409 in its words, an approval shown with its request number, a navigate followed by HX-Location, a foreign navigate ignored,
+    over 2,000 characters and nothing said refused); the action-token and run-token gate (a person's token opens one read with no cookie, expired and
+    tampered 401, a write under it answers JSON, an admitted agent reads its activity and its view is logged with the run id, an agent kept off the
+    home, the mint and the command bar, no relay 401, an unknown id refused and never created and logged `member.refused`).
+  - **vhost (31; 33 under Apache)**: the receivers at their extension-less names, every canonical URL and the placeholders, `/bases/new` and the record
+    pages 404 until their slice, the file door 401/404, `/api` blocked but for health (the questions API's names rewritten to slice 7's files — 404 until
+    then), the MCP proxies 502 and the internal vhost's health (Apache), the manifest and the assets served with their types, nothing outside `html/`.
+  - **registry**: `bin/build_action_registry.php --check` — 61 screens (5 built, 4 stubs), 62 actions (4 built), 20 approvals in step.
 
 ## Open questions

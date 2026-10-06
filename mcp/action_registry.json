@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-05T18:26:29+00:00",
+    "generated_at": "2026-10-06T13:44:47+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -66,7 +66,7 @@
                 "archived"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "base-add": {
             "screen": "base-add",
@@ -360,7 +360,7 @@
                 "q"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "conversations": {
             "screen": "conversations",
@@ -421,7 +421,7 @@
                 "due"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "graph": {
             "screen": "graph",
@@ -580,7 +580,7 @@
             "when": "the admin area: settings, templates, the model, usage, every base, every key, the agents, connections, proposals, dispatches, purge",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "admin-purge": {
             "screen": "admin-purge",

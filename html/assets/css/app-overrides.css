@@ -68,6 +68,7 @@ html.app-skin-dark .app-tabbar { background: #1b2431; border-top-color: rgba(255
 label.btn-touch { display: flex; }
 .min-w-0 { min-width: 0; }
 .empty-state { display: flex; align-items: center; gap: 1rem; }
+.empty-state.text-center { flex-direction: column; }        /* a centred empty state (the first-run home) stacks: at 375 px a row pushed its button past the edge */
 .empty-state .avatar-text { flex: 0 0 auto; }
 .coming-card { border-style: dashed; }
 

@@ -623,3 +623,6 @@ form exists yet, so nothing was converted. Slice specs reworded to name it: `bas
 guest choosers), `guidelines-areas.md` (area-view: Add a source). Proof: `tests/phase2/picker.php` (22 checks, in `run.sh`).
 The slices prove their own sources (search, paging, a dependent param, a 422 keeping the label) as ProcessCore's
 `scripts/prove-picker.sh` does.
+
+
+**2026-10-09 — the application switcher added to the shell** (K31, the kernel's `docs/build-specs/kernel-app-switcher.md`; the plugins at 0.9.0): `app/switcher.php` and `shared/app-switcher.php` in `header-right` where the ad-hoc "All applications" icon was — the Helpdesk button and the dropdown of every application the person may open, from the kernel's `GET /api/v1/apps/mine.php` as the person, cached five minutes; every link a launch on `OS_LAUNCHER_URL`; nothing before the kernel answers. Proven by `tests/phase2/switcher.php` (the shell without a kernel, the partial from a fixture).

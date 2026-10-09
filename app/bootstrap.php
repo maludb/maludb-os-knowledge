@@ -80,6 +80,7 @@ require_once __DIR__ . '/http.php';
 require_once __DIR__ . '/handler.php';
 require_once __DIR__ . '/activity.php';
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/switcher.php';          // the application switcher (K31): os_my_applications(), the header's Helpdesk button and menu
 require_once __DIR__ . '/directory.php';
 require_once __DIR__ . '/mail.php';
 require_once __DIR__ . '/picker.php';                 // the record picker: picker_field(), picker_source() — the registry is app/pickers.php

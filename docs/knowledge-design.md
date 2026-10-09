@@ -643,3 +643,8 @@ pages and a quote marked, replace, remove (forgotten in the engine within the mi
 The proofs run against the REAL MaluDB API 0.4.0 on a scratch memory database (`tests/phase3/engine.sh`). `tests/phase3/slice2/run.sh`: 192
 checks under php -S and under Apache. The kit's mirror no longer blanks a member's job title, phone and time zone on a hand-off (Inventory's
 fix). **Next:** slice 3 (guidelines, vocabulary, areas and the compile step), slice 4 (builds), slice 5 (ask, THE SECOND) — the handoff point.
+
+**2026-10-09 — M1 merged and live.** `POST /v1/memory/answer` (MaluDB API 0.4.0) merged as maludb-python-api-server PR #18 and running on
+:8000 after a restart; the API's suite 645 passed. **Owed at install:** the knowledge memory database's `answer` model
+(`PUT /v1/llm/models/answer` with its own token, after `deploy/ROOT_STEPS.sh` steps 3–4 create the database and mint the token); until one
+is chosen the route falls back to the `extract` choice, then each base's namespace configuration.

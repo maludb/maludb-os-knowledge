@@ -145,11 +145,12 @@ function back_link(): ?array
     if (preg_match('#^/bases/\d+$#', $path)) {
         return [$back, 'the knowledge base'];
     }
-    if (preg_match('#^/bases/\d+/(share|settings|edit|sources)$#', $path, $m)) {
-        return [$back, ['share' => 'sharing', 'settings' => 'the base\'s settings', 'edit' => 'the edit', 'sources' => 'the sources'][$m[1]]];
+    if (preg_match('#^/bases/\d+/(share|settings|edit|sources|guidelines|vocabulary|areas|compiled)$#', $path, $m)) {
+        return [$back, ['share' => 'sharing', 'settings' => 'the base\'s settings', 'edit' => 'the edit', 'sources' => 'the sources', 'guidelines' => 'the guidelines',
+                        'vocabulary' => 'the vocabulary', 'areas' => 'the areas', 'compiled' => 'what the engine is told'][$m[1]]];
     }
-    if (preg_match('#^/(sources|sections)/\d+$#', $path, $m)) {
-        return [$back, $m[1] === 'sources' ? 'the source' : 'the section'];
+    if (preg_match('#^/(sources|sections|guidelines|areas)/\d+$#', $path, $m)) {
+        return [$back, ['sources' => 'the source', 'sections' => 'the section', 'guidelines' => 'the guideline', 'areas' => 'the area'][$m[1]]];
     }
     return null;
 }

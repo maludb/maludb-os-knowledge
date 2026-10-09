@@ -345,6 +345,24 @@ credential (the owner's, once, into `kb:0`).
   TYPE, ALIAS and EXCLUDE lines (its `/last` request carries the compiled text and the section after `Text:`).
 
 ## Built and proven
-Not built.
+**Built 2026-10-09 with slice 3; proven by `tests/phase3/slice3/compile.php` (46 checks, in `tests/phase3/slice3/run.sh`).** The golden files were
+written from this spec's own worked examples (example 2's elided OUTPUT block and preamble filled from example 1's) and the module reproduces all
+four byte for byte on the first run. Settled in the build:
+- The caps are measured on a block's finished lines joined by newlines; a block over its cap loses whole lines from its end; the whole template
+  over 24,000 loses TERM groups from the end (with the block caps as they are it never triggers). `truncated` keys: `extract`, `subject_type`,
+  `vocabulary_note`, `term` (TERM groups, aliases with them), `exclude`. With an alias on every term, the 8,000-character TERM + ALIAS cap binds
+  long before the 500-line one; with short alias-less terms the 500 lines bind (both proven).
+- An answering or audience guideline over its block is cut at a word with `…`; every later one of the kind is dropped (counted).
+- A draft (`kn_compile_with_draft()`) replaces its row by `guideline_id` keeping the row's position unless the draft names one; a new draft sorts
+  last in its kind.
+- `kn_compile_connection()` reads the reference config's `extraction_alias` (the engine's name for the alias) and `secret_ref`; a base's namespace
+  is configured with `secret_name` and no token — proven: no response carries the credential.
+- `deploy/ROOT_STEPS.sh` step 5 already names `kb:0` (divergence 1's warning is settled).
+- **Found against the real engine — M12.** The core refuses a statement whose subject type is not in its catalogue, and the `general` template's
+  types (product, system, organisation, place, policy, procedure, term, document) are not in it: every statement the model typed with one was
+  refused (`422 unknown subject_type product`). Fixed upstream on `feat/documents-register-types-m12` (MaluDB API 0.4.1, PR #19 — the documents
+  route registers an unseen type the way graph import does, else falls back and keeps the declared type as a predicate attribute); the Phase 3
+  proofs run the API from that branch's worktree (`tests/phase3/engine.sh`, `KN_ENGINE_API_DIR`) until it is merged. **The owner merges PR #19
+  before the first build** (`deploy/ROOT_STEPS.sh` step 6).
 
 ## Open questions

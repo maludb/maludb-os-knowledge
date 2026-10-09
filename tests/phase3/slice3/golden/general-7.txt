@@ -1,0 +1,36 @@
+KNOWLEDGE BASE kb:7 — extraction instructions (compiled by Knowledge from the base's guidelines; template general v1)
+You read ONE section of a document from this knowledge base and extract a knowledge graph from it: the subjects the section is about, and the statements it makes about them. Follow every line below. Lines starting EXTRACT say what to keep, SUBJECT TYPE the types a subject may have, TERM and ALIAS the base's vocabulary, VOCABULARY NOTE how to read it, EXCLUDE what never to extract.
+Language: en — write every name as the text writes it.
+
+EXTRACT: Extract the named things the documents are about — products, systems, people by role, organisations, places, policies, procedures, terms defined in the text — and the relationships stated between them.
+EXTRACT: Keep every date, deadline, duration, amount, limit, version number and owner as a statement attached to the thing it describes.
+EXTRACT: A heading names a subject; a definition is a statement about the defined term.
+EXTRACT: Prefer the document's own words over paraphrase.
+
+SUBJECT TYPE: product
+SUBJECT TYPE: system
+SUBJECT TYPE: organisation
+SUBJECT TYPE: person
+SUBJECT TYPE: place
+SUBJECT TYPE: policy
+SUBJECT TYPE: procedure
+SUBJECT TYPE: term
+SUBJECT TYPE: document
+SUBJECT TYPE: event
+
+EXCLUDE: Ignore page headers and footers, page numbers, running titles, tables of contents, copyright and confidentiality boilerplate, navigation text and anything that is clearly a template placeholder.
+EXCLUDE: Do not extract personal contact details (phone numbers, personal email addresses, home addresses) about individuals.
+
+OUTPUT
+Return ONLY JSON of the form {"candidate_edges":[{"subject_text":"","subject_type":"","verb_text":"","predicate":[{"attr_name":"","value_text":""}],"source_span":"","confidence":0.0}]}.
+- subject_text: the subject's name as the text gives it; when the text uses an ALIAS, the TERM's canonical name instead.
+- subject_type: one of the SUBJECT TYPE values; other when none fits.
+- verb_text: a small canonical verb ("covers", not "is_covered_by").
+- predicate: the statement's details as attributes — dates, durations, amounts, limits, versions, owners, status — one attr_name and value_text each.
+- source_span: the sentence the statement comes from, copied VERBATIM from the text: the same characters, no paraphrase, no ellipsis, no added words. It is the passage an answer will quote, and a quote that is not in the text is thrown away.
+- confidence: from 0 to 1.
+- Never an edge from text an EXCLUDE line rules out, and never an edge whose source_span is not in the text.
+- When the section states nothing worth keeping, return {"candidate_edges":[]}.
+
+Text:
+{{chunk}}

@@ -14,6 +14,20 @@ declare(strict_types=1);
 require_once APP_ROOT . '/app/knowledge/engine.php';
 require_once APP_ROOT . '/app/knowledge/fetch.php';
 require_once APP_ROOT . '/app/features/files/queries.php';
+require_once APP_ROOT . '/app/knowledge/areas.php';
+
+/** Slice 3: a deleted base's areas lose their engine projects before the base goes; false when one remains (the next pass retries). */
+function kn_worker_purge_base_projects(PDO $pdo, int $baseId): bool
+{
+    $st = $pdo->prepare('SELECT id FROM focus_areas WHERE base_id = :b AND maludb_project_id IS NOT NULL');
+    $st->execute(['b' => $baseId]);
+    foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $areaId) {
+        if (!kn_area_engine_remove($pdo, (int) $areaId)['ok']) {
+            return false;
+        }
+    }
+    return true;
+}
 
 const KN_WORKER_STOP_CODES = ['engine_unavailable', 'engine_auth', 'engine_forbidden', 'engine_timeout'];
 

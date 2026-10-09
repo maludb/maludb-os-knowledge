@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-09T21:12:07+00:00",
+    "generated_at": "2026-10-09T22:14:50+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -204,7 +204,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "a base's guidelines by the five kinds, the version the graph is built under, what needs a rebuild",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "guideline-add": {
@@ -217,7 +217,7 @@
                 "kind",
                 "section"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "guideline-edit": {
@@ -228,7 +228,7 @@
             "params": [
                 "section"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "guideline-view": {
@@ -237,7 +237,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "a guideline's versions and the one the graph was built under",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "guidelines-compiled": {
@@ -246,7 +246,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "what the engine is told: the compiled extraction prompt, the answer guidelines, the terms",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "vocabulary": {
@@ -258,7 +258,7 @@
                 "q",
                 "never"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "term-add": {
@@ -271,7 +271,7 @@
                 "canonical_name",
                 "aliases"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "term-edit": {
@@ -280,7 +280,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "to change or delete a vocabulary term",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "vocabulary-import": {
@@ -289,7 +289,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "to import terms from a CSV: check first, then import",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "areas": {
@@ -298,7 +298,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "a base's focus areas as cards; the proposed ones to accept or dismiss; sources in no area and areas with no source",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "area-add": {
@@ -309,7 +309,7 @@
             "params": [
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "area-edit": {
@@ -318,7 +318,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "to change a focus area",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "area-view": {
@@ -327,7 +327,7 @@
             "section": "Guidelines, vocabulary and focus areas (slice 3)",
             "when": "one focus area: its terms, example questions, sources and its engine link",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "builds": {
@@ -1491,7 +1491,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the guideline",
-            "built": false
+            "built": true
         },
         "guideline_delete": {
             "action": "guideline_delete",
@@ -1512,7 +1512,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the guideline",
-            "built": false
+            "built": true
         },
         "vocabulary_save": {
             "action": "vocabulary_save",
@@ -1563,7 +1563,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the term",
-            "built": false
+            "built": true
         },
         "vocabulary_delete": {
             "action": "vocabulary_delete",
@@ -1584,7 +1584,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the term",
-            "built": false
+            "built": true
         },
         "vocabulary_import": {
             "action": "vocabulary_import",
@@ -1617,7 +1617,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "focus_area_save": {
             "action": "focus_area_save",
@@ -1680,7 +1680,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "focus_area_propose": {
             "action": "focus_area_propose",
@@ -1731,7 +1731,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "focus_area_accept": {
             "action": "focus_area_accept",
@@ -1752,7 +1752,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "focus_area_dismiss": {
             "action": "focus_area_dismiss",
@@ -1773,7 +1773,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "focus_area_link": {
             "action": "focus_area_link",
@@ -1794,7 +1794,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "focus_area_delete": {
             "action": "focus_area_delete",
@@ -1815,7 +1815,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "focus_area_assign": {
             "action": "focus_area_assign",
@@ -1848,7 +1848,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the area",
-            "built": false
+            "built": true
         },
         "source_areas_set": {
             "action": "source_areas_set",
@@ -1875,7 +1875,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the source",
-            "built": false
+            "built": true
         },
         "build_start": {
             "action": "build_start",

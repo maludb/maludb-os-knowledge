@@ -20,8 +20,8 @@ ok(page($j, '/activity')['code'] === 200 && page($j, '/notifications')['code'] =
 ok(page($j, '/bases/new')['code'] === 200 && page($j, '/bases/1')['code'] === 200 && page($j, '/bases/1/edit')['code'] === 200 && page($j, '/bases/1/share')['code'] === 200,
     '/bases/new, /bases/1, /bases/1/edit and /bases/1/share are rewritten to form.php, view.php and share.php (slice 1)');
 ok(str_contains(page($j, '/bases/999999')['body'], 'Knowledge base not found.'), 'a base that does not exist reaches view.php, which says so');
-ok(page($j, '/bases/1/sources')['code'] === 200 && page($j, '/bases/1/guidelines')['code'] === 404 && page($j, '/sources/7/outline')['code'] === 404,
-    'a page of a record is rewritten to its own file: /bases/1/sources (slice 2) answers; /bases/1/guidelines and /sources/7/outline 404 until their slice');
+ok(page($j, '/bases/1/sources')['code'] === 200 && page($j, '/bases/1/nosuchpage')['code'] === 404 && page($j, '/sources/7/outline')['code'] === 404,
+    'a page of a record is rewritten to its own file: /bases/1/sources (slice 2) answers; a page with no file (/bases/1/nosuchpage, /sources/7/outline) is 404');
 ok(req('GET', '/nosuchscreen', ['jar' => $j])['code'] === 404, 'an unknown path: 404');
 ok(req('GET', '/files/1')['code'] === 401, '/files/1 without a session: 401 (never a redirect — a file URL sits in an <img>)');
 ok(page($j, '/files/1')['code'] === 404, '/files/1 with a session: 404 (no attachment yet)');

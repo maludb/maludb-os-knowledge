@@ -1,4 +1,4 @@
-<?php /** A source (screen `source-view`). Data: s, b, outline, pages, may (manage, retry), curate, successor, timeline, tz, here, notice */
+<?php /** A source (screen `source-view`). Data: s, b, outline, pages, may (manage, retry, areas), curate, successor, timeline, activeAreas, tz, here, notice */
 $sid = (int) $s['source_id']; $bid = (int) $b['base_id'];
 [$kindWords, $icon] = SOURCE_KINDS[$s['kind']] ?? ['Source', 'feather-file'];
 $err = source_error_words($s['error'], (string) $s['status']);
@@ -51,6 +51,7 @@ $countStale($outline); ?>
             <?php endif; ?>
         </div></div>
     <?php endif; ?>
+    <?php if ($may['areas'] && $activeAreas !== []): ?><?= view('sources/partials/areas-form.php', ['s' => $s, 'areas' => $activeAreas]) ?><?php endif; ?>
     <?php if ($outline !== []): ?>
         <div class="card mb-3" id="source-outline-card"><div class="card-header"><h5 class="card-title mb-0">Outline</h5></div><div class="card-body kn-outline-scroll">
             <?= view('sources/partials/outline.php', ['nodes' => $outline, 'curate' => $curate]) ?>

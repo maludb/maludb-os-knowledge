@@ -165,3 +165,6 @@ details > summary.btn-touch { min-height: 44px; cursor: pointer; }
 .kn-section-text { font-size: 15px; line-height: 1.6; }
 .kn-section-text mark#quote { background: #fde68a; padding: 0 2px; border-radius: 2px; }
 html.app-skin-dark .kn-section-text mark#quote { background: #a16207; color: #fff; }
+
+/* GUIDELINES, VOCABULARY, AREAS (slice 3): a compiled prompt or a preview wraps inside the page — a long line never widens the viewport. */
+.kn-preview-pre { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; max-height: 70vh; overflow-y: auto; font-size: 12px; background: var(--bs-tertiary-bg, #f8fafc); border: 1px solid var(--bs-border-color, #e5e7eb); border-radius: 6px; padding: 12px; margin: 0; }

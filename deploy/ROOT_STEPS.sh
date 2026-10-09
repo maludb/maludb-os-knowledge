@@ -127,9 +127,12 @@ echo "   sudo systemctl restart certstudy-agent-runner        # K24 — the owne
 
 # ------------------------------------------------------------------------------------------------------------------
 # 6. MANUAL — before answers are composed: M1 and the audit log.
-echo "== 6. MANUAL — answers (M1) and logging"
-echo "   - MaluDB API 0.4.0 (branch feat/memory-answer-m1, worktree /home/maludb/maludb-api-m1) must be MERGED and the maludb-api"
-echo "     service RESTARTED, then the tenant's 'answer' model set. Until then the ask window shows evidence, not a composed answer."
+echo "== 6. MANUAL — the engine's API, answers and logging"
+echo "   - MaluDB API 0.4.0 (M1, the answer route) is merged and live since 2026-10-09 (PR #18)."
+echo "   - MaluDB API 0.4.1 (M12, PR #19: the documents route registers an unseen subject type) must be MERGED and maludb-api RESTARTED"
+echo "     before the first build: without it every statement typed with a template's own type (product, policy, place …) is refused."
+echo "   - the memory database's 'answer' model: PUT /v1/llm/models/answer (bearer = MALUDB_KB_API_TOKEN). Until one is chosen the answer"
+echo "     route falls back to the extract choice, then each base's namespace configuration."
 echo "   - Settle pgaudit logging FIRST: the engine's calls carry the questions and the extracted text; decide what the audit log may keep"
 echo "     before the first build, not after."
 
@@ -137,7 +140,7 @@ echo "     before the first build, not after."
 # 7. The owner's keys and decisions (any time after 2):
 echo "== 7. The owner's"
 echo "   - MaluMail: MALUMAIL_API_KEY, MAIL_FROM, MAIL_FROM_NAME into $APP/config/.env (the outbox sends the Monday notes and build mail)"
-echo "   - text extraction tools: pdftotext (poppler-utils) on the host, KN_PDFTOTEXT if not on PATH; KN_URL_FETCH=0 turns URL sources off"
+echo "   - text extraction tools: pdftotext (poppler-utils) on the host, KN_PDFTOTEXT if not on PATH; KN_URL_FETCH=off turns URL sources off"
 echo "   - DNS and TLS for knowledge.subello.com (until then /etc/hosts maps it to this host)"
 echo "   - the Archivist's duty (45 6 * * 1) in Agent HR until the installer reads agents[].duty"
 echo "   - the connections a super-admin approves (bin/app_connection.php): Help Desk, Projects, Spaces and Consultant Tracking reading ask, search and bases_index;"

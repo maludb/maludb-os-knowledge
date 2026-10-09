@@ -241,6 +241,23 @@ The world: slice 2's, with "SMOKE Field Manuals" read and cut (sections `queued`
   screens and 13 actions of this slice built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-09 by the planning model; proven by `tests/phase3/slice3/run.sh`** — compile 46, guidelines 26, preview 13, vocabulary 19,
+areas against the real engine (with assignment and who sees) 33, the engine down and the purge 10, JSON and agents 20, the browser 41 (375 × 740 and
+1280 × 800, JavaScript off) — 208 checks under php -S and under a real Apache, plus the registry and no PHP warning. The registry reads the 13
+screens and 13 actions built. Slices 1 and 2, Phase 2 and Phase 0 stay green.
+
+Settled in the build:
+- **M12** (the compile spec's "Built and proven"): the engine refused the template's subject types; fixed upstream, PR #19, owed before the first
+  build.
+- **An agent's partial update of an array column** (aliases, seed terms, example questions) arrived as a PostgreSQL literal (`{"seal ring"}`) from
+  `partial_update_prefill()` and was taken as one item: the handlers now read such a literal as its list (`kn_pg_literal_list()` in the kit).
+- The save banners are built from the base as it is when the page loads (`guideline_notices()`), never from words carried in the URL.
+- One `guideline.save` row carries `engine_synced` (the compile is sent after the commit); `guideline.version` and `section.stale` are written in
+  the transaction. `did` and the banner report the stale sections in all, not only those this save marked.
+- Archiving an area keeps its engine project (an archived area sends no project — `kn_compile_projects()`); re-activating it syncs.
+- The area's description is sent whole as the project's classifier and cut at 4,000 for its description.
+- Preview without JavaScript is the same form posted to `preview.php` (`formaction`), which answers the whole form with the preview filled.
+- The proofs give the expert (Seamus) the Curator role the spec names (the fixture gives him Member) — `world()` in `tests/phase3/slice3/lib.php`.
+- The fake provider reads an `EXCLUDE:` line as one word; the compile proof's exclusion is a single word.
 
 ## Open questions

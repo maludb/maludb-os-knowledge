@@ -11,6 +11,7 @@ const require = createRequire('/var/www/web/node_modules/');
 const { chromium } = require('playwright');
 
 const BASE = 'http://127.0.0.1:8501';
+const ROOT = new URL('../../../', import.meta.url).pathname;
 const SHOTS = process.env.SHOTS || '/tmp/kn-shots-s1';
 const KEY = process.env.ACTION_TOKEN_KEY;
 const fixture = JSON.parse(fs.readFileSync(new URL('../../../bin/dev_directory.json', import.meta.url), 'utf8'));
@@ -69,11 +70,13 @@ for (const [label, vp] of [['375 x 740', PHONE], ['1280 x 800', DESK]]) {
   ok(await page.locator('#base-add-documents').isVisible(), `three taps land on the base (${id}) with Add documents first`);
   ok(sql(`SELECT template FROM knowledge_bases WHERE id = ${id}`) === 'smoke_browser', 'the template tapped is the base\'s');
   const tabs = await page.locator('#base-tabs .nav-link').evaluateAll((els) => els.map((e) => e.id));
-  // a tab is lit only by its slice's controller: Overview, Share and Settings are slice 1's; a later slice adds its own (Sources, slice 2); the
-  // placeholders (Ask until slice 5) and the unbuilt ones never show
-  const built = ['base-tab-overview', 'base-tab-sources', 'base-tab-share', 'base-tab-settings'];
-  ok(tabs[0] === 'base-tab-overview' && tabs.includes('base-tab-share') && tabs.includes('base-tab-settings') && tabs.every((t) => built.includes(t)) && !tabs.includes('base-tab-ask'),
-    'the tabs show only the built slices\' (Overview first, Share, Settings, nothing unbuilt): ' + tabs.join(', '));
+  // a tab is lit only by its slice's controller (present and not the shell's placeholder): the expected set is read from disk, so a later
+  // slice lighting its tab does not break this proof; Overview first, Share and Settings always (slice 1's), Ask hidden while a placeholder
+  const built = (file) => fs.existsSync(ROOT + 'html' + file) && !fs.readFileSync(ROOT + 'html' + file, 'utf8').includes('render_nav_stub(');
+  const expected = Object.entries({ overview: '/bases/view.php', ask: '/ask.php', sources: '/bases/sources.php', areas: '/bases/areas.php', guidelines: '/bases/guidelines.php',
+    builds: '/bases/builds.php', graph: '/bases/graph.php', questions: '/bases/questions.php', keys: '/bases/keys.php', share: '/bases/share.php', settings: '/bases/settings.php' })
+    .filter(([, f]) => built(f)).map(([k]) => 'base-tab-' + k);
+  ok(JSON.stringify(tabs) === JSON.stringify(expected), 'the tabs are exactly the built slices\' (read from disk): ' + tabs.join(', '));
   o = await overflow(page); ok(o.sw === o.iw, `no sideways scroll on the base (${o.sw} = ${o.iw})`);
   s = await small(page); ok(s.length === 0, 'every control of the base is at least 44 px ' + s.join(', '));
   await page.screenshot({ path: `${SHOTS}/${tag}-base-view.png`, fullPage: true });

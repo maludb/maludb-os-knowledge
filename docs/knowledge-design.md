@@ -648,3 +648,11 @@ fix). **Next:** slice 3 (guidelines, vocabulary, areas and the compile step), sl
 :8000 after a restart; the API's suite 645 passed. **Owed at install:** the knowledge memory database's `answer` model
 (`PUT /v1/llm/models/answer` with its own token, after `deploy/ROOT_STEPS.sh` steps 3–4 create the database and mint the token); until one
 is chosen the route falls back to the `extract` choice, then each base's namespace configuration.
+
+**2026-10-09 — slice 3 built and proven** (guidelines, vocabulary, focus areas and the compile module — `docs/build-specs/guidelines-areas.md`,
+`guidelines-compile.md`): the five kinds with their examples and Preview on a section; versions and what the graph is built under; the vocabulary
+with alias conflicts, never-met terms and a CSV import; focus areas as MaluDB projects (seed terms linked, renames re-created, proposals accepted
+or dismissed, sources assigned); `app/knowledge/compile.php` reproducing the spec's golden files byte for byte; `app/knowledge/areas.php`.
+`tests/phase3/slice3/run.sh`: 208 checks under php -S and Apache against the real engine. **Found: M12** — the engine refused every statement typed
+with the `general` template's own types (product, policy, place …); fixed in the MaluDB API (0.4.1, PR #19, the owner merges before the first
+build). **Next:** slice 4 (builds), slice 5 (ask, THE SECOND exemplar) — the handoff point.

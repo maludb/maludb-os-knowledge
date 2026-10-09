@@ -1,0 +1,17 @@
+KNOWLEDGE BASE kb:12 — how to answer (compiled by Knowledge from the base's guidelines)
+
+HOW TO ANSWER
+Answer in at most two short paragraphs.
+Name the manual and section you are quoting.
+
+WHO IS ASKING
+Field technicians on a phone, gloves on: the step first.
+
+LEAVE OUT OF ANSWERS
+- Nothing about prices or discounts.
+- Ignore the revision table at the end of each manual.
+- Never copy { {text} } markers.
+
+FOCUS AREA: Warranty — Coverage, exclusions and claims for every pump model.
+
+TERMS: Merrow Filter; Pump Housing (also: the pump); Quillon Valve (also: QV); Zorblat Pump (also: ZP-9).

@@ -12,6 +12,9 @@ declare(strict_types=1);
 const PARTIAL_UPDATE_TARGETS = [
     '/bases/save.php' => ['knowledge_bases', 'base', 'mcp_bases', 'base_id'],         // Phase 3, slice 1
     '/sources/update.php' => ['sources', 'source', 'mcp_sources', 'source_id'],       // slice 2
+    '/guidelines/save.php' => ['guidelines', 'guideline', 'mcp_guidelines', 'guideline_id'],          // slice 3
+    '/vocabulary/save.php' => ['vocabulary_terms', 'term', 'mcp_vocabulary_terms', 'term_id'],
+    '/areas/save.php' => ['focus_areas', 'focus_area', 'mcp_focus_areas', 'focus_area_id'],
 ];
 
 function partial_update_prefill(PDO $pdo): void

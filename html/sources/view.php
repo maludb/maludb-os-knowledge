@@ -17,7 +17,13 @@ $curate = in_array($level, ['own', 'curate'], true);
 $may = [
     'manage' => $s['status'] !== 'forgotten' && $s['kind'] !== 'feed' && ($level === 'own' || ($level === 'curate' && has_right('sources.manage'))),
     'retry' => $s['status'] === 'failed' && $b['archived_at'] === null && ($level === 'own' || ($level === 'curate' && has_right('sources.add'))),
+    'areas' => $s['status'] !== 'forgotten' && $b['archived_at'] === null && ($level === 'own' || ($level === 'curate' && has_right('base.manage'))),
 ];
+$activeAreas = [];
+if ($may['areas']) {
+    require_once APP_ROOT . '/app/features/areas/queries.php';
+    $activeAreas = active_areas($pdo, $bid);
+}
 base_screen_view($pdo, 'source-view', $bid, ['source_id' => $sid]);
 $outline = $s['status'] === 'forgotten' ? [] : source_outline($pdo, $sid);
 $pages = $s['status'] === 'forgotten' ? [] : source_pages($pdo, $sid);
@@ -27,5 +33,5 @@ if (wants_json()) {
                     'superseded_by' => $successor === null ? null : ['source_id' => (int) $successor['source_id'], 'title' => $successor['title']]]);
 }
 render_screen($s['title'], view('sources/view.php', ['s' => $s, 'b' => $b, 'outline' => $outline, 'pages' => $pages, 'may' => $may, 'curate' => $curate, 'successor' => $successor,
-    'timeline' => source_timeline($pdo, $sid), 'tz' => member_timezone(), 'here' => here_url(), 'notice' => kn_notice(request_string('notice') ?: null, source_notices($s))]),
+    'timeline' => source_timeline($pdo, $sid), 'activeAreas' => $activeAreas, 'tz' => member_timezone(), 'here' => here_url(), 'notice' => kn_notice(request_string('notice') ?: null, source_notices($s))]),
     ['activeNav' => 'bases', 'screen' => 'source-view', 'entity' => 'source', 'recordId' => (string) $sid]);

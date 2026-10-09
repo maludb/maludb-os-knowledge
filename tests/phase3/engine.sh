@@ -13,7 +13,9 @@ ROOT="$(cd "$HERE/../.." && pwd)"
 STATE=${KN_ENGINE_STATE:-/tmp/kn-engine-p3}
 ENVF=${KN_DEV_ENV:-/tmp/kn-dev.env}
 PY=/home/maludb/maludb-python-api-server/.venv/bin/python
-API_M1=/home/maludb/maludb-api-m1
+# The API under proof: 0.4.0 + M12 (the documents route registers an unseen subject type) on its branch's worktree until the owner
+# merges it; then the main checkout. KN_ENGINE_API_DIR overrides.
+API_M1=${KN_ENGINE_API_DIR:-/home/maludb/maludb-api-m12}
 DB=kn_engine_p3
 ROLE=kn_engine_p3
 P_API=8503; P_FAKE=8504
@@ -44,7 +46,7 @@ case "${1:-}" in
     die "the API did not come back" ;;
   start)
     [ -x "$PY" ] || die "$PY missing"
-    [ -d "$API_M1/app" ] || die "$API_M1 (the M1 worktree, API 0.4.0) missing"
+    [ -d "$API_M1/app" ] || die "$API_M1 (the API under proof) missing"
     sudo -n -u postgres true 2>/dev/null || die "passwordless sudo -u postgres is required"
     [ -e "$STATE" ] && stop
     exists=$("${PSQL[@]}" -d postgres -c "SELECT (SELECT count(*) FROM pg_database WHERE datname='$DB') + (SELECT count(*) FROM pg_roles WHERE rolname='$ROLE')")

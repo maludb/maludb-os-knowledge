@@ -256,6 +256,18 @@ function kn_diff(array $before, array $after): array
     return ['before' => $b, 'after' => $a];
 }
 
+/**
+ * A list field that may arrive as a PostgreSQL array literal — what partial_update_prefill() copies from a text[] column ('{a,"b c"}') —
+ * as the list it is; null when the value is not such a literal (the caller then splits it its own way).
+ */
+function kn_pg_literal_list(mixed $v): ?array
+{
+    if (!is_string($v) || !preg_match('/^\{.*\}$/s', trim($v))) {
+        return null;
+    }
+    return pg_text_array(trim($v));
+}
+
 /** "{1,2,3}" from a bigint[] column → [1, 2, 3]. */
 function pg_int_array(?string $text): array
 {

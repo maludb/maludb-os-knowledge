@@ -179,6 +179,33 @@ $groups = nav_groups();
     </main>
     <!--! [End] Main Content !-->
 
+    <!-- RECORD PICKER (references/record-picker.md): the ONE modal that chooses a record for any picker field on the screen —
+         outside the swap target so swaps keep it. The second exemption to the no-modal rule, beside hx-confirm. -->
+    <div class="modal fade" id="record-picker" tabindex="-1" aria-labelledby="record-picker-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="record-picker-title">Choose</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="record-picker-close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="record-picker-search p-3 border-bottom">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="feather-search"></i></span>
+                            <input type="search" class="form-control" id="record-picker-search" placeholder="Search…" autocomplete="off" aria-controls="record-picker-results"
+                                   hx-get="/pick/" hx-trigger="input changed delay:300ms, search, pickerload" hx-target="#record-picker-results" hx-swap="innerHTML"
+                                   hx-sync="this:replace" hx-vals="js:{...recordPickerValues()}" />
+                        </div>
+                    </div>
+                    <div id="record-picker-results" aria-live="polite"></div>
+                </div>
+                <div class="modal-footer d-none" id="record-picker-footer">
+                    <button type="button" class="btn btn-light-brand" id="record-picker-create-btn"><i class="feather-plus me-1"></i>New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?= view('shared/assistant-bar.php') ?>
     <?= view('shared/tab-bar.php', ['activeNav' => $activeNav]) ?>
 
@@ -232,6 +259,7 @@ $groups = nav_groups();
         });
     </script>
     <script src="/assets/js/common-init.min.js"></script>
+    <script src="/assets/js/record-picker.js"></script>   <!-- the record picker (design-system record-picker.md): after common-init -->
     <script src="/assets/js/theme-customizer-init.min.js"></script>
 </body>
 </html>

@@ -82,6 +82,7 @@ require_once __DIR__ . '/activity.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/directory.php';
 require_once __DIR__ . '/mail.php';
+require_once __DIR__ . '/picker.php';                 // the record picker: picker_field(), picker_source() — the registry is app/pickers.php
 require_once __DIR__ . '/features/shell/nav.php';
 require_once __DIR__ . '/features/shell/queries.php';
 

@@ -445,7 +445,7 @@ tools: about 42; activity tools: 6.
   polls every 3 s; a build's progress polls every 5 s while the page is visible.
 
 ## 9. Screens (the nxl look; the ask window and a source are read at 375 px first; the graph explorer is designed at 1280 px and
-works at 375; no modals; cards for named things — bases, sources, areas, pinned answers —, tables for the question log, builds,
+works at 375; no modals (the one sanctioned modal is the record picker, §16 2026-10-09); cards for named things — bases, sources, areas, pinned answers —, tables for the question log, builds,
 keys and admin lists; every name a link; every page a way back)
 
 **The shell**: a sidebar at 1280 (Home · Ask · **Bases** (each base: Ask, Sources, Areas, Graph, Guidelines, Builds, Questions,
@@ -609,3 +609,17 @@ vhost 31/33, the registry in step), Phase 0's 92 re-run green, the installer's `
 first-run button overflowed a phone's width. **K26 approved and built the same day** (kernel db/173: the consumer's identity in the headers
 `X-OS-Consumer` / `X-OS-Consumer-Agent`, `shares[].timeout_seconds`; `ask` and `search` declare 60 in `maludb-os.json`; plugin 0.8.0). **Next:** slice 1 (bases, templates, sharing, settings), then slice 2 (sources and sectioning,
 THE FIRST EXEMPLAR), slices 3 and 4, slice 5 (ask, THE SECOND) — the handoff point.
+
+**2026-10-09 — the record picker added to the shell, before the slices** (the owner's decision in the builder plugin 0.8.0,
+`design-system/references/record-picker.md`; exemplar ProcessCore's purchase order): a form that chooses a **record** — a base, a
+source, a section, a guideline, a person — does it through one searchable modal, never a `<select>` of every row; an enumeration
+(a kind, a status, a level, a guideline type) stays a select. The shell now carries `app/picker.php` (`picker_field()`,
+`picker_source()`, `picker_label()`), the EMPTY registry `app/pickers.php` (each slice adds its sources over the feature's own
+`find_*()`; `roles` there are Knowledge rights, any one admits), the endpoint `html/pick/index.php` (`GET /pick/?source=&q=&page=`:
+login, the source's rights, `q` cut at 80, declared params only, refusals as fragments, nothing logged), `shared/picker-rows.php`,
+`assets/js/record-picker.js`, the RECORD PICKER section of `app-overrides.css` and the one `#record-picker` modal in the layout
+after `</main>`. The shell has no unsaved-changes guard, so none admits `data-picker-value`; a slice that adds one must. No slice
+form exists yet, so nothing was converted. Slice specs reworded to name it: `bases-core.md` (base-share: the person/agent and the
+guest choosers), `guidelines-areas.md` (area-view: Add a source). Proof: `tests/phase2/picker.php` (22 checks, in `run.sh`).
+The slices prove their own sources (search, paging, a dependent param, a 422 keeping the label) as ProcessCore's
+`scripts/prove-picker.sh` does.

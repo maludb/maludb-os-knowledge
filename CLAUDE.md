@@ -65,7 +65,7 @@ fire-code example (laws parsed into provisions, amendments, editions, effective 
   pinned in `config/.env` before the installer's `apply` (8187 / 8835 / 8836). Never put a `config/.env` here before `apply`
   except that port pin (`deploy/ROOT_STEPS.sh` step 0); proofs read `$KN_DEV_ENV`.
 - Phone first: the ask window and a section are read at 375 px; the graph explorer is designed at 1280 px and works at 375; no
-  modals; full-page create/edit; cards for named things (bases, sources, areas, pinned answers), tables for the question log,
+  modals (the one exception: **the record picker**, `app/picker.php` — a form that chooses a record, a base, a source, a person, uses `form_picker()` / `picker_field()` and a source in `app/pickers.php`, never a `<select>` of every row; an enumeration stays a select; it only chooses and closes, never holds a form); full-page create/edit; cards for named things (bases, sources, areas, pinned answers), tables for the question log,
   builds, keys and admin lists; every name a link, every page a way back. **The first-run path is three steps — create a base,
   add documents, ask — and an empty base's first action is "Add documents".**
 - Commit after every finished step on `main`, in the sibling repos' message style (`Knowledge: …`); never push unless the owner

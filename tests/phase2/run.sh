@@ -18,7 +18,7 @@ cd "$ROOT"
 php bin/directory_sync.php --full >/dev/null || { echo "the first sync failed"; exit 1; }
 status=0
 echo "== browser"; node tests/phase2/browser.mjs || status=1
-for p in gates vhost; do
+for p in gates vhost picker; do
   echo "== $p"; php "tests/phase2/$p.php" || status=1
 done
 echo "== registry"; php bin/build_action_registry.php --check >/dev/null 2>&1 && echo "  ok   the registry and maludb-os.json approvals[] match the manifest" || { echo "  FAIL the registry or approvals[] is stale — run bin/build_action_registry.php"; status=1; }

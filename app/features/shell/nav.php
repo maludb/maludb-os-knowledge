@@ -128,7 +128,8 @@ function back_link(): ?array
     }
     $path = parse_url($back, PHP_URL_PATH) ?: '/';
     $labels = ['/' => 'Home', '/ask' => 'Ask', '/bases' => 'Bases', '/pinned' => 'Pinned', '/notifications' => 'Notifications', '/activity' => 'My activity',
-               '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens', '/admin/' => 'Admin'];
+               '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens', '/admin/' => 'Admin', '/admin/settings' => 'Settings', '/admin/templates' => 'Templates',
+               '/bases/new' => 'New base'];
     foreach ($labels as $p => $label) {
         if ($path === $p) {
             return [$back, $label];
@@ -143,6 +144,9 @@ function back_link(): ?array
     }
     if (preg_match('#^/bases/\d+$#', $path)) {
         return [$back, 'the knowledge base'];
+    }
+    if (preg_match('#^/bases/\d+/(share|settings|edit)$#', $path, $m)) {
+        return [$back, ['share' => 'sharing', 'settings' => 'the base\'s settings', 'edit' => 'the edit'][$m[1]]];
     }
     return null;
 }
@@ -159,7 +163,7 @@ function with_back(string $url, string $here): string
 }
 
 /** The slice that builds each not-yet-built menu item, in words — the placeholders and the registry read it. */
-const NAV_SLICES = ['ask' => 'slice 5', 'bases' => 'slice 1', 'pinned' => 'slice 5', 'admin' => 'slice 9'];
+const NAV_SLICES = ['ask' => 'slice 5', 'pinned' => 'slice 5', 'admin' => 'slice 9'];
 
 /**
  * A screen of the manifest that its slice has not built yet (Phase 2): the shell, the page header, one card saying which

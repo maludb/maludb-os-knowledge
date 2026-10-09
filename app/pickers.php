@@ -9,12 +9,28 @@ declare(strict_types=1);
  *           'label'  => fn(PDO, int $id): ?string]
  * `search` reuses the feature's own list query (find_*() with ILIKE and paging), never a second one; `label` names the chosen record.
  *
- * Empty in the Phase 2 shell. The slices add (see docs/knowledge-design.md and the ten slice specs):
- *   base     — slice 1, a form that chooses a knowledge base (copy a guideline set from, share with, move a source to, a key's base)
+ * Built:
+ *   person   — slice 1: the people and agents a base is shared with (base-share's first form; never a guest), over mcp_members
+ *   guest    — slice 1: the guests a base is shared with (base-share's guest form), over mcp_members
+ * The slices add (see docs/knowledge-design.md and the ten slice specs):
+ *   base     — a form that chooses a knowledge base (copy a guideline set from, move a source to, a key's base)
  *   source   — slice 2, a source (reprocess, supersede with, attach a section's source)
  *   section  — slice 2/5, a section (pin an answer to, link a guideline to)
  *   guideline— slice 3, a guideline (copy from another base, compile)
- *   person   — slice 1/8, a member or agent (share a base with, assign a key to) — over the directory mirror, never a select of everyone
  * A short enumeration (a kind, a status, a role, a guideline type) stays a <select>.
+ * The roles: an owner who holds only Member shares their own base (bases.create admits them); a curator holds base.share.
  */
-return [];
+require_once __DIR__ . '/features/bases/queries.php';
+
+return [
+    'person' => [
+        'title' => 'A person or an agent', 'noun' => 'person', 'roles' => ['bases.create', 'base.share'], 'params' => [],
+        'search' => static fn (PDO $pdo, string $q, array $params, int $page): array => search_share_principals($pdo, $q, false, $page),
+        'label' => static fn (PDO $pdo, int $id): ?string => share_principal_label($pdo, $id, false),
+    ],
+    'guest' => [
+        'title' => 'A guest', 'noun' => 'guest', 'roles' => ['bases.create', 'base.share'], 'params' => [],
+        'search' => static fn (PDO $pdo, string $q, array $params, int $page): array => search_share_principals($pdo, $q, true, $page),
+        'label' => static fn (PDO $pdo, int $id): ?string => share_principal_label($pdo, $id, true),
+    ],
+];

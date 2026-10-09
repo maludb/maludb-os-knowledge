@@ -140,3 +140,17 @@ html.app-skin-dark #record-picker .record-picker-search { background: #0f172a; }
 .header-apps-menu { min-width: 260px; }
 .header-apps-menu .header-apps-list { max-height: calc(100vh - 260px); overflow-y: auto; }
 .header-apps-menu .dropdown-item.active { background: var(--bs-primary-bg-subtle, rgba(59, 130, 246, .12)); color: inherit; cursor: default; }
+
+/* KNOWLEDGE BASES (slice 1, bases-core.md): the base's tabs are a row under the header at 1280 and a pill row that scrolls sideways
+   INSIDE the page at 375 (never the viewport); a template is a choice card (the whole card is the radio's label); a description and
+   a guideline keep their line breaks; the share table scrolls inside its card. */
+.kn-base-tabs { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; max-width: 100%; padding-bottom: 4px; }
+.kn-base-tabs .nav { flex-wrap: nowrap; gap: 4px; }
+.kn-base-tabs .nav-link { white-space: nowrap; display: flex; align-items: center; min-height: 44px; }
+.kn-choice-card { cursor: pointer; border: 1px solid var(--bs-border-color, #e5e7eb); }
+.kn-choice-card:has(input:checked) { border-color: var(--bs-primary, #3454d1); box-shadow: 0 0 0 1px var(--bs-primary, #3454d1); }
+.kn-choice-card input[type=radio] { width: 1.25rem; height: 1.25rem; }
+.kn-prewrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+#base-members-scroll { max-width: 100%; }
+details > summary.btn-touch { min-height: 44px; cursor: pointer; }
+.kn-level-select { min-width: 7rem; }

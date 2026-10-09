@@ -30,7 +30,7 @@ ok($rc === 0, 'the script parses (node --check)' . ($rc ? ': ' . implode(' ', $o
 $css = req('GET', '/assets/css/app-overrides.css')['body'];
 ok(str_contains($css, 'RECORD PICKER') && str_contains($css, '#record-picker .modal-dialog') && str_contains($css, '.record-picker-field .record-picker-open'), 'app-overrides.css has the RECORD PICKER section');
 
-echo "2. The endpoint — an empty registry answers 404 as a fragment\n";
+echo "2. The endpoint — a source the registry lacks answers 404 as a fragment\n";
 foreach (['/pick/?source=anything', '/pick/', '/pick/?source=' . str_repeat('x', 300), '/pick/?source=../../etc/passwd'] as $u) {
     $r = page($jAdmin, $u);
     ok($r['code'] === 404 && str_contains($r['body'], 'id="record-picker-error"') && str_contains($r['body'], 'That list does not exist.') && !str_contains($r['body'], '<html'), "signed in, GET $u: 404 with the fragment, not a page");
@@ -47,7 +47,9 @@ $r = req('POST', '/pick/', ['jar' => $jAdmin, 'form' => ['source' => 'anything']
 ok($r['code'] === 404, 'a search is a GET; a POST with a source the registry lacks is the same 404 (nothing is chosen or written)');
 
 echo "3. The registry and the log\n";
-ok((require $root . '/app/pickers.php') === [], 'app/pickers.php returns [] — no slice has added a source yet');
+$sources = require $root . '/app/pickers.php';
+$shaped = array_filter($sources, static fn ($s): bool => is_array($s) && isset($s['title'], $s['noun'], $s['roles'], $s['params'], $s['search'], $s['label']) && is_callable($s['search']) && is_callable($s['label']));
+ok(count($shaped) === count($sources) && isset($sources['person'], $sources['guest']), 'app/pickers.php: every source keeps the contract (slice 1 added person and guest): ' . implode(', ', array_keys($sources)));
 $before = last_activity_id();
 page($jAdmin, '/pick/?source=anything');
 ok(last_activity_id() === $before, 'a search is not an action: nothing is written to the activity log');

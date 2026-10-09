@@ -13,11 +13,13 @@ foreach (['/sso' => 403, '/sso/logout' => 405] as $path => $want) {
 }
 ok(page($j, '/settings/tokens/')['code'] === 200 && page($j, '/settings/tokens')['code'] === 200, '/settings/tokens/ and /settings/tokens both reach settings/tokens/index.php');
 ok(page($j, '/settings/')['code'] === 200 && page($j, '/settings')['code'] === 200, '/settings/ and /settings both reach settings/index.php');
-ok(page($j, '/bases/')['code'] === 200 && page($j, '/bases')['code'] === 200, '/bases/ and /bases both reach bases/index.php (the placeholder)');
+ok(page($j, '/bases/')['code'] === 200 && page($j, '/bases')['code'] === 200, '/bases/ and /bases both reach bases/index.php');
 ok(page($j, '/ask')['code'] === 200 && page($j, '/pinned')['code'] === 200, '/ask and /pinned reach ask.php and pinned.php (the placeholders)');
 ok(page($j, '/admin/')['code'] === 403 && page($j, '/admin')['code'] === 403, '/admin/ and /admin resolve to admin/index.php (403 for a curator, by the right)');
 ok(page($j, '/activity')['code'] === 200 && page($j, '/notifications')['code'] === 200, '/activity and /notifications resolve to their own files');
-ok(page($j, '/bases/new')['code'] === 404 && page($j, '/bases/1')['code'] === 404 && page($j, '/bases/1/edit')['code'] === 404, '/bases/new, /bases/1 and /bases/1/edit are rewritten to form.php and view.php, which slice 1 builds: 404 until then');
+ok(page($j, '/bases/new')['code'] === 200 && page($j, '/bases/1')['code'] === 200 && page($j, '/bases/1/edit')['code'] === 200 && page($j, '/bases/1/share')['code'] === 200,
+    '/bases/new, /bases/1, /bases/1/edit and /bases/1/share are rewritten to form.php, view.php and share.php (slice 1)');
+ok(str_contains(page($j, '/bases/999999')['body'], 'Knowledge base not found.'), 'a base that does not exist reaches view.php, which says so');
 ok(page($j, '/bases/1/sources')['code'] === 404 && page($j, '/sources/7/outline')['code'] === 404, 'a page of a record (/bases/1/sources, /sources/7/outline) is rewritten to its own file: 404 until its slice');
 ok(req('GET', '/nosuchscreen', ['jar' => $j])['code'] === 404, 'an unknown path: 404');
 ok(req('GET', '/files/1')['code'] === 401, '/files/1 without a session: 401 (never a redirect — a file URL sits in an <img>)');

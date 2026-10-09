@@ -8,6 +8,8 @@
  * Run after the browser proof through tests/phase2/run.sh (the bases it seeds are idempotent).
  */
 require __DIR__ . '/lib.php';
+/** The menu items whose screen is still the shell's placeholder — a slice that builds one removes it here (and from NAV_SLICES). */
+const NAV_SLICES_LEFT = ['ask' => ['/ask', 'slice 5', 'Ask'], 'pinned' => ['/pinned', 'slice 5', 'Pinned'], 'admin' => ['/admin/', 'slice 9', 'Admin']];
 $json = ['headers' => ['Accept: application/json']];
 
 echo "1. Rights per role — every screen and placeholder answers 200 or 403\n";
@@ -42,11 +44,13 @@ ok(badge_of($jAvery) === 'Knowledge admin' && page($jAvery, '/admin/')['code'] =
 
 echo "2. The placeholders — a page naming its slice, 501 for JSON and for a POST\n";
 $stubs = trim((string) shell_exec('grep -rl "render_nav_stub(" ' . escapeshellarg(dirname(__DIR__, 2) . '/html') . ' 2>/dev/null | wc -l'));
-ok((int) $stubs === 4, "four controllers call render_nav_stub (ask, bases, pinned, admin): $stubs");
-foreach (['ask' => ['/ask', 'slice 5', 'Ask'], 'bases' => ['/bases/', 'slice 1', 'Bases'], 'pinned' => ['/pinned', 'slice 5', 'Pinned'], 'admin' => ['/admin/', 'slice 9', 'Admin']] as $id => [$url, $slice, $title]) {
+ok((int) $stubs === count(NAV_SLICES_LEFT), 'the controllers still calling render_nav_stub are the menu items not built yet (' . implode(', ', array_keys(NAV_SLICES_LEFT)) . "): $stubs");
+foreach (NAV_SLICES_LEFT as $id => [$url, $slice, $title]) {
     $b = page($jAdmin, $url)['body'];
     ok(str_contains($b, 'id="' . $id . '-coming"') && str_contains($b, $title . ' is not built yet') && str_contains($b, $slice . ' builds this screen') && str_contains($b, '<title>' . $title . ' · Knowledge</title>'), "$url: the shell, the header and one card saying $slice builds it");
 }
+$b = page($jAdmin, '/bases/')['body'];
+ok(str_contains($b, 'id="base-list"') && !str_contains($b, 'id="bases-coming"'), '/bases/ is built (slice 1): the list, not the placeholder');
 $r = page($jAdmin, '/ask', $json);
 ok($r['code'] === 501 && (json_decode($r['body'], true)['error']['code'] ?? '') === 'not_built', 'a JSON caller on a placeholder: 501 not_built');
 $r = req('POST', '/ask', ['jar' => $jAdmin, 'form' => ['csrf_token' => page_csrf($jAdmin)]]);

@@ -244,6 +244,32 @@ Watcher (an agent with no grant).
   JavaScript off creates, shares and saves; the registry reads 8 screens and 14 actions of this slice built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-09 by the planning model; proven by `tests/phase3/slice1/run.sh` — 231 checks under php -S and the same 231 under a real Apache
+(`KN_APP=apache`)**: bases 28, share 40, visibility 26, settings 28, lifecycle 24, json 29, the browser 54 (375 × 740 and 1280 × 800, JavaScript
+off), the registry and approvals in step, no PHP warning in the server's log. The registry reads the 8 screens and 14 actions built. Phase 2's
+proofs updated for a built `/bases` (the placeholders still standing are listed in `tests/phase2/gates.php` `NAV_SLICES_LEFT`; the picker
+registry now holds `person` and `guest`) — 198 green; Phase 0's 92 green; the installer's `plan` clean (49 steps).
+
+What the build settled, for every later slice to copy:
+- **`kn_guard_fields()`** (`app/handler.php`): the database's refusal — a RAISE, a duplicate, a CHECK or a trigger's check_violation, a missing
+  reference — named on its field by constraint name or by a regex of the database's own sentence (`base_field_refusals()`,
+  `share_field_refusals()`, `kn_settings_refusals()`); an unmapped trigger sentence is shown as written, an unmapped constraint message never.
+  `kn_guard()` alone let a CHECK (23514) through as a 500.
+- **`kn_done()`** answers JSON with the bare location (no `?notice=`), so a create's location ends in its id.
+- `base_from_request(PDO, ?string $screen)` names the screen in the admin-view log; `base_screen_view()` logs a base's screen with `base_id`;
+  `require_base_own()` gates the own-level actions; `require_base_live()` says "archived: restore it first".
+- **An `own` share is a co-curator, not an owner**: `kn_base_level()` (db/006) answers own only for the owner and the admin, so only they may
+  give own. **Adding** a share to an archived base is refused; removing one is not.
+- **Delete** refuses any live build (db/009 allows one per base): a `forget` one says "This base is being deleted.", any other "A build is
+  running: cancel it first."; an archived base is live under its `deleting-` key for the moment its forget build is queued (db/009 refuses a
+  build on an archived base), then archived again, in one transaction; the forget build's `items_total` is the sections holding a document id.
+  A base deleted at once takes its attachment rows, its notes and (after the commit) its files.
+- The tabs (`BASE_TABS`) start with **Overview**; a tab is built when its controller exists and does not call `render_nav_stub()` — Ask stays
+  hidden until slice 5 replaces the placeholder.
+- The record picker's `person` and `guest` sources admit `bases.create` or `base.share` (an owner holding only Member shares their own base).
+- The admin's settings: sizes are entered in MB (largest file) and KB (largest page) and stored in bytes (an agent may send the bytes column);
+  the time zone is checked against PHP's list (the database has no rule); a form whose right the person lacks is shown read-only;
+  `app/features/admin/handler.php` (one handler shape for the three forms) is beyond the file list above.
+- "Add documents" is a plain link to `/sources/new?base=` until slice 2 builds it.
 
 ## Open questions

@@ -133,6 +133,62 @@ function kn_guard(PDO $pdo, callable $step): mixed
     }
 }
 
+/**
+ * kn_guard() that names the field (slice 1, the CRUD exemplar): the database's refusal — a RAISE (P0001), a duplicate (23505), a
+ * CHECK or a trigger's check_violation (23514), a missing reference (23503) — becomes a 422 on the field it concerns. $fields maps a
+ * constraint or index name, or a regex of the database's own sentence (a key starting with '/'), to [field, sentence|null]: null =
+ * the database's words. An unmapped trigger sentence is shown as it is; an unmapped constraint message ("new row for relation …")
+ * is never shown — "That could not be saved." Anything that is not a refusal is kn_guard()'s.
+ */
+function kn_guard_fields(PDO $pdo, callable $step, array $fields): mixed
+{
+    return kn_guard($pdo, static function () use ($pdo, $step, $fields): mixed {
+        try {
+            return $step();
+        } catch (PDOException $e) {
+            $code = (string) $e->getCode();
+            if (!in_array($code, ['P0001', '23505', '23514', '23503'], true)) {
+                throw $e;
+            }
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $words = db_error_words($e);
+            $constraint = preg_match('/constraint "([^"]+)"/', $words, $m) === 1 ? $m[1] : null;
+            foreach ($fields as $match => [$field, $sentence]) {
+                $hit = str_starts_with((string) $match, '/') ? preg_match((string) $match, $words) === 1 : $constraint === $match;
+                if ($hit) {
+                    kn_refuse_fields([$field => $sentence ?? kn_sentence($words)]);
+                }
+            }
+            error_log('db refusal: ' . $words);
+            $machine = $constraint !== null || str_starts_with($words, 'new row for relation') || str_starts_with($words, 'duplicate key')
+                || str_starts_with($words, 'insert or update on table') || str_starts_with($words, 'update or delete on table');
+            refuse(422, $machine ? 'That could not be saved.' : kn_sentence($words));
+        }
+    });
+}
+
+/** The database's own sentence of an error: the text after "ERROR:" up to its DETAIL or CONTEXT. */
+function db_error_words(Throwable $e): string
+{
+    $text = $e->getMessage();
+    $at = strpos($text, 'ERROR:');
+    $text = $at === false ? $text : substr($text, $at + 6);
+    return trim((string) (preg_split('/\R|DETAIL:|CONTEXT:|HINT:/', $text)[0] ?? ''));
+}
+
+/** A sentence a person reads: a capital first letter and a full stop. */
+function kn_sentence(string $words): string
+{
+    $words = trim($words);
+    if ($words === '') {
+        return 'That could not be saved.';
+    }
+    $words = mb_strtoupper(mb_substr($words, 0, 1)) . mb_substr($words, 1);
+    return preg_match('/[.!?]$/u', $words) === 1 ? $words : $words . '.';
+}
+
 /** A refusal with field errors: JSON gets {errors[], fields{}}; a browser the first sentence (422). $fields: name => sentence. */
 function kn_refuse_fields(array $fields): never
 {
@@ -171,12 +227,17 @@ function kn_notice(?string $key, array $map): ?array
     return $key === null ? null : ($map[$key] ?? null);
 }
 
-/** The handler's end: what it did, the record, where to land; JSON gets it all, HTMX follows, a browser is redirected. */
+/**
+ * The handler's end: what it did, the record, where to land; JSON gets it all, HTMX follows, a browser is redirected. The notice
+ * banner (?notice=) is a browser's: JSON's location is the bare path, so a create's location ends in the record id.
+ */
 function kn_done(string $did, int|string|null $recordId, string $land, string $event = '', array $extra = []): never
 {
     emit_action_status(true, ['did' => $did, 'record_id' => $recordId, 'refresh' => $event] + $extra);
     if (wants_json()) {
-        respond_saved(['did' => $did, 'record_id' => $recordId, 'location' => $land, 'refresh' => $event] + $extra);
+        $bare = preg_replace('/([?&])notice=[^&#]*&?/', '$1', $land) ?? $land;
+        $bare = rtrim(preg_replace('/[?&](#|$)/', '$1', $bare) ?? $bare, '?&');
+        respond_saved(['did' => $did, 'record_id' => $recordId, 'location' => $bare, 'refresh' => $event] + $extra);
     }
     saved_go($land, $event);
 }

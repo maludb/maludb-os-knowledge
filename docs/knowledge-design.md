@@ -626,3 +626,11 @@ The slices prove their own sources (search, paging, a dependent param, a 422 kee
 
 
 **2026-10-09 — the application switcher added to the shell** (K31, the kernel's `docs/build-specs/kernel-app-switcher.md`; the plugins at 0.9.0): `app/switcher.php` and `shared/app-switcher.php` in `header-right` where the ad-hoc "All applications" icon was — the Helpdesk button and the dropdown of every application the person may open, from the kernel's `GET /api/v1/apps/mine.php` as the person, cached five minutes; every link a launch on `OS_LAUNCHER_URL`; nothing before the kernel answers. Proven by `tests/phase2/switcher.php` (the shell without a kernel, the partial from a fixture).
+
+**2026-10-09 — slice 1 built and proven** (bases, templates, sharing and settings — the CRUD exemplar, `docs/build-specs/bases-core.md`): the 8
+screens and 14 actions; the base's tabs; sharing with people, agents, departments, guests and applications through the record picker's `person`
+and `guest` sources; visibility; archive, restore and delete with the forget build (divergence 2); the admin's settings, limits and retention and
+the templates. The kit gained `kn_guard_fields()` (the database's refusal on its field) and a bare JSON location in `kn_done()`. Proof
+`tests/phase3/slice1/run.sh`: 231 checks under php -S and under Apache; Phase 2's 198 and Phase 0's 92 green; `plan` clean. The action registry
+had been stale since the K26 wording (2026-10-06) and is regenerated. **Next:** slice 2 (sources and sectioning, THE FIRST EXEMPLAR), slices 3
+and 4, slice 5 (ask, THE SECOND) — the handoff point.

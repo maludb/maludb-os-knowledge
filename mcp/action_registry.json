@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-09T20:28:18+00:00",
+    "generated_at": "2026-10-09T20:43:47+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -65,8 +65,8 @@
                 "mine",
                 "archived"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "base-add": {
             "screen": "base-add",
@@ -76,7 +76,7 @@
             "params": [
                 "template"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "base-view": {
@@ -85,7 +85,7 @@
             "section": "Bases, templates, sharing and settings (slice 1)",
             "when": "a base at a glance: description, counts, areas, the last build, the curators, an ask box; an empty base's first action is Add documents",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "base-edit": {
@@ -94,7 +94,7 @@
             "section": "Bases, templates, sharing and settings (slice 1)",
             "when": "to change a base's name, key, description or template (the template only while it is empty)",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "base-share": {
@@ -103,7 +103,7 @@
             "section": "Bases, templates, sharing and settings (slice 1)",
             "when": "who may read or curate a base and why; share with a person, an agent, a department, a guest or an application; make it internal",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "base-settings": {
@@ -112,7 +112,7 @@
             "section": "Bases, templates, sharing and settings (slice 1)",
             "when": "a base's auto-extract, sensitivity, language and monthly text limit",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-settings": {
@@ -121,7 +121,7 @@
             "section": "Bases, templates, sharing and settings (slice 1)",
             "when": "the application's settings, limits and retention, each its own form",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "templates": {
@@ -130,7 +130,7 @@
             "section": "Bases, templates, sharing and settings (slice 1)",
             "when": "the templates and the guidelines each ships, read-only",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "sources": {
@@ -797,7 +797,7 @@
             "who": "bases.create",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "base_update": {
             "action": "base_update",
@@ -842,7 +842,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the base",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "base_settings_save": {
@@ -888,7 +888,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "base_visibility_set": {
             "action": "base_visibility_set",
@@ -915,7 +915,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "base_share": {
             "action": "base_share",
@@ -954,7 +954,7 @@
             "who": "base.share on a curated base",
             "agent": true,
             "record_id": "the share row",
-            "built": false
+            "built": true
         },
         "base_share_guest": {
             "action": "base_share_guest",
@@ -981,7 +981,7 @@
             "who": "base.share on a curated base",
             "agent": true,
             "record_id": "the share row",
-            "built": false
+            "built": true
         },
         "base_share_application": {
             "action": "base_share_application",
@@ -1008,7 +1008,7 @@
             "who": "base.share on a curated base",
             "agent": true,
             "record_id": "the share row",
-            "built": false
+            "built": true
         },
         "base_member_remove": {
             "action": "base_member_remove",
@@ -1035,7 +1035,7 @@
             "who": "base.share on a curated base",
             "agent": true,
             "record_id": "the share row",
-            "built": false
+            "built": true
         },
         "base_archive": {
             "action": "base_archive",
@@ -1056,7 +1056,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "base_restore": {
             "action": "base_restore",
@@ -1077,7 +1077,7 @@
             "who": "base.manage on a curated base",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "base_delete": {
             "action": "base_delete",
@@ -1104,7 +1104,7 @@
             "who": "base.manage at own level",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "settings_save": {
             "action": "settings_save",
@@ -1185,7 +1185,7 @@
             "who": "settings.manage",
             "agent": true,
             "record_id": "the settings",
-            "built": false
+            "built": true
         },
         "limits_save": {
             "action": "limits_save",
@@ -1236,7 +1236,7 @@
             "who": "limits.manage",
             "agent": true,
             "record_id": "the settings",
-            "built": false
+            "built": true
         },
         "retention_set": {
             "action": "retention_set",
@@ -1257,7 +1257,7 @@
             "who": "retention.manage",
             "agent": true,
             "record_id": "the settings",
-            "built": false
+            "built": true
         },
         "source_add": {
             "action": "source_add",

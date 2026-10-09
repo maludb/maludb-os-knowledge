@@ -154,3 +154,14 @@ html.app-skin-dark #record-picker .record-picker-search { background: #0f172a; }
 #base-members-scroll { max-width: 100%; }
 details > summary.btn-touch { min-height: 44px; cursor: pointer; }
 .kn-level-select { min-width: 7rem; }
+
+/* SOURCES AND SECTIONS (slice 2, sources-sections.md): the drop zone is a dashed target that takes a drag; the outline indents a level
+   by 12 px and wraps inside the viewport at any depth; a section's words keep their line breaks and wrap long tokens; the quote is marked. */
+.kn-drop-zone { border: 2px dashed var(--bs-border-color, #cbd5e1); background: var(--bs-tertiary-bg, #f8fafc); cursor: pointer; min-height: 160px; }
+.kn-drop-zone.kn-drop-over { border-color: var(--bs-primary, #3454d1); background: rgba(52, 84, 209, .06); }
+.kn-outline { padding-left: 12px; margin: 0; list-style: none; }
+.kn-outline .kn-outline-link { overflow-wrap: anywhere; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+.kn-outline-scroll { max-width: 100%; overflow-x: auto; }
+.kn-section-text { font-size: 15px; line-height: 1.6; }
+.kn-section-text mark#quote { background: #fde68a; padding: 0 2px; border-radius: 2px; }
+html.app-skin-dark .kn-section-text mark#quote { background: #a16207; color: #fff; }

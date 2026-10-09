@@ -23,7 +23,7 @@ $curators = $o['curators'] ?? []; ?>
             <?php if ($may['add_sources']): ?>
                 <div class="fw-semibold mb-1">Add documents to <?= e($b['name']) ?></div>
                 <div class="fs-12 text-muted mb-3">Files, pasted text or a web page. Each is cut into sections, and every answer quotes them.</div>
-                <a href="/sources/new?base=<?= $id ?>" class="btn btn-primary btn-touch" id="base-add-documents"><i class="feather-upload me-1"></i>Add documents</a>
+                <?= hx_link('/sources/new?base=' . $id, '<i class="feather-upload me-1"></i>Add documents', 'btn btn-primary btn-touch', 'id="base-add-documents"') ?>
             <?php else: ?>
                 <div class="fs-12 text-muted" id="base-view-nothing-yet">Nothing has been added to this base yet.</div>
             <?php endif; ?>

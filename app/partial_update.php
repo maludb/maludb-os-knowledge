@@ -11,6 +11,7 @@ declare(strict_types=1);
  * `any field of`). Every Knowledge record has a bigint id. */
 const PARTIAL_UPDATE_TARGETS = [
     '/bases/save.php' => ['knowledge_bases', 'base', 'mcp_bases', 'base_id'],         // Phase 3, slice 1
+    '/sources/update.php' => ['sources', 'source', 'mcp_sources', 'source_id'],       // slice 2
 ];
 
 function partial_update_prefill(PDO $pdo): void

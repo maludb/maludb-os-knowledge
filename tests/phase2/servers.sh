@@ -43,7 +43,7 @@ PY
       # mod_php reads the application's environment from the process: the scratch .env is exported above, so the vhost needs no SetEnv.
       apache2 -f "$STATE/apache/main.conf" -k start
     else
-      ( cd "$ROOT" && PHP_CLI_SERVER_WORKERS=4 php -d upload_max_filesize=64M -d post_max_size=72M -S 127.0.0.1:8501 -t html tests/dev_router.php >"$STATE/app.log" 2>&1 & echo $! > "$STATE/app.pid" )
+      ( cd "$ROOT" && PHP_CLI_SERVER_WORKERS=4 php -d upload_max_filesize=52M -d post_max_size=100M -d max_file_uploads=20 -S 127.0.0.1:8501 -t html tests/dev_router.php >"$STATE/app.log" 2>&1 & echo $! > "$STATE/app.pid" )
     fi
     for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8501/api/v1/health && break; sleep 0.2; done
     echo "servers up (app :8501 ${KN_APP:-php}, fake kernel :8502, fake MaluDB + MaluMail :8506)" ;;

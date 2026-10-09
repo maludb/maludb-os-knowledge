@@ -69,7 +69,11 @@ for (const [label, vp] of [['375 x 740', PHONE], ['1280 x 800', DESK]]) {
   ok(await page.locator('#base-add-documents').isVisible(), `three taps land on the base (${id}) with Add documents first`);
   ok(sql(`SELECT template FROM knowledge_bases WHERE id = ${id}`) === 'smoke_browser', 'the template tapped is the base\'s');
   const tabs = await page.locator('#base-tabs .nav-link').evaluateAll((els) => els.map((e) => e.id));
-  ok(JSON.stringify(tabs) === JSON.stringify(['base-tab-overview', 'base-tab-share', 'base-tab-settings']), 'the tabs show only the built slices\' (Overview, Share, Settings): ' + tabs.join(', '));
+  // a tab is lit only by its slice's controller: Overview, Share and Settings are slice 1's; a later slice adds its own (Sources, slice 2); the
+  // placeholders (Ask until slice 5) and the unbuilt ones never show
+  const built = ['base-tab-overview', 'base-tab-sources', 'base-tab-share', 'base-tab-settings'];
+  ok(tabs[0] === 'base-tab-overview' && tabs.includes('base-tab-share') && tabs.includes('base-tab-settings') && tabs.every((t) => built.includes(t)) && !tabs.includes('base-tab-ask'),
+    'the tabs show only the built slices\' (Overview first, Share, Settings, nothing unbuilt): ' + tabs.join(', '));
   o = await overflow(page); ok(o.sw === o.iw, `no sideways scroll on the base (${o.sw} = ${o.iw})`);
   s = await small(page); ok(s.length === 0, 'every control of the base is at least 44 px ' + s.join(', '));
   await page.screenshot({ path: `${SHOTS}/${tag}-base-view.png`, fullPage: true });

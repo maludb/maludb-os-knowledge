@@ -91,13 +91,16 @@ function require_base_live(array $b): void
     }
 }
 
-/** A screen of a base was opened: screen.view with base_id (and after.base_id); JSON readers only when they ask (log_screen_view's rule). */
-function base_screen_view(PDO $pdo, string $screen, int $baseId): void
+/**
+ * A screen of a base was opened: screen.view with base_id (and after.base_id, plus $after — a source's or a section's id); JSON readers
+ * only when they ask (log_screen_view's rule).
+ */
+function base_screen_view(PDO $pdo, string $screen, int $baseId, array $after = []): void
 {
     if (wants_json() && ($_SERVER['HTTP_X_SCREEN_VIEW'] ?? '') !== '1') {
         return;
     }
-    log_activity($pdo, 'screen.view', null, null, ['screen' => $screen, 'base_id' => $baseId, 'after' => ['base_id' => $baseId]]);
+    log_activity($pdo, 'screen.view', null, null, ['screen' => $screen, 'base_id' => $baseId, 'after' => ['base_id' => $baseId] + $after]);
 }
 
 /** A row of the trail about a base: base_id on every one (design §6.4). */

@@ -266,6 +266,29 @@ The world: slice 1's (Priya owns "SMOKE Field Manuals", Marco curates it, Reid r
   screens and 5 actions of this slice built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-09 by the planning model — THE FIRST EXEMPLAR; proven by `tests/phase3/slice2/run.sh`: 192 checks under php -S and the same
+under a real Apache (`KN_APP=apache`)** — upload 18, worker 23, paste 10, address 27, views 31, remove and replace against the real engine 25,
+purge 8, JSON and agents 16, the browser 34 (375 × 740 and 1280 × 800, JavaScript off) — plus the registry and approvals in step and no PHP
+warning in the server's log. The registry reads the 6 screens and 5 actions built. Slice 1's proofs (231), Phase 2's (199) and Phase 0's (92)
+stay green.
+
+What the build settled, for every later slice to copy:
+- **`tests/phase3/engine.sh start|stop|restart-api`**: the real MaluDB API 0.4.0 (the M1 worktree) on a scratch memory database `kn_engine_p3`
+  with the fake provider, a private auth store, a token minted by proving the login and appended to the proofs' env file
+  (`MALUDB_KB_API_URL`, `MALUDB_KB_API_TOKEN`, `KN_PROOF_FAKE_URL`, `KN_PROOF_PROVIDER_SECRET`); `restart-api` is the "engine down, then back"
+  step. A proof configures a base's namespace with `kn_engine_config_namespace()` and ingests as slice 4's build will.
+- **The proof's web server is on :8505, not :8507** — :8507 is the internal vhost under `KN_APP=apache`. The dev map is
+  `docs.example.test=93.184.215.14@127.0.0.1:8505`, written into the env file by `run.sh`, so the add handler's check and the worker resolve alike.
+- **286 is sent as a whole status line** (`HTTP/1.1 286 Stop Polling`): Apache answers an unknown code given by number as a 500.
+- A name that does not resolve is `fetch_failed`; one that resolves to a non-public address `fetch_refused` (the redirect to 127.0.0.1 included).
+  `fetch_status` is stored as `fetch_status:<code>` so the words carry the status. A timeout's retry is bounded by the pass's deadline
+  (`KN_WORKER_DEADLINE`, 50 s by default): a page that sleeps 25 s fails after one 20 s attempt when the deadline leaves no room for a second.
+- The replace marks the old source forgotten before the new one is added (the same bytes may come back as the new version) and then sets
+  `superseded_by`; the area rows are copied; the old content is wiped (divergence 4).
+- A browser's plain multi-file POST is answered 303 to the form, which shows the result lines once (from the session); JSON answers `results`
+  (a line per file) and `records`; a POST that arrives empty is told the upload was too large before the CSRF check refuses it.
+- The fetched page's bytes are kept under a name whose extension matches its type (`page.html`, `page.pdf`, else the URL's own leaf).
+- The kit: `base_screen_view()` takes extra `after` ids (a source's, a section's). The deploy vhost carries the upload limits inside
+  `<IfModule php_module>` on BOTH vhosts — a browser uploads through the public one.
 
 ## Open questions

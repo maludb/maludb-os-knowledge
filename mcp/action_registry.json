@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-09T20:43:47+00:00",
+    "generated_at": "2026-10-09T21:12:07+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -144,7 +144,7 @@
                 "area",
                 "q"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "source-add": {
@@ -156,7 +156,7 @@
                 "base",
                 "tab"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "source-view": {
@@ -165,7 +165,7 @@
             "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
             "when": "one source: origin, status and its error in words, the outline, the pages, its areas, what it taught the graph; edit, replace, remove, retry",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "source-edit": {
@@ -174,7 +174,7 @@
             "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
             "when": "to change a source's title or language",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "source-replace": {
@@ -183,7 +183,7 @@
             "section": "Sources and sectioning — THE FIRST EXEMPLAR (slice 2)",
             "when": "to replace a source with a new version: its sections are forgotten and the new one is read afresh, its areas kept",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "section-view": {
@@ -195,7 +195,7 @@
                 "quote",
                 "back"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "guidelines": {
@@ -1308,7 +1308,7 @@
             "who": "sources.add on a curated base",
             "agent": true,
             "record_id": "the first source (records: every id)",
-            "built": false
+            "built": true
         },
         "source_update": {
             "action": "source_update",
@@ -1341,7 +1341,7 @@
             "who": "sources.manage on a curated base",
             "agent": true,
             "record_id": "the source",
-            "built": false
+            "built": true
         },
         "source_replace": {
             "action": "source_replace",
@@ -1392,7 +1392,7 @@
             "who": "sources.manage on a curated base",
             "agent": true,
             "record_id": "the new source",
-            "built": false
+            "built": true
         },
         "source_remove": {
             "action": "source_remove",
@@ -1413,7 +1413,7 @@
             "who": "sources.manage on a curated base",
             "agent": true,
             "record_id": "the source",
-            "built": false
+            "built": true
         },
         "source_retry": {
             "action": "source_retry",
@@ -1434,7 +1434,7 @@
             "who": "sources.add on a curated base",
             "agent": true,
             "record_id": "the source",
-            "built": false
+            "built": true
         },
         "guideline_save": {
             "action": "guideline_save",

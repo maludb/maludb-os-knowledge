@@ -634,3 +634,12 @@ the templates. The kit gained `kn_guard_fields()` (the database's refusal on its
 `tests/phase3/slice1/run.sh`: 231 checks under php -S and under Apache; Phase 2's 198 and Phase 0's 92 green; `plan` clean. The action registry
 had been stale since the K26 wording (2026-10-06) and is regenerated. **Next:** slice 2 (sources and sectioning, THE FIRST EXEMPLAR), slices 3
 and 4, slice 5 (ask, THE SECOND) — the handoff point.
+
+**2026-10-09 — slice 2 built and proven, THE FIRST EXEMPLAR** (`docs/build-specs/sources-sections.md`): adding documents (files with a drop zone,
+one POST per file; pasted text; a page by its address), the worker's discipline (one pass under the lock, a 50 s deadline; forget → purge →
+recover → read and cut, each source claimed by exactly one pass and written in one transaction), the fetcher (`app/knowledge/fetch.php`: the
+public-address check on every hop, the connection pinned, 10 MB, 20 s, five redirects), the source and section screens with the outline, the
+pages and a quote marked, replace, remove (forgotten in the engine within the minute) and retry, and the purge that finishes slice 1's deletion.
+The proofs run against the REAL MaluDB API 0.4.0 on a scratch memory database (`tests/phase3/engine.sh`). `tests/phase3/slice2/run.sh`: 192
+checks under php -S and under Apache. The kit's mirror no longer blanks a member's job title, phone and time zone on a hand-off (Inventory's
+fix). **Next:** slice 3 (guidelines, vocabulary, areas and the compile step), slice 4 (builds), slice 5 (ask, THE SECOND) — the handoff point.

@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-06T13:44:47+00:00",
+    "generated_at": "2026-10-09T20:28:18+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -501,7 +501,7 @@
             "screen": "connections",
             "url": "/admin/connections",
             "section": "The token API, keys and K7 (slice 7)",
-            "when": "which sibling applications read which bases, the shares and the reads, the last share calls; the K26 notice while the kernel does not name the consumer",
+            "when": "which sibling applications read which bases, the shares and the reads, the last share calls (K26 built 2026-10-06: the kernel names the consumer in `X-OS-Consumer`)",
             "params": [],
             "built": false,
             "stub": false

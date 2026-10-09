@@ -175,4 +175,11 @@ $r = req('GET', '/activity', ['headers' => as_agent($tok2)]);
 ok($r['code'] === 401 && (int) one('SELECT count(*) FROM members WHERE id = 900') === 0, 'an id with no mirror row is refused and never created');
 $ref = activity('member.refused', $since);
 ok($ref !== [] && (int) end($ref)['entity_id'] === 900, 'and logged member.refused with the id');
+
+echo "8. A hand-off keeps what the directory said\n";
+pdo()->exec("UPDATE members SET job_title = 'SMOKE Field engineer', phone = '+15550100', timezone = 'America/Chicago' WHERE id = 28");
+sign_on(28);
+$m = q('SELECT job_title, phone, timezone FROM members WHERE id = 28')[0];
+ok($m['job_title'] === 'SMOKE Field engineer' && $m['phone'] === '+15550100' && $m['timezone'] === 'America/Chicago',
+    "a sign-on whose claims carry no job title, phone or time zone keeps the feed's (mirror_apply_member — Inventory's Phase 2 found it blanking them): " . json_encode($m));
 finish();

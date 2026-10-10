@@ -210,6 +210,52 @@ the application principal `helpdesk`, base 2 to nothing.
   registry reads the four screens and four actions built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-10 by a Sonnet 5.5 worker; proven by `tests/phase3/slice7/run.sh`** — keys (mint, change, the screens) 34, rotate and revoke 25, the API 39
+(43 under Apache: the public vhost answers the API and `/internal/` stays 404), the rate 15, feedback through a key 16, K7 29 (30 under Apache: the share door
+answers on the internal vhost only), connections 12, JSON mode 17, the browser 67 (375 × 740 and 1280 × 800) — 254 checks under php -S and 259 under a real
+Apache, against the fake engine and the fake kernel, plus the registry and no PHP warning. The registry reads the 4 screens and 4 actions built. Slices 5 and 6,
+Phase 2 (its vhost check now expects the 401 the API answers) and slice 1 stay green.
+
+Settled in the build:
+- **One additive migration, `db/016_share_door_grant.sql`**: `GRANT EXECUTE ON FUNCTION kn_application_bases(text) TO knowledge_rw`. db/015 granted it to
+  `knowledge_records_ro` alone (a records server reading it directly), but every share reaches PHP through the bridge, which runs as `knowledge_rw`; without the
+  grant `kn_share_bases_index()` is "permission denied for function kn_application_bases". Nothing else in the schema changed.
+- **Confirmation is `hx-confirm`**, as every other destructive control of the application (area delete, source remove, member remove), not "a second page": rotate
+  and revoke ask in the browser's own confirm and the proof accepts the dialog (it checks the sentence). No-JavaScript posts directly, as in the other slices.
+- **Divergence 2 is half-closed by db/015**: `question_feedback.token_id` names the key. `rate_question()` gained a last optional argument (`?int $tokenId = null`);
+  the row is still one per (question, member), so a key's rating is its minter's and replaces the minter's own, and the minter's own rating clears the key. The
+  `mcp_question_feedback` view shows `key_label` beside the minter. The thumbs-down notice moved from `html/questions/feedback.php` into `feedback_tell_curators()`
+  (`app/features/ask/write.php`), which both that handler and the API's feedback call.
+- **`key.rotate` is logged on the new key** (entity = the new key, `old_key_id` and `new_key_id` in `after`), so the new key's history begins with where it came
+  from; the action's `record_id` is the new key too. A rotation of a key that is revoked **or past its end** is refused with `kn_key_rotate()`'s words "Only a live
+  key is rotated." on `fields.api_key` (the function alone would rotate an expired, unrevoked key). Mint and rotate are refused on an archived base; revoke, save and
+  the list are not.
+- **A limit above the default is refused only when it is a change**: an admin's higher limit survives a curator renaming the key; a blank limit on an edit sets the
+  default again. The area is an id or a slug; an area of another base reaches the database, which says so ("A key's area is an area of its base."); an archived or
+  proposed area of the same base is refused here.
+- **The API reads a JSON body (or a form post) itself** (`api_body()`) and never needs an `Accept` header; every refusal is `api_error()`'s JSON, never a page. A
+  session caller of a POST is held to the CSRF token (`X-CSRF-Token` header or `csrf_token` in the body, else 403 `csrf_failed`) — a key's call has none to forge. The
+  kit's `api_error()` gained an optional `$extra` (the 429's `limit`, the 422's `fields`, the 503's `question_id`); `api_rate_limit()` answers a key revoked between
+  its resolution and its count as the same 401.
+- **Failed answers are 503 with a code**: `engine_unavailable` or `engine_timeout` as they are, any other failure (`engine_auth`, `engine_error`, …) as `engine_error`;
+  `question_id` is in the error when a row was written (`/search` writes none). A refused question (`base_not_built`, `area_not_built`) is HTTP 200 with status `refused`.
+- **`GET /api/v1/bases` for a key adds `calls_today`** (the key's own count, top level) and shows only the key's area when it is bound to one; for a session caller it is
+  `mcp_bases` and the base's active areas. `limit` of `/search` is clamped to 1–20.
+- **The share budget is a process-wide override, restored**: `kn_share_budget()` sets `MALUDB_KB_API_TIMEOUT` to 50 for the call (an environment value below 50, as the
+  proofs set 3, is kept) and puts it back. A slower M1 answer is `failed` / `engine_timeout`, and the document's `message` for a share is "…the engine took too long to
+  answer; call search for the passages." Share results are always HTTP 200 documents through the bridge (`not_shared`, `consumer_unknown`, `invalid` included);
+  `share_bases` takes an optional `q` (a name filter). The consumer arrives as `caller.application` of the bridge message (the records server copies the kernel's
+  `X-OS-Consumer`); an application caller with no name is `consumer_unknown`. A member caller on a share op, and an application caller on any other op, are 403.
+- **`/api/v1/health` gains `engine`** (`ok` / `unavailable` / `answer_unavailable`), cached 60 s in `storage/cache/health-engine.json` (the proof clears it between steps).
+- **Connections**: the K26 line is a warning only when one of the last 50 `share.read` rows is `consumer_unknown` (else a plain note that the kernel names the consumer);
+  Admin › Settings links to it (the admin index is slice 9's). Its table of calls scrolls inside its card at 375.
+- **`key.rate_limited` once per bucket** reads `key_usage.refused` right after the refusing call (`= 1`); two simultaneous first refusals could both read 2 and log none
+  — a flood is still one row a minute at most, and the 429 is unaffected.
+- `tests/dev_router.php` gained the vhost's five API rewrites; `tests/phase2/vhost.php` now expects the one 401 body (it expected 404 "until slice 7");
+  `PARTIAL_UPDATE_TARGETS` names `/keys/save.php`; the worker's pass lists `key_usage` in `cron.run`.
 
 ## Open questions
+None open. **Settled by the planning model (2026-10-10):** the proof's "revoke through a confirm step (a second page, no modal)" is met by the
+application's `hx-confirm`, the confirmation every other destructive control uses (source remove, member remove, area delete) and the one
+exemption the design system makes to the no-modal rule; no separate confirmation page is built. Without JavaScript a revoke posts at once, as
+those controls do.

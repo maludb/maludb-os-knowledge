@@ -43,14 +43,33 @@ function ask_log(PDO $pdo, array $req, int $baseId, ?int $questionId, ?array $ar
         'error_code' => $errorCode, 'model' => $model, 'input_tokens' => (int) ($usage['input_tokens'] ?? 0), 'output_tokens' => (int) ($usage['output_tokens'] ?? 0)]]);
 }
 
-/** One rating per person per question (an upsert): ['rating', 'changed' (it differed from the one before), 'first' (no rating before)]. */
-function rate_question(PDO $pdo, int $questionId, int $memberId, string $rating, ?string $comment): array
+/**
+ * One rating per person per question (an upsert): ['rating', 'changed' (it differed from the one before), 'first' (no rating before)]. $tokenId: the key a
+ * rating through the token API came in on (a key's rating is its minter's: the row names both, db/015); a person's own rating clears it.
+ */
+function rate_question(PDO $pdo, int $questionId, int $memberId, string $rating, ?string $comment, ?int $tokenId = null): array
 {
     $before = one_value($pdo, 'SELECT rating FROM question_feedback WHERE question_id = :q AND member_id = :m', ['q' => $questionId, 'm' => $memberId]);
-    $pdo->prepare('INSERT INTO question_feedback (question_id, member_id, rating, comment) VALUES (:q, :m, :r, :c)
-                   ON CONFLICT (question_id, member_id) DO UPDATE SET rating = EXCLUDED.rating, comment = EXCLUDED.comment')
-        ->execute(['q' => $questionId, 'm' => $memberId, 'r' => $rating, 'c' => $comment]);
+    $pdo->prepare('INSERT INTO question_feedback (question_id, member_id, rating, comment, token_id) VALUES (:q, :m, :r, :c, :t)
+                   ON CONFLICT (question_id, member_id) DO UPDATE SET rating = EXCLUDED.rating, comment = EXCLUDED.comment, token_id = EXCLUDED.token_id')
+        ->execute(['q' => $questionId, 'm' => $memberId, 'r' => $rating, 'c' => $comment, 't' => $tokenId]);
     return ['rating' => $rating, 'changed' => $before !== null && $before !== $rating, 'first' => $before === null];
+}
+
+/** A thumbs-down tells the base's curators once each (kn_notify, kind feedback, one per question per curator). $q: the question row, $b: the base row. */
+function feedback_tell_curators(PDO $pdo, array $q, array $b): void
+{
+    $qid = (int) $q['question_id'];
+    $told = $pdo->prepare("SELECT 1 FROM notifications WHERE member_id = :m AND kind = 'feedback' AND record_type = 'question' AND record_id = :q");
+    $cur = $pdo->prepare('SELECT kn_base_curator_ids(:b)');
+    $cur->execute(['b' => (int) $q['base_id']]);
+    foreach ($cur->fetchAll(PDO::FETCH_COLUMN) as $m) {
+        $told->execute(['m' => (int) $m, 'q' => $qid]);
+        if ($told->fetchColumn() === false) {
+            $pdo->prepare("SELECT kn_notify(:m, 'feedback', :t, :body, 'question', :q, :d)")->execute(['m' => (int) $m,
+                't' => 'Thumbs down on "' . mb_substr(preg_replace('/\s+/', ' ', (string) $q['question']) ?? '', 0, 60) . '"', 'body' => (string) $b['name'], 'q' => $qid, 'd' => 'feedback:' . $qid . ':' . (int) $m]);
+        }
+    }
 }
 
 /** Pin through the database's own function (its words are the refusals). Answers the pin's id. */

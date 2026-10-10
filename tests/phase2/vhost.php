@@ -28,7 +28,9 @@ ok(page($j, '/files/1')['code'] === 404, '/files/1 with a session: 404 (no attac
 $h = req('GET', '/api/v1/health');
 ok($h['code'] === 200 && json_decode($h['body'], true)['application'] === 'knowledge', '/api/v1/health answers');
 ok(req('GET', '/api/v1/health.php')['code'] === 200, '/api/v1/health.php answers too');
-ok(req('POST', '/api/v1/ask')['code'] === 404 && req('GET', '/api/v1/bases')['code'] === 404 && req('GET', '/api/v1/questions/1')['code'] === 404, 'the questions API (/api/v1/ask, /bases, /questions/{id}) is rewritten to files slice 7 builds: 404 until then');
+$noKey = [req('POST', '/api/v1/ask'), req('POST', '/api/v1/search'), req('GET', '/api/v1/bases'), req('GET', '/api/v1/questions/1'), req('POST', '/api/v1/questions/1/feedback')];
+ok(count(array_unique(array_map(static fn ($r) => $r['code'] . ' ' . $r['body'], $noKey))) === 1 && $noKey[0]['code'] === 401 && json_decode($noKey[0]['body'], true)['error']['code'] === 'unauthorized',
+    'the questions API (/api/v1/ask, /search, /bases, /questions/{id}, /questions/{id}/feedback) is rewritten to the files slice 7 built: with no bearer key each answers the one 401 body');
 ok(req('GET', '/api/v1/other')['code'] === 404 && req('GET', '/api/')['code'] === 404, 'anything else under /api is 404');
 if (getenv('KN_APP') === 'apache') {
     ok(in_array(req('GET', '/mcp/records')['code'], [502, 503], true) && in_array(req('GET', '/mcp/activity')['code'], [502, 503], true), 'the MCP proxies are in the vhost and answer 502 until Phase 4 starts the servers');

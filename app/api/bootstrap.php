@@ -19,9 +19,9 @@ function api_json(array $payload, int $status = 200): never
     json_response($payload, $status);
 }
 
-function api_error(string $code, string $message, int $status): never
+function api_error(string $code, string $message, int $status, array $extra = []): never
 {
-    json_error($code, $message, $status);
+    json_error($code, $message, $status, $extra);
 }
 
 function api_cors(): void
@@ -132,7 +132,12 @@ function api_require_base(int $baseId): void
     }
 }
 
-/** Count one call of a key into its minute and day buckets (kn_rate_ok); the 31st in a minute is a 429 with Retry-After. A session caller is not limited. */
+/**
+ * Count one call of a key into its minute and day buckets (kn_rate_ok); the 31st in a minute is a 429 with Retry-After and a body naming the bucket
+ * (`limit`: minute | day). A session caller is not limited. The first refusal of a bucket is logged once (`key.rate_limited`: limit_hit, key_label,
+ * retry_after) — when the bucket's `refused` has just become 1 — so a flood writes one row a minute, not thousands. A key revoked between its
+ * resolution and its count is a 401 like any other.
+ */
 function api_rate_limit(): void
 {
     $key = api_key();
@@ -142,8 +147,19 @@ function api_rate_limit(): void
     $st = db()->prepare('SELECT ok, limit_hit, retry_after FROM kn_rate_ok(:t)');
     $st->execute(['t' => $key['token_id']]);
     $r = $st->fetch();
-    if ($r === false || !$r['ok']) {
-        header('Retry-After: ' . max(1, (int) ($r['retry_after'] ?? 60)));
-        api_error('rate_limited', 'Too many calls (' . ($r['limit_hit'] ?? 'limit') . ').', 429);
+    if ($r !== false && $r['ok']) {
+        return;
     }
+    $hit = (string) ($r['limit_hit'] ?? 'minute');
+    if (in_array($hit, ['no_key', 'revoked'], true)) {
+        api_error('unauthorized', 'A valid API key is required.', 401);
+    }
+    $retry = max(1, (int) ($r['retry_after'] ?? 60));
+    $first = db()->prepare('SELECT refused FROM key_usage WHERE token_id = :t AND bucket_kind = :k ORDER BY bucket_start DESC LIMIT 1');
+    $first->execute(['t' => $key['token_id'], 'k' => $hit === 'day' ? 'day' : 'minute']);
+    if ((int) $first->fetchColumn() === 1) {
+        log_activity(db(), 'key.rate_limited', 'key', $key['token_id'], ['base_id' => $key['base_id'], 'after' => ['limit_hit' => $hit, 'key_label' => $key['label'], 'retry_after' => $retry]]);
+    }
+    header('Retry-After: ' . $retry);
+    api_error('rate_limited', 'Too many calls (' . $hit . ').', 429, ['limit' => $hit]);
 }

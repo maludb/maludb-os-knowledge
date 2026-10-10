@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-10T13:27:25+00:00",
+    "generated_at": "2026-10-10T14:27:06+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -474,7 +474,7 @@
             "section": "The token API, keys and K7 (slice 7)",
             "when": "a base's API keys: label, area, limits, today's count, last use; mint, edit, rotate, revoke",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "key-add": {
@@ -485,7 +485,7 @@
             "params": [
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "key-edit": {
@@ -494,7 +494,7 @@
             "section": "The token API, keys and K7 (slice 7)",
             "when": "to change a key's label, area or limits",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "connections": {
@@ -503,7 +503,7 @@
             "section": "The token API, keys and K7 (slice 7)",
             "when": "which sibling applications read which bases, the shares and the reads, the last share calls (K26 built 2026-10-06: the kernel names the consumer in `X-OS-Consumer`)",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "proposals": {
@@ -2151,7 +2151,7 @@
             "who": "keys.manage on a curated base",
             "agent": true,
             "record_id": "the key (its value once, as key)",
-            "built": false
+            "built": true
         },
         "key_save": {
             "action": "key_save",
@@ -2196,7 +2196,7 @@
             "who": "keys.manage on a curated base",
             "agent": true,
             "record_id": "the key",
-            "built": false
+            "built": true
         },
         "key_rotate": {
             "action": "key_rotate",
@@ -2217,7 +2217,7 @@
             "who": "keys.manage on a curated base",
             "agent": true,
             "record_id": "the new key (its value once, as key)",
-            "built": false
+            "built": true
         },
         "key_revoke": {
             "action": "key_revoke",
@@ -2238,7 +2238,7 @@
             "who": "keys.manage on a curated base",
             "agent": true,
             "record_id": "the key",
-            "built": false
+            "built": true
         },
         "archivist_propose": {
             "action": "archivist_propose",

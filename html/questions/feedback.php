@@ -25,16 +25,7 @@ $r = kn_guard($pdo, static function () use ($pdo, $q, $qid, $me, $rating, $comme
     $r = rate_question($pdo, $qid, $me, $rating, $comment);
     question_log($pdo, 'question.feedback', $q, ['rating' => $rating, 'has_comment' => $comment !== null, 'changed' => $r['changed']]);
     if ($rating === 'down') {
-        $told = $pdo->prepare("SELECT 1 FROM notifications WHERE member_id = :m AND kind = 'feedback' AND record_type = 'question' AND record_id = :q");
-        $cur = $pdo->prepare('SELECT kn_base_curator_ids(:b)');
-        $cur->execute(['b' => (int) $q['base_id']]);
-        foreach ($cur->fetchAll(PDO::FETCH_COLUMN) as $m) {
-            $told->execute(['m' => (int) $m, 'q' => $qid]);
-            if ($told->fetchColumn() === false) {
-                $pdo->prepare("SELECT kn_notify(:m, 'feedback', :t, :body, 'question', :q, :d)")->execute(['m' => (int) $m,
-                    't' => 'Thumbs down on "' . mb_substr(preg_replace('/\s+/', ' ', (string) $q['question']) ?? '', 0, 60) . '"', 'body' => (string) $b['name'], 'q' => $qid, 'd' => 'feedback:' . $qid . ':' . (int) $m]);
-            }
-        }
+        feedback_tell_curators($pdo, $q, $b);
     }
     $pdo->commit();
     return $r;

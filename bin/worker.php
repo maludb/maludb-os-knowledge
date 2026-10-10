@@ -6,8 +6,8 @@ declare(strict_types=1);
  * advisory lock (a second pass exits 0 at once, never overlaps), has a deadline of 50 s from its start (each step stops taking new work
  * past it and finishes the item in hand), runs its steps in order and logs `cron.run` with each step's count (source cron).
  *   slice 2: kn_worker_forget → kn_worker_purge_bases → kn_worker_recover → kn_worker_sources   (app/knowledge/worker/sources.php)
- *   slice 4: → kn_worker_builds (app/knowledge/worker/builds.php: the automatic queue, forget-then-ingest, retries, the guards); slice 7: key-usage pruning and the retention
- *   sweep; slice 8: feed polling, the outbox and the Archivist's duty — each added to the order below.
+ *   slice 4: → kn_worker_builds (app/knowledge/worker/builds.php: the automatic queue, forget-then-ingest, retries, the guards); slice 7: → key_usage (kn_prune_key_usage())
+ *   and, with slice 9, the retention sweep; slice 8: feed polling, the outbox and the Archivist's duty — each added to the order below.
  *   php bin/worker.php
  */
 if (PHP_SAPI !== 'cli') { fwrite(STDERR, "CLI only.\n"); exit(1); }
@@ -29,6 +29,7 @@ $steps = [
     'recover' => static fn (): int => kn_worker_recover($pdo),
     'sources' => static fn (): int => kn_worker_sources($pdo, $deadline),
     'builds'  => static fn (): int => kn_worker_builds($pdo, $deadline),
+    'key_usage' => static fn (): int => (int) $pdo->query('SELECT kn_prune_key_usage()')->fetchColumn(),      // slice 7: the rate buckets older than their keep (db/011)
 ];
 foreach ($steps as $name => $step) {
     try {

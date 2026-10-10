@@ -15,6 +15,7 @@ const PARTIAL_UPDATE_TARGETS = [
     '/guidelines/save.php' => ['guidelines', 'guideline', 'mcp_guidelines', 'guideline_id'],          // slice 3
     '/vocabulary/save.php' => ['vocabulary_terms', 'term', 'mcp_vocabulary_terms', 'term_id'],
     '/areas/save.php' => ['focus_areas', 'focus_area', 'mcp_focus_areas', 'focus_area_id'],
+    '/keys/save.php' => ['mcp_access_tokens', 'api_key', 'mcp_keys', 'key_id'],      // slice 7 (the key's param is api_key: a base's own `key` is its slug)
 ];
 
 function partial_update_prefill(PDO $pdo): void

@@ -1,6 +1,7 @@
 <?php /** The application's settings, limits and retention — three forms, each its own action (screen `admin-settings`). Data: s (mcp_settings), may (settings, limits, retention), notice */ ?>
 <?= view('shared/header.php', ['id' => 'admin-settings', 'title' => 'Settings', 'crumbs' => [['Home', '/'], ['Bases', '/bases'], ['Settings', null]],
-    'back' => back_link() ?? ['/bases', 'Bases'], 'action' => hx_link('/admin/templates', '<i class="feather-layers me-1"></i>Templates', 'btn btn-light btn-touch', 'id="admin-settings-templates-link"')]) ?>
+    'back' => back_link() ?? ['/bases', 'Bases'], 'action' => hx_link('/admin/connections', '<i class="feather-share-2 me-1"></i>Connections', 'btn btn-light btn-touch me-1', 'id="admin-settings-connections-link"')
+        . hx_link('/admin/templates', '<i class="feather-layers me-1"></i>Templates', 'btn btn-light btn-touch', 'id="admin-settings-templates-link"')]) ?>
 <div class="main-content" id="admin-settings-content">
     <?= view('shared/notice.php', ['notice' => $notice]) ?>
     <?php foreach (KN_SETTINGS_FORMS as $form => [$title, $right, $action, $endpoint]): $editable = $may[$form]; ?>

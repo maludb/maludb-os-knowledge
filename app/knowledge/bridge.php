@@ -6,7 +6,8 @@ declare(strict_types=1);
  * kn_ask() and the engine without ever holding the MaluDB token. POST /internal/bridge.php on the INTERNAL port only, signed
  *   X-KN-Bridge: {unix_ts}.{hex hmac_sha256(ACTIONS_RELAY_KEY, "kn-bridge:" . unix_ts . "." . sha256_hex(body))}
  * with {op, caller: {kind: member, member_id} | {kind: application, application}, door, run_id, request_id, is_eval, args}. A member caller
- * acts with the screens' own gates (app.member_id set for the request); an application caller is honoured for the share ops only (slice 7).
+ * acts with the screens' own gates (app.member_id set for the request); an application caller is honoured for the share ops only (slice 7: share_ask,
+ * share_search, share_bases — judged by kn_application_base_ids() alone, no member).
  *   kn_bridge_verify()    401 unless loopback, ±30 s and the HMAC verifies — the server's REMOTE_ADDR, never a header
  *   kn_bridge_dispatch()  the op table: ask, search, suggest, admin_view, and (slice 6) the graph ops; slices 3 and 7 add theirs (KN_BRIDGE_OPS)
  */
@@ -14,6 +15,7 @@ require_once APP_ROOT . '/app/knowledge/ask.php';
 require_once APP_ROOT . '/app/features/ask/queries.php';
 require_once APP_ROOT . '/app/features/sources/queries.php';
 require_once APP_ROOT . '/app/features/graph/queries.php';
+require_once APP_ROOT . '/app/knowledge/share.php';
 
 const KN_BRIDGE_SKEW = 30;
 /** op => [handler function, the caller kinds it admits]. Later slices append. */
@@ -37,6 +39,10 @@ const KN_BRIDGE_OPS = [
     'source_graph'        => ['kn_bridge_source_graph', ['member']],
     'sections_for_subject' => ['kn_bridge_sections_for_subject', ['member']],
     'duplicate_subjects'  => ['kn_bridge_duplicate_subjects', ['member']],
+    // slice 7 — the K7 shares, for an `application` caller alone (the kernel's X-OS-Consumer, K26): app/knowledge/share.php
+    'share_ask'    => ['kn_bridge_share_ask', ['application']],
+    'share_search' => ['kn_bridge_share_search', ['application']],
+    'share_bases'  => ['kn_bridge_share_bases', ['application']],
 ];
 
 /** Null when the request may pass; else [http, code, message]. $server: $_SERVER (REMOTE_ADDR, HTTP_X_KN_BRIDGE). */
@@ -90,6 +96,33 @@ function kn_bridge_dispatch(PDO $pdo, array $msg): array
         db_apply_context($pdo);
     }
     return $fn($pdo, $msg, is_array($msg['args'] ?? null) ? $msg['args'] : []);
+}
+
+/** The consumer an application caller names (the kernel's X-OS-Consumer, passed by the records server as caller.application); null when it did not say. */
+function kn_bridge_consumer(array $msg): ?string
+{
+    $a = $msg['caller']['application'] ?? null;
+    return is_string($a) && $a !== '' ? $a : null;
+}
+
+function kn_bridge_share_ask(PDO $pdo, array $msg, array $a): array
+{
+    return [200, kn_share_ask($pdo, kn_bridge_consumer($msg), $a)];
+}
+
+function kn_bridge_share_search(PDO $pdo, array $msg, array $a): array
+{
+    return [200, kn_share_search($pdo, kn_bridge_consumer($msg), $a)];
+}
+
+function kn_bridge_share_bases(PDO $pdo, array $msg, array $a): array
+{
+    $doc = kn_share_bases_index($pdo, kn_bridge_consumer($msg));
+    $q = isset($a['q']) && is_string($a['q']) ? mb_strtolower(trim($a['q'])) : '';
+    if ($q !== '' && isset($doc['bases'])) {                                  // bases_index's `q`: a name filter
+        $doc['bases'] = array_values(array_filter($doc['bases'], static fn (array $b): bool => str_contains(mb_strtolower($b['name']), $q)));
+    }
+    return [200, $doc];
 }
 
 /** A base named by id or key → its id (0 when unknown — the gate then says "not found"). */

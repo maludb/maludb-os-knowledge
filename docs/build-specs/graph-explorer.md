@@ -161,7 +161,7 @@ mixes both bases' documents and subjects, a path Zorblat Pump → Merrow Filter 
   the registry reads the four screens built.
 
 ## Built and proven
-**Built 2026-10-10 by a Sonnet 5.5 worker from this spec; to be verified and committed by the planning model; proven by `tests/phase3/slice6/run.sh`** — overview 19,
+**Built 2026-10-10 by a Sonnet 5.5 worker from this spec; verified and committed by the planning model the same day (8397cc8); proven by `tests/phase3/slice6/run.sh`** — overview 19,
 subject 26, confinement 11, communities 13, path 17, duplicates 15, cache 19, taught 13, the bridge 34, engine down 14, the browser 93 (375 × 740 and 1280 × 800)
 — 274 checks under php -S and 274 under a real Apache, against the fake engine (`tests/fake_kb_engine.php`, its `graph` state) and the fake kernel, plus the
 registry (4 screens built: 44 of 61 screens, 45 of 62 actions) and no PHP warning. Slices 2 and 5 and Phase 2 stay green. No migration.

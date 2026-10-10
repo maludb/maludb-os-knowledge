@@ -51,6 +51,7 @@ function world(): array
     $id = base_by_key('smoke-field-manuals');
     if ($id === null) {
         $id = make_base(PRIYA, 'SMOKE Field Manuals', ['key' => 'smoke-field-manuals']);
+        pdo()->exec("UPDATE knowledge_bases SET auto_extract = false WHERE id = $id");   // the world marks its sections by hand; slice 4's worker would build them
         $p = as_member(PRIYA);
         act($p, '/bases/members/add.php', ['base' => $id, 'member' => MARCO, 'level' => 'curate']);
         act($p, '/bases/members/add.php', ['base' => $id, 'member' => REID, 'level' => 'read']);

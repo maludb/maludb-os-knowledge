@@ -14,7 +14,8 @@ POST /v1/chat/completions answers two contracts, told apart by the prompt:
         SUBJECT TYPE: <type>        every subject gets this type
         ALIAS: <alias> => <name>    a subject written as the alias is extracted under the canonical name
         EXCLUDE: <word>             a sentence containing the word is not extracted
-  * "FAILPROVIDER" anywhere in the request answers HTTP 500; "BADJSON" in the text answers prose that is not JSON.
+  * "FAILPROVIDER" anywhere in the request answers HTTP 500; "BADJSON" in the text answers prose that is not JSON;
+    "SLOWPROVIDER" in an extraction sleeps 3 s before answering (slice 4's timeout proof).
 GET  /calls    {"extract": n, "answer": n, "other": n}      POST /reset   zero the counts and forget the last requests
 GET  /last     {"answer": {...}, "extract": {...}}          the last request of each kind (system + user text)
 ANY  /hang/... sleeps 10 s before answering (the module's timeout proof)
@@ -109,6 +110,8 @@ async def chat(request: Request):
     if kind == "answer":
         return answer(system, user)
     if kind == "extract":
+        if "SLOWPROVIDER" in raw:
+            await asyncio.sleep(3)
         return extract(user)
     return completion(json.dumps({"ok": True}))
 

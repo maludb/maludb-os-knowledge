@@ -659,3 +659,10 @@ build). **Next:** slice 4 (builds), slice 5 (ask, THE SECOND exemplar) — the h
 
 **2026-10-10 — M12 merged and live** (MaluDB API 0.4.1, PR #19; `maludb-api` restarted by the owner): the documents route registers an unseen
 subject type. Nothing of the engine is owed before the first build but the answer model (`PUT /v1/llm/models/answer`, at install).
+
+**2026-10-10 — slice 4 built and proven** (the build — `docs/build-specs/builds.md`): the estimate against the month, start and rebuild-everything
+and cancel; the worker's build step (`app/knowledge/worker/builds.php`) — the automatic queue of new sections, prepare (the prompt ensured, the
+vocabulary seeded, the areas linked, the hash line), forget-then-ingest section by section, the failure table (retries with backoff, a timeout
+resolved by asking the engine, the duplicate-key guard, five in a row, the engine down and the 30-minute clock), the monthly limit and its warning,
+the base's counts; build-view polling every 5 s while visible and stopping at the 286. `tests/phase3/slice4/run.sh`: 173 checks under php -S and
+Apache against the real engine. **Next:** slice 5 (ask, THE SECOND exemplar) — the handoff point.

@@ -243,6 +243,28 @@ sources; Marco and Priya its curators; a second base for the "a big build never 
   this slice built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-10 by the planning model; proven by `tests/phase3/slice4/run.sh`** — the estimate and the start button's reasons 21, starting 13,
+the worker (prepare, the passes, what lands in the engine, the counts, stale sections, a guideline saved mid-build, rebuild everything) 32, failures
+and timeouts 29, the monthly limit 12, cancel 12, automatic builds 11, JSON and agents 9, the browser 34 (375 × 740 and 1280 × 800, JavaScript off)
+— 173 checks under php -S and under a real Apache against the REAL MaluDB API 0.4.1 on a scratch memory database, plus the registry and no PHP
+warning. The registry reads the 2 screens and 3 actions built. Slices 1–3, Phase 2 and Phase 0 stay green; `plan` clean.
+
+Settled in the build:
+- **"The month spent" for the automatic queue** means not even the base's smallest queued section fits what is left — with "used ≥ limit" a build
+  that stopped at the limit with a few thousand characters left would be queued again every pass, fail again and tell the curators every minute.
+- **Cancelling a finished build** is refused before the write with the trigger's own sentence ("A finished build stays cancelled."): re-cancelling
+  a cancelled build changes no status, so the trigger would not raise.
+- **Cancel lives inside the polled progress region**, so it leaves the page with the 286 when the build finishes.
+- The error words take the count of sections left (`{n}` in `BUILD_ERRORS`, from the skipped and queued items).
+- `KN_BUILD_BACKOFF=0` in the worker's environment drops the 2 s / 8 s waits — for the five-in-a-row proof only (it would wait 50 s a pass); the
+  single-failure proof measures the real backoff (≥ 10 s).
+- One file beyond the list: `tests/phase3/slice4/call.php` runs one worker step on its own (prepare, or one item) under the CLI bootstrap, so a
+  proof can stop between prepare and the items and call an item while the engine is down.
+- The proofs' choices: the limit is proven by writing this month's use near the 1 MB limit rather than queueing 1.2 MB (the same arithmetic, in
+  seconds); the 300-section base has sections of at least 200 characters (the sectioner merges smaller ones); the duplicate-key rewind looks for a
+  run of taken subject ids (the API's own allocations leave gaps); BADJSON is proven on a one-section base, so that build is also the
+  `every_section_failed` proof.
+- Slice 3's proof world now turns auto-extract off: with this slice the worker would build the sections that world marks by hand.
+- `base_month_usage()` is written to the spec's signature and is read by nothing yet (the admin's usage, slice 9).
 
 ## Open questions

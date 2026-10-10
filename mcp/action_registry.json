@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-09T22:14:50+00:00",
+    "generated_at": "2026-10-10T11:44:12+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -336,7 +336,7 @@
             "section": "The build (slice 4)",
             "when": "what a build would do now against the month's limit, start it, rebuild everything, the builds so far",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "build-view": {
@@ -345,7 +345,7 @@
             "section": "The build (slice 4)",
             "when": "one build's progress, counts, usage, failed sections with their reasons, the items; cancel",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "ask": {
@@ -1896,7 +1896,7 @@
             "who": "builds.run on a curated base",
             "agent": true,
             "record_id": "the build",
-            "built": false
+            "built": true
         },
         "build_rebuild_all": {
             "action": "build_rebuild_all",
@@ -1923,7 +1923,7 @@
             "who": "builds.run on a curated base",
             "agent": true,
             "record_id": "the build",
-            "built": false
+            "built": true
         },
         "build_cancel": {
             "action": "build_cancel",
@@ -1944,7 +1944,7 @@
             "who": "builds.run on a curated base",
             "agent": true,
             "record_id": "the build",
-            "built": false
+            "built": true
         },
         "question_ask": {
             "action": "question_ask",

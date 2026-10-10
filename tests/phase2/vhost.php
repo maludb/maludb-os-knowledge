@@ -14,7 +14,7 @@ foreach (['/sso' => 403, '/sso/logout' => 405] as $path => $want) {
 ok(page($j, '/settings/tokens/')['code'] === 200 && page($j, '/settings/tokens')['code'] === 200, '/settings/tokens/ and /settings/tokens both reach settings/tokens/index.php');
 ok(page($j, '/settings/')['code'] === 200 && page($j, '/settings')['code'] === 200, '/settings/ and /settings both reach settings/index.php');
 ok(page($j, '/bases/')['code'] === 200 && page($j, '/bases')['code'] === 200, '/bases/ and /bases both reach bases/index.php');
-ok(page($j, '/ask')['code'] === 200 && page($j, '/pinned')['code'] === 200, '/ask and /pinned reach ask.php and pinned.php (the placeholders)');
+ok(page($j, '/ask')['code'] === 200 && page($j, '/pinned')['code'] === 200, '/ask and /pinned reach ask/index.php and pinned/index.php (slice 5)');
 ok(page($j, '/admin/')['code'] === 403 && page($j, '/admin')['code'] === 403, '/admin/ and /admin resolve to admin/index.php (403 for a curator, by the right)');
 ok(page($j, '/activity')['code'] === 200 && page($j, '/notifications')['code'] === 200, '/activity and /notifications resolve to their own files');
 ok(page($j, '/bases/new')['code'] === 200 && page($j, '/bases/1')['code'] === 200 && page($j, '/bases/1/edit')['code'] === 200 && page($j, '/bases/1/share')['code'] === 200,

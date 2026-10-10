@@ -4,7 +4,9 @@
  * endpoints Knowledge calls, from the JSON state file $FAKE_KERNEL_STATE (the proofs rewrite it between steps):
  *   GET  /api/v1/directory/changes.php  → state.feed (os.directory-changes/1); ?since= answers state.incremental when set, else an empty change
  *   POST /api/v1/runs/facts.php {token} → state.facts[<run id>] (the run token's third part), else {valid: false}
- *   POST /api/v1/agents/chat.php        → state.chat (a canned reply) or the refusal state.chat_status names, echoing the acting member it saw
+ *   POST /api/v1/agents/chat.php        → state.chat (a canned reply) or the refusal state.chat_status names, echoing the acting member it saw;
+ *                                         state.chat_http (202) answers state.chat with that status; GET ?run= answers state.chat_run (else state.chat),
+ *                                         or state.chat_run_http; every call is appended to "<state file>.chat"
  *   GET  /api/v1/ledger/periods.php     → A5, from state.ledger: no ?period= answers os.ledger-periods/1 (state.ledger.periods — the months and their status); ?period=YYYY-MM answers
  *                                         state.ledger.docs[<period>] (an os.ledger-period/1 document, as the kernel sends it), a 422 for a month it has none of; state.ledger.mode = down answers 503;
  *                                         every request is appended to "<state file>.ledger" (the period asked, or "list")
@@ -50,7 +52,15 @@ switch ($path) {
         $run = $parts[2] ?? '';
         $out($state['facts'][$run] ?? ['valid' => false]);
     case '/api/v1/agents/chat.php':
-        file_put_contents((string) getenv('FAKE_KERNEL_STATE') . '.chat', json_encode(['agent' => $_GET['agent'] ?? null, 'acting' => $_SERVER['HTTP_X_ACTING_MEMBER'] ?? null, 'utterance' => $input['utterance'] ?? null]) . "\n", FILE_APPEND);
+        file_put_contents((string) getenv('FAKE_KERNEL_STATE') . '.chat', json_encode(['method' => $_SERVER['REQUEST_METHOD'], 'agent' => $_GET['agent'] ?? null, 'run' => $_GET['run'] ?? null,
+            'acting' => $_SERVER['HTTP_X_ACTING_MEMBER'] ?? null, 'utterance' => $input['utterance'] ?? null, 'context' => $input['context'] ?? null]) . "\n", FILE_APPEND);
+        if (isset($_GET['run'])) {                         // A6's GET ?run=: state.chat_run (a run still going answers finished false), else state.chat
+            if (($state['chat_run_http'] ?? 200) !== 200) { $out(['error' => ['code' => 'gone', 'message' => 'No such run.']], (int) $state['chat_run_http']); }
+            $out($state['chat_run'] ?? ($state['chat'] ?? ['run_id' => (int) $_GET['run'], 'status' => 'succeeded', 'finished' => true, 'reply' => 'Hello from the fake expert']));
+        }
+        if (isset($state['chat_http'])) {                  // 202: the run is still going after `wait`
+            $out(($state['chat'] ?? []) + ['seen_acting_member' => $_SERVER['HTTP_X_ACTING_MEMBER'] ?? null], (int) $state['chat_http']);
+        }
         if (isset($state['chat_status'])) {
             $messages = [403 => 'This person may not use the expert.', 404 => 'No expert for this application.', 409 => 'The expert is busy with another turn.'];
             $out(['error' => ['code' => 'refused', 'message' => $state['chat_message'] ?? ($messages[(int) $state['chat_status']] ?? 'Refused.')]], (int) $state['chat_status']);

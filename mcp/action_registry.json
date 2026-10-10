@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-10T11:44:12+00:00",
+    "generated_at": "2026-10-10T12:34:01+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -359,8 +359,8 @@
                 "c",
                 "q"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "conversations": {
             "screen": "conversations",
@@ -370,7 +370,7 @@
             "params": [
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "question-view": {
@@ -379,7 +379,7 @@
             "section": "Ask — THE SECOND EXEMPLAR (slice 5)",
             "when": "one question in full: the answer, its citations, the evidence, the feedback, pin or unpin",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "questions": {
@@ -397,7 +397,7 @@
                 "q",
                 "page"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "gaps": {
@@ -408,7 +408,7 @@
             "params": [
                 "since"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "pinned": {
@@ -420,8 +420,8 @@
                 "base",
                 "due"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "graph": {
             "screen": "graph",
@@ -1983,7 +1983,7 @@
             "who": "bases.read and the base's reach",
             "agent": true,
             "record_id": "the question",
-            "built": false
+            "built": true
         },
         "question_feedback": {
             "action": "question_feedback",
@@ -2016,7 +2016,7 @@
             "who": "answers.rate and the question visible",
             "agent": true,
             "record_id": "the question",
-            "built": false
+            "built": true
         },
         "answer_pin": {
             "action": "answer_pin",
@@ -2043,7 +2043,7 @@
             "who": "answers.pin on a curated base",
             "agent": true,
             "record_id": "the pinned answer",
-            "built": false
+            "built": true
         },
         "answer_unpin": {
             "action": "answer_unpin",
@@ -2064,7 +2064,7 @@
             "who": "answers.pin on a curated base",
             "agent": false,
             "record_id": "the pinned answer",
-            "built": false
+            "built": true
         },
         "answer_pin_review": {
             "action": "answer_pin_review",
@@ -2085,7 +2085,7 @@
             "who": "answers.pin on a curated base",
             "agent": true,
             "record_id": "the pinned answer",
-            "built": false
+            "built": true
         },
         "question_expert": {
             "action": "question_expert",
@@ -2106,7 +2106,7 @@
             "who": "bases.read and the question visible",
             "agent": false,
             "record_id": "the dispatch",
-            "built": false
+            "built": true
         },
         "key_mint": {
             "action": "key_mint",

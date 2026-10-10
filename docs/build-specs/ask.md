@@ -399,6 +399,30 @@ audience guideline; base **Private notes** (id 2, private, Cara's) with one sect
   no console errors; the `questions` table and `gaps` cards at 1280 and as cards at 375.
 
 ## Built and proven
-Not built.
+**Built 2026-10-10 by the planning model; proven by `tests/phase3/slice5/run.sh`** — ask and conversations and the rate guard 28, mapping 10,
+statuses and the fallback 11, the expert 20, feedback 10, pins 14, the log 10, gaps and the base's log 11, who sees 9, JSON and agents 10, the
+database's words 5, the bridge 14 (15 under Apache: the public vhost's 404 on /internal/), the browser 80 (375 × 740 and 1280 × 800, JavaScript off)
+— 231 checks under php -S and 232 under a real Apache, against the fake engine (`tests/fake_kb_engine.php`) and the fake kernel, plus the
+registry and no PHP warning. The registry reads the 6 screens and 6 actions built. Slices 1–4, Phase 2 and Phase 0 stay green.
+
+Settled in the build:
+- **Divergence 1 had already landed** in db/015 (`kn_settings.expert_member_id` / `archivist_member_id` with the agent-only trigger), so this slice
+  adds no migration.
+- **The answer's `[n]` markers are renumbered to the citations' ranks** when the row is written (`kn_ask_renumber()`): the engine numbers its
+  evidence, the rows are ranked 1..k, and a marker, a chip (`cite-{qid}-{rank}`) and the API's citation `n` must agree. A marker whose passage was
+  dropped is removed; no word of the answer changes. The marker is the citation's own `n` (one joined by its document keeps its marker).
+- **The cast** of the proof is the fixture's: Cara → Marco (Curator), Gus → Ann (a guest), Dee → Bea (Member), the expert → Seamus (agent 40);
+  the scratch database is `kn_dev5`. The world sets the two named sections' documents (501, 502) and statuses in SQL — the fake engine builds nothing.
+- **A key's door** is proven through `kn_ask()` in-process (`php_kn()` in the proof's lib): the token API is slice 7's.
+- **Window controls swap their turn**: a thumbs, Pin or Ask-the-expert form posted by HTMX with `partial=turn` answers the re-rendered turn
+  (`ask_turn_or_done()`); JSON and a browser land as `kn_done()` says. The send handler answers HTMX with the turn and the conversation id out of
+  band (`#ask-c`).
+- **The base's log and gaps tell a reader why** ("The questions asked of a base are its curators' to review.", 403) instead of the base write
+  rule's sentence.
+- **Cancelling-style guards on pins**: unpinning or verifying a retired pin is refused ("This answer is no longer pinned.").
+- The window's small script is inline in the composer partial (Enter sends, the echo, the counter, the suggestion chips), guarded so a swap
+  never binds it twice.
+- `tests/fake_kernel.php` gained the chat endpoint's 202 (`state.chat_http`) and `GET ?run=` (`state.chat_run`); the fake engine is freed by its
+  port (`fuser`), never by a command-line pattern.
 
 ## Open questions

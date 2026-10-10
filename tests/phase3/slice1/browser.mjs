@@ -73,7 +73,7 @@ for (const [label, vp] of [['375 x 740', PHONE], ['1280 x 800', DESK]]) {
   // a tab is lit only by its slice's controller (present and not the shell's placeholder): the expected set is read from disk, so a later
   // slice lighting its tab does not break this proof; Overview first, Share and Settings always (slice 1's), Ask hidden while a placeholder
   const built = (file) => fs.existsSync(ROOT + 'html' + file) && !fs.readFileSync(ROOT + 'html' + file, 'utf8').includes('render_nav_stub(');
-  const expected = Object.entries({ overview: '/bases/view.php', ask: '/ask.php', sources: '/bases/sources.php', areas: '/bases/areas.php', guidelines: '/bases/guidelines.php',
+  const expected = Object.entries({ overview: '/bases/view.php', ask: '/ask/index.php', sources: '/bases/sources.php', areas: '/bases/areas.php', guidelines: '/bases/guidelines.php',
     builds: '/bases/builds.php', graph: '/bases/graph.php', questions: '/bases/questions.php', keys: '/bases/keys.php', share: '/bases/share.php', settings: '/bases/settings.php' })
     .filter(([, f]) => built(f)).map(([k]) => 'base-tab-' + k);
   ok(JSON.stringify(tabs) === JSON.stringify(expected), 'the tabs are exactly the built slices\' (read from disk): ' + tabs.join(', '));

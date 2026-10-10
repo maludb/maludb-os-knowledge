@@ -168,3 +168,30 @@ html.app-skin-dark .kn-section-text mark#quote { background: #a16207; color: #ff
 
 /* GUIDELINES, VOCABULARY, AREAS (slice 3): a compiled prompt or a preview wraps inside the page — a long line never widens the viewport. */
 .kn-preview-pre { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; max-height: 70vh; overflow-y: auto; font-size: 12px; background: var(--bs-tertiary-bg, #f8fafc); border: 1px solid var(--bs-border-color, #e5e7eb); border-radius: 6px; padding: 12px; margin: 0; }
+
+/* Slice 5 — the ask window: bubbles, answer cards, citation chips, the sticky composer, horizontally scrolling chip rows. */
+.kn-bubble { max-width: 85%; background: var(--bs-primary, #3454d1); color: #fff; border-radius: 14px 14px 4px 14px; padding: 10px 14px; overflow-wrap: anywhere; font-size: 14px; }
+.kn-bubble-area { opacity: .85; }
+.kn-answer .kn-md { overflow-wrap: anywhere; font-size: 14px; }
+.kn-md h4, .kn-md h5, .kn-md h6 { margin: .75rem 0 .35rem; }
+.kn-md p:last-child { margin-bottom: 0; }
+.kn-md-quote { border-left: 3px solid var(--bs-border-color, #e5e7eb); padding-left: 10px; color: var(--bs-secondary-color, #64748b); }
+.kn-md-code { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--bs-tertiary-bg, #f8fafc); padding: 8px; border-radius: 6px; font-size: 12px; }
+a.cite-ref { font-size: 11px; vertical-align: super; text-decoration: none; }
+.kn-cite { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 12px; border: 1px dashed var(--bs-border-color, #cbd5e1); border-radius: 22px; font-size: 12px; color: inherit; text-decoration: none; max-width: 100%; overflow-wrap: anywhere; }
+.kn-cite-verified { border-style: solid; border-color: var(--bs-success, #17c666); }
+.kn-cite:hover { background: var(--bs-tertiary-bg, #f1f5f9); }
+.kn-passage blockquote { border-left: 3px solid var(--bs-info, #3dc7be); padding-left: 10px; overflow-wrap: anywhere; }
+.kn-evidence-item { border-top: 1px solid var(--bs-border-color, #eef0f3); padding-top: 8px; overflow-wrap: anywhere; }
+.kn-sim { display: inline-block; flex: 0 0 60px; height: 6px; background: var(--bs-tertiary-bg, #eef0f3); border-radius: 3px; overflow: hidden; }
+.kn-sim > span { display: block; height: 100%; background: var(--bs-info, #3dc7be); }
+.kn-chips { display: flex; gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+.kn-chips > * { flex: 0 0 auto; white-space: nowrap; }
+.kn-composer { position: sticky; bottom: 0; z-index: 5; background: var(--bs-body-bg, #fff); border-top: 1px solid var(--bs-border-color, #e5e7eb); padding: 10px 0 12px; margin-top: 8px; }
+.kn-composer textarea { resize: vertical; min-height: 48px; }
+.kn-base-name { max-width: 70vw; }
+.kn-down > summary, .kn-pin > summary { list-style: none; }
+.kn-down > summary::-webkit-details-marker, .kn-pin > summary::-webkit-details-marker { display: none; }
+.kn-down[open] { flex-basis: 100%; }
+.kn-pin[open] { flex-basis: 100%; }
+.kn-suggestion { white-space: normal; max-width: 100%; }

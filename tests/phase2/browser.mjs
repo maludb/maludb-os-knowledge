@@ -102,14 +102,14 @@ const smallControls = (page, scope) => page.evaluate((s) => [...document.querySe
   await page.waitForSelector('#notice-banner');
   ok((await page.locator('#notice-banner').innerText()).includes('Saved'), 'saving the settings lands back on them with the notice');
   ok(!(await page.isChecked('#prefs-field-email')), 'and email stayed off');
-  // a placeholder reached by a tab: the card naming its slice, the title, the highlight
+  // the Ask tab (built by slice 5): the window, the title, the highlight
   await page.click('#tab-ask');
   await page.waitForURL(BASE + '/ask');
-  await page.waitForSelector('#ask-coming');
-  ok((await page.title()).startsWith('Ask') && (await page.locator('#ask-coming').innerText()).includes('slice 5'), 'the Ask tab opens the placeholder (slice 5), title "' + (await page.title()) + '"');
+  await page.waitForSelector('#ask-content');
+  ok((await page.title()).startsWith('Ask'), 'the Ask tab opens the window (slice 5), title "' + (await page.title()) + '"');
   ok(await page.evaluate(() => document.querySelector('#tab-ask').classList.contains('active') && document.getElementById('page-content').dataset.screen === 'ask'), 'the tab is highlighted and the screen stamped ask');
-  ok((await overflow(page)).sw === 375, 'no sideways scroll on the placeholder');
-  await page.screenshot({ path: `${SHOTS}/phone-placeholder-ask.png` });
+  ok((await overflow(page)).sw === 375, 'no sideways scroll on the window');
+  await page.screenshot({ path: `${SHOTS}/phone-ask.png` });
   await page.goto(BASE + '/activity', { waitUntil: 'networkidle' });
   ok((await overflow(page)).sw === 375, 'no sideways scroll on My activity');
   await page.goto(BASE + '/notifications', { waitUntil: 'networkidle' });

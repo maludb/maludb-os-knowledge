@@ -106,7 +106,7 @@ function kn_ref(PDO $pdo, string $name, ?int $keep, string $sql, string $label, 
     return (int) $v;
 }
 
-/** Run a step: our own sentence (DomainException) or the database's RAISE is a 422 ('Not found.' a 404); a duplicate a 422. Anything else is a 500. */
+/** Run a step: our own sentence (DomainException) or the database's RAISE (db_is_raise()) is a 422 ('Not found.' and P0002 a 404); a bare duplicate a 422. Anything else is a 500. */
 function kn_guard(PDO $pdo, callable $step): mixed
 {
     try {
@@ -123,11 +123,11 @@ function kn_guard(PDO $pdo, callable $step): mixed
             }
             refuse($m === 'Not found.' ? 404 : 422, $m);
         }
-        if ($e instanceof PDOException && (string) $e->getCode() === 'P0001') {
-            refuse(422, db_message($e, 'That could not be done.'));
+        if ($e instanceof PDOException && db_is_raise($e)) {          // our own words (slice 5's kit prerequisite): no data found is a 404
+            refuse((string) $e->getCode() === 'P0002' ? 404 : 422, db_message($e, 'That could not be done.'));
         }
         if ($e instanceof PDOException && (string) $e->getCode() === '23505') {
-            refuse(422, 'That name is already taken.');
+            refuse(422, 'That name is already taken.');               // a bare unique constraint
         }
         throw $e;
     }

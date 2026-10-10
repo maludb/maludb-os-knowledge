@@ -35,11 +35,15 @@ function db_bool(PDO $pdo, string $sql, array $args = []): bool
     return (bool) $st->fetchColumn();
 }
 
-/** A database error in words a person can act on: only our own RAISE (P0001) is shown. */
+/**
+ * A database error in words a person can act on: our own RAISE — P0001, or a trigger's or a function's RAISE under P0002 (no data
+ * found), 23502, 23505 or 23514 — is shown as it was written; a bare constraint violation (its message names a `constraint "…"`, or is
+ * the server's own "null value in column …", "new row for relation …", "duplicate key …") is never shown: $fallback.
+ */
 function db_message(Throwable $e, string $fallback): string
 {
     error_log('db error: ' . $e->getMessage());
-    if (!($e instanceof PDOException) || (string) $e->getCode() !== 'P0001') {
+    if (!db_is_raise($e)) {
         return $fallback;
     }
     $text = $e->getMessage();
@@ -47,8 +51,20 @@ function db_message(Throwable $e, string $fallback): string
     if ($at === false) {
         return $fallback;
     }
-    $text = trim((string) (preg_split('/\R|CONTEXT:/', substr($text, $at + 6))[0] ?? ''));
+    $text = trim((string) (preg_split('/\R|DETAIL:|CONTEXT:|HINT:/', substr($text, $at + 6))[0] ?? ''));
     return $text === '' ? $fallback : $text;
+}
+
+/** Is this one of our own RAISEs (the SQLSTATEs Knowledge's triggers and functions raise with words), not a bare constraint? */
+function db_is_raise(Throwable $e): bool
+{
+    if (!($e instanceof PDOException) || !in_array((string) $e->getCode(), ['P0001', 'P0002', '23502', '23505', '23514'], true)) {
+        return false;
+    }
+    $m = $e->getMessage();
+    $at = strpos($m, 'ERROR:');
+    $first = trim((string) (preg_split('/\R/', $at === false ? $m : substr($m, $at + 6))[0] ?? ''));
+    return !str_contains($first, 'constraint "') && !preg_match('/^(null value in column|new row for relation|duplicate key value|insert or update on table|update or delete on table)/', $first);
 }
 
 /** The first column of the first row, or null. */

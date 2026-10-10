@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 const BASE_TABS = [
     'overview'   => ['Overview',   '/bases/{id}',            '/bases/view.php',       'read'],
-    'ask'        => ['Ask',        '/ask?base={id}',         '/ask.php',              'read'],      // slice 5
+    'ask'        => ['Ask',        '/ask?base={id}',         '/ask/index.php',        'read'],      // slice 5
     'sources'    => ['Sources',    '/bases/{id}/sources',    '/bases/sources.php',    'read'],      // slice 2
     'areas'      => ['Areas',      '/bases/{id}/areas',      '/bases/areas.php',      'read'],      // slice 3
     'guidelines' => ['Guidelines', '/bases/{id}/guidelines', '/bases/guidelines.php', 'curate'],    // slice 3

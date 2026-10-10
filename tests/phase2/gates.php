@@ -9,7 +9,7 @@
  */
 require __DIR__ . '/lib.php';
 /** The menu items whose screen is still the shell's placeholder — a slice that builds one removes it here (and from NAV_SLICES). */
-const NAV_SLICES_LEFT = ['ask' => ['/ask', 'slice 5', 'Ask'], 'pinned' => ['/pinned', 'slice 5', 'Pinned'], 'admin' => ['/admin/', 'slice 9', 'Admin']];
+const NAV_SLICES_LEFT = ['admin' => ['/admin/', 'slice 9', 'Admin']];        // ask and pinned: built by slice 5
 $json = ['headers' => ['Accept: application/json']];
 
 echo "1. Rights per role — every screen and placeholder answers 200 or 403\n";
@@ -51,18 +51,18 @@ foreach (NAV_SLICES_LEFT as $id => [$url, $slice, $title]) {
 }
 $b = page($jAdmin, '/bases/')['body'];
 ok(str_contains($b, 'id="base-list"') && !str_contains($b, 'id="bases-coming"'), '/bases/ is built (slice 1): the list, not the placeholder');
-$r = page($jAdmin, '/ask', $json);
+$r = page($jAdmin, '/admin/', $json);
 ok($r['code'] === 501 && (json_decode($r['body'], true)['error']['code'] ?? '') === 'not_built', 'a JSON caller on a placeholder: 501 not_built');
-$r = req('POST', '/ask', ['jar' => $jAdmin, 'form' => ['csrf_token' => page_csrf($jAdmin)]]);
-ok($r['code'] === 501 && str_contains($r['body'], 'This is built by slice 5.'), 'a POST to a placeholder: 501, in words');
-$r = page($jAdmin, '/ask', ['headers' => ['HX-Request: true']]);
-ok($r['code'] === 200 && str_contains($r['body'], 'id="ask-coming"') && !str_contains($r['body'], '<html') && preg_match('/^HX-Title: Ask/mi', $r['headers']) === 1 && preg_match('/^X-Screen: ask\r?$/mi', $r['headers']) === 1, 'over HTMX a placeholder is the partial with HX-Title and X-Screen, so the tab highlight and the command bar follow');
-$v = (int) one("SELECT count(*) FROM activity_log WHERE action = 'screen.view' AND screen = 'ask'");
-ok($v >= 2, "opening a placeholder logs screen.view for its screen ($v for ask)");
+$r = req('POST', '/admin/', ['jar' => $jAdmin, 'form' => ['csrf_token' => page_csrf($jAdmin)]]);
+ok($r['code'] === 501 && str_contains($r['body'], 'This is built by slice 9.'), 'a POST to a placeholder: 501, in words');
+$r = page($jAdmin, '/admin/', ['headers' => ['HX-Request: true']]);
+ok($r['code'] === 200 && str_contains($r['body'], 'id="admin-coming"') && !str_contains($r['body'], '<html') && preg_match('/^HX-Title: Admin/mi', $r['headers']) === 1 && preg_match('/^X-Screen: admin\r?$/mi', $r['headers']) === 1, 'over HTMX a placeholder is the partial with HX-Title and X-Screen, so the tab highlight and the command bar follow');
+$v = (int) one("SELECT count(*) FROM activity_log WHERE action = 'screen.view' AND screen = 'admin'");
+ok($v >= 2, "opening a placeholder logs screen.view for its screen ($v for admin)");
 $built = json_decode((string) file_get_contents(dirname(__DIR__, 2) . '/mcp/action_registry.json'), true);
 $reg = [];
 foreach (($built['screens'] ?? []) as $s) { $reg[$s['screen'] ?? ''] = $s; }
-ok(($reg['ask']['built'] ?? null) === false && ($reg['ask']['stub'] ?? null) === true && ($reg['admin']['stub'] ?? null) === true && ($reg['home']['built'] ?? null) === true && ($reg['tokens']['built'] ?? null) === true, 'the registry marks ask and admin as stubs, home and tokens as built, so the voice surface never offers an unbuilt screen');
+ok(($reg['ask']['built'] ?? null) === true && empty($reg['ask']['stub']) && ($reg['admin']['stub'] ?? null) === true && ($reg['home']['built'] ?? null) === true && ($reg['tokens']['built'] ?? null) === true, 'the registry marks admin a stub, ask (slice 5), home and tokens built, so the voice surface never offers an unbuilt screen');
 
 echo "3. The menu per role, and no session\n";
 $menu = fn (string $j): array => (preg_match_all('/id="nav-([a-z-]+)"/', page($j, '/')['body'], $m) ? array_values(array_filter($m[1], fn ($i) => $i !== 'base-')) : []);

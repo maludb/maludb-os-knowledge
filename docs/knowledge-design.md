@@ -666,3 +666,14 @@ vocabulary seeded, the areas linked, the hash line), forget-then-ingest section 
 resolved by asking the engine, the duplicate-key guard, five in a row, the engine down and the 30-minute clock), the monthly limit and its warning,
 the base's counts; build-view polling every 5 s while visible and stopping at the 286. `tests/phase3/slice4/run.sh`: 173 checks under php -S and
 Apache against the real engine. **Next:** slice 5 (ask, THE SECOND exemplar) — the handoff point.
+
+**2026-10-10 — slice 5 built and proven — THE SECOND EXEMPLAR, THE HANDOFF POINT** (ask — `docs/build-specs/ask.md`): `kn_ask()` in
+`app/knowledge/ask.php`, the one function behind every door (the gate, the last three turns, aliases expanded for the engine only, the compiled
+answering system, M1 through the engine module, the evidence fallback for an installation that cannot compose, evidence and citations mapped to
+sections with another base's passages dropped unseen, the rows, the metering, the log that never carries an answer, a quote or more than 120
+characters of a question) and `kn_search()`; the window at 375 (the base picker, the area chips, conversations, the composer that echoes at once,
+citation chips opening the section at the quote, the evidence, thumbs, pins, Ask the expert with its poll); question-view, the base's log, the gaps,
+the pinned answers; the engine bridge's PHP side (`/internal/bridge.php`: ask, search, suggest, admin_view); the kit shows the database's own
+RAISE words for P0001/P0002/23502/23505/23514 and a P0002 is a 404; `kn_markdown_html()`. `tests/phase3/slice5/run.sh`: 231 checks under php -S,
+232 under Apache, against the fake engine (`tests/fake_kb_engine.php`). **Next:** slices 6–9 and Phase 4 by Sonnet 5.5 workers, one at a time, each
+verified by the planning model before the next; Phase 5 the owner's.

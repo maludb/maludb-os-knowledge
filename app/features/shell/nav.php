@@ -167,7 +167,7 @@ function with_back(string $url, string $here): string
 }
 
 /** The slice that builds each not-yet-built menu item, in words — the placeholders and the registry read it. */
-const NAV_SLICES = ['ask' => 'slice 5', 'pinned' => 'slice 5', 'admin' => 'slice 9'];
+const NAV_SLICES = ['admin' => 'slice 9'];
 
 /**
  * A screen of the manifest that its slice has not built yet (Phase 2): the shell, the page header, one card saying which

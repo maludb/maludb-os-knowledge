@@ -1,0 +1,93 @@
+<?php
+/** Slice 8 proof — following a feed: the screens and the four actions (agents-feeds.md "Proof": feeds.php). */
+require __DIR__ . '/lib.php';
+
+$w = agents_world();
+$m = $w['manuals'];
+$p = $w['policies'];
+$cara = as_member(CARA);
+pdo()->exec("INSERT INTO focus_areas (base_id, name, slug, description, status) VALUES ($m, 'Warranty', 'warranty', 'Guarantee terms.', 'active') ON CONFLICT DO NOTHING");
+$area = (int) one("SELECT id FROM focus_areas WHERE base_id = :b AND slug = 'warranty'", ['b' => $m]);
+pdo()->exec("DELETE FROM feeds WHERE base_id IN ($m, $p) AND arguments->>'space' IS DISTINCT FROM 'smoke-stopped'");
+
+echo "1. Follow a feed\n";
+$since = last_activity_id();
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'space' => 'product', 'focus_area' => $area, 'every_minutes' => 60, 'enabled' => '1']);
+$fid = (int) ($b['record_id'] ?? 0);
+$f = feed_row($fid);
+ok($c === 200 && $fid > 0 && $f['provider'] === 'spaces' && $f['tool'] === 'pages_index' && json_decode((string) $f['arguments'], true) === ['space' => 'product'] && (int) $f['focus_area_id'] === $area && (int) $f['every_minutes'] === 60 && $f['enabled'], 'Cara follows Spaces pages_index {space: product} with the area Warranty');
+ok(strtotime((string) $f['next_sync_at']) <= time() + 2 && $f['last_sync_at'] === null && (int) $f['created_by'] === CARA, 'a new feed is due at once');
+ok(str_ends_with((string) $b['location'], '/bases/' . $m . '/feeds#feed-' . $fid), 'location /bases/{id}/feeds#feed-{id}: ' . $b['location']);
+$ev = activity('feed.save', $since);
+$a = after_of($ev[0] ?? ['after' => '{}']);
+ok(count($ev) === 1 && (int) ($a['feed_id'] ?? 0) === $fid && ($a['provider'] ?? '') === 'spaces' && ($a['created'] ?? null) === true && !in_log('"product"'), 'feed.save logged (ids, provider, tool, interval) — not the arguments');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'provider' => 'spaces', 'tool' => 'pages_index', 'arguments' => '{"space": "product"}']);
+ok($c === 422 && isset(fields($b)['provider']) && fields($b)['provider'] === 'This base already follows that.', 'the same feed again → 422 "' . (fields($b)['provider'] ?? '') . '"');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'provider' => 'spaces', 'tool' => 'page_markdown', 'arguments' => '{"page": "p1"}']);
+ok($c === 422 && (fields($b)['tool'] ?? '') === 'Knowledge does not read that tool.', 'a tool that is not an index tool of reads[] → 422 "' . (fields($b)['tool'] ?? '') . '"');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'provider' => 'billing', 'tool' => 'invoices_index']);
+ok($c === 422 && isset(fields($b)['tool']), 'another application\'s tool → 422');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index']);
+ok($c === 422 && isset(fields($b)['space']), 'Spaces without a space → 422 on the field');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'arguments' => '{"space": "x", "limit": 5}']);
+ok($c === 422 && isset(fields($b)['arguments']), 'an argument the tool does not take → 422');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'space' => 'other', 'every_minutes' => 4]);
+ok($c === 422 && isset(fields($b)['every_minutes']), 'every 4 minutes → 422 (5 to 10,080)');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'space' => 'other', 'every_minutes' => 10081]);
+ok($c === 422 && isset(fields($b)['every_minutes']), 'every 10,081 minutes → 422');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'space' => 'other', 'focus_area' => $w['warranty']]);
+ok($c === 422 && isset(fields($b)['focus_area']), 'an area of another base → 422 on the field: "' . (fields($b)['focus_area'] ?? '') . '"');
+[$c] = act(as_member(PRIYA), '/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'space' => 'other']);
+ok($c === 403, 'Priya → 403');
+[$c] = act_token('/feeds/save.php', ['base' => $m, 'source_tool' => 'spaces.pages_index', 'space' => 'other'], as_agent(run_token(ARCHIVIST, 7810)));
+ok($c === 403, 'the Archivist (a reader of the base) may not follow a feed');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $m, 'source_tool' => 'helpdesk.articles_published', 'category' => 'setup', 'every_minutes' => 120]);
+$hd = (int) ($b['record_id'] ?? 0);
+ok($c === 200 && json_decode((string) feed_row($hd)['arguments'], true) === ['category' => 'setup'] && (int) feed_row($hd)['every_minutes'] === 120, 'Help Desk articles_published with a category');
+[$c, $b] = act($cara, '/feeds/save.php', ['base' => $p, 'source_tool' => 'helpdesk.articles_published']);
+$hd2 = (int) ($b['record_id'] ?? 0);
+ok($c === 200 && json_decode((string) feed_row($hd2)['arguments'], true) === [] && trim((string) feed_row($hd2)['arguments']) === '{}' , 'Help Desk without a category follows every published article ({})');
+
+echo "   Change, sync now\n";
+[$c, $b] = act($cara, '/feeds/save.php', ['feed' => $fid, 'every_minutes' => 30]);
+$f = feed_row($fid);
+ok($c === 200 && (int) $f['every_minutes'] === 30 && json_decode((string) $f['arguments'], true) === ['space' => 'product'] && (int) $f['focus_area_id'] === $area, 'a field left out keeps its value: 30 minutes, the arguments and the area as they were');
+pdo()->exec("UPDATE feeds SET last_sync_at = now() WHERE id = $fid");
+pdo()->exec("UPDATE feeds SET next_sync_at = now() + interval '1 day' WHERE id = $fid");     // (the trigger moves next_sync_at when last_sync_at moves: two statements)
+$expert = as_agent(run_token(EXPERT, 7811));
+[$c, $b] = act_token('/feeds/save.php', ['feed' => $fid, 'every_minutes' => 45, '_partial' => '1'], $expert);
+$f = feed_row($fid);
+ok($c === 200 && (int) $f['every_minutes'] === 45 && json_decode((string) $f['arguments'], true) === ['space' => 'product'] && (int) $f['focus_area_id'] === $area && strtotime((string) $f['next_sync_at']) > time() + 3600, 'an agent\'s _partial=1 keeps the arguments (and does not make it due)');
+[$c, $b] = act($cara, '/feeds/save.php', ['feed' => $fid, 'space' => 'design']);
+$f = feed_row($fid);
+ok($c === 200 && json_decode((string) $f['arguments'], true) === ['space' => 'design'] && strtotime((string) $f['next_sync_at']) <= time() + 2, 'another space → the feed is due again at once');
+[$c, $b] = act($cara, '/feeds/save.php', ['feed' => $fid, 'space' => 'product', 'enabled' => '0']);
+ok($c === 200 && !feed_row($fid)['enabled'], 'enabled 0 → paused');
+pdo()->exec("UPDATE feeds SET enabled = true, next_sync_at = now() + interval '1 day' WHERE id = $fid");
+$since = last_activity_id();
+[$c, $b] = act($cara, '/feeds/sync.php', ['feed' => $fid]);
+ok($c === 200 && strtotime((string) feed_row($fid)['next_sync_at']) <= time() + 2 && (after_of(activity('feed.sync', $since)[0])['requested'] ?? false) === true, 'Sync now → due; feed.sync logged with requested');
+[$c] = act(as_member(PRIYA), '/feeds/sync.php', ['feed' => $fid]);
+ok($c === 403, 'Priya\'s Sync now → 403');
+[$c] = act($cara, '/feeds/sync.php', ['feed' => 999999]);
+ok($c === 404, 'an unknown feed → 404');
+
+echo "2. The screens\n";
+$h = page($cara, '/bases/' . $m . '/feeds')['body'];
+ok(str_contains($h, 'id="feeds-table"') && str_contains($h, 'id="feeds-cards"') && str_contains($h, 'Space: product') && str_contains($h, 'Category: setup') && str_contains($h, 'id="base-tab-feeds"') && str_contains($h, 'id="feeds-add-btn"'), 'the feeds screen: the table and the cards, the arguments in words ("Space: product"), the tab, Follow a feed');
+ok(str_contains($h, 'id="feed-card-' . $fid . '-edit"') && str_contains($h, 'id="feed-card-' . $fid . '-sync"') && str_contains($h, 'id="feed-card-' . $fid . '-delete"') && str_contains($h, 'never synced'), 'per feed Edit · Sync now · Delete; "never synced"');
+[$c, $d] = screen($cara, '/bases/' . $m . '/feeds');
+ok($c === 200 && count($d['feeds']) === 3 && count($d['tools']) === 2 && $d['feeds'][0]['arguments_words'] !== '', 'JSON: the feeds with their arguments in words, and the tools that can be followed');
+$f1 = page($cara, '/feeds/new?base=' . $m)['body'];
+ok(str_contains($f1, 'id="feed-form"') && str_contains($f1, 'id="feed-form-field-source_tool"') && str_contains($f1, 'id="feed-form-field-space"') && str_contains($f1, 'id="feed-form-field-category"') && str_contains($f1, 'id="feed-form-field-every_minutes"'), 'the add form: the tool, the arguments of each, the area, the interval, enabled');
+ok(!str_contains($f1, 'page_markdown') && substr_count($f1, '<option value="spaces.') === 1, 'only the index tools are offered (no page_markdown)');
+$f2 = page($cara, '/feeds/' . $fid . '/edit')['body'];
+ok(str_contains($f2, 'name="feed" value="' . $fid . '"') && str_contains($f2, 'value="product"') && !str_contains($f2, 'name="base"'), 'the edit form carries the feed (never its base) and its values');
+ok(page(as_member(PRIYA), '/bases/' . $m . '/feeds')['code'] === 403 && page(as_member(PRIYA), '/feeds/new?base=' . $m)['code'] === 403, 'Priya → 403 on both screens');
+ok(page($cara, '/feeds/999999/edit')['code'] === 404, 'an unknown feed → 404');
+ok(str_contains(page($cara, '/bases/' . $m)['body'], 'id="base-tab-proposals"') && str_contains(page($cara, '/bases/' . $m)['body'], 'id="base-tab-feeds"') && !str_contains(page(as_member(PRIYA), '/bases/' . $m)['body'], 'id="base-tab-feeds"'), 'the Feeds and Proposals tabs are the curators\'');
+
+echo "3. Delete pauses for an agent\n";
+$reg = json_decode(file_get_contents(APP_ROOT . '/mcp/action_registry.json'), true);
+ok(($reg['actions']['feed_delete']['approval'] ?? '') === 'deletion' && ($reg['actions']['feed_save']['approval'] ?? null) === null && ($reg['actions']['feed_sync']['approval'] ?? null) === null && ($reg['actions']['feed_delete']['log_event'] ?? '') === 'feed.delete', 'feed_delete is a deletion for an agent, with its own log event; feed_save and feed_sync are free');
+finish();

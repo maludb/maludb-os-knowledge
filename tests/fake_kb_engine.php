@@ -85,6 +85,63 @@ if ($g !== null && (str_starts_with($path, '/v1/graph/') && $path !== '/v1/graph
         $out(['community_id' => (int) $m[1], 'members' => array_slice($g['members'][$m[1]] ?? [], 0, (int) ($_GET['limit'] ?? 200))]);
     }
 }
+/*
+ * Slice 8 (docs/build-specs/agents-feeds.md "Proof"), both OFF unless the state asks:
+ *   config          {model_identifier, base_url, embedding_model, secret_ref, …}   GET /v1/memory/config → {config}   (a build can be started: kn_compile_connection())
+ *   projects_fake   true → a small stateful store ($FAKE_KB_STATE.proj) answers what a focus area's project needs: GET /v1/subjects?label=eq., POST /v1/memory/documents
+ *                   (its edges become subjects, a subject typed project becomes a project), DELETE /v1/documents/{id}, GET /v1/projects?name=eq., GET|PATCH|DELETE
+ *                   /v1/projects/{id}, POST|DELETE /v1/projects/{id}/subjects, PATCH /v1/subjects/{id}
+ */
+if (isset($state['config']) && $path === '/v1/memory/config' && $_SERVER['REQUEST_METHOD'] === 'GET') { $out(['config' => $state['config']]); }
+if (!empty($state['projects_fake'])) {
+    $pf = $stateFile . '.proj';
+    $P = json_decode((string) @file_get_contents($pf), true) ?: ['next_subject' => 1000, 'next_project' => 500, 'next_doc' => 9000, 'subjects' => [], 'projects' => []];
+    $save = static function () use (&$P, $pf): void { file_put_contents($pf, json_encode($P)); };
+    $method = $_SERVER['REQUEST_METHOD'];
+    $eq = static fn (string $v): string => preg_match('/^eq\.(.*)$/s', $v, $m) ? $m[1] : $v;
+    if ($path === '/v1/subjects' && $method === 'GET') {
+        $rows = [];
+        foreach ($P['subjects'] as $name => $s) {
+            if ((isset($_GET['label']) && $eq((string) $_GET['label']) === (string) $name) || (isset($_GET['id']) && $eq((string) $_GET['id']) === (string) $s['id'])) { $rows[] = ['id' => $s['id'], 'label' => (string) $name, 'type' => $s['type'], 'description' => null]; }
+        }
+        $out(['subjects' => $rows]);
+    }
+    if ($path === '/v1/memory/documents' && $method === 'POST') {
+        foreach ($body['edges'] ?? [] as $e) {
+            $name = (string) ($e['subject_text'] ?? '');
+            if ($name !== '' && !isset($P['subjects'][$name])) {
+                $P['subjects'][$name] = ['id' => $P['next_subject']++, 'type' => (string) ($e['subject_type'] ?? 'other')];
+                if (($e['subject_type'] ?? '') === 'project') { $P['projects'][(string) $P['next_project']] = ['name' => $name, 'subjects' => []]; $P['next_project']++; }
+            }
+        }
+        $P['next_doc']++; $save();
+        $out(['document_id' => $P['next_doc'], 'edges' => $body['edges'] ?? []], 201);
+    }
+    if (preg_match('#^/v1/documents/(\d+)$#', $path) && $method === 'DELETE') { $out(['deleted' => true]); }
+    if ($path === '/v1/projects' && $method === 'GET') {
+        $name = $eq((string) ($_GET['name'] ?? ''));
+        $rows = [];
+        foreach ($P['projects'] as $id => $pr) { if ($pr['name'] === $name) { $rows[] = ['id' => (int) $id, 'name' => $pr['name']]; } }
+        $out(['projects' => $rows]);
+    }
+    if (preg_match('#^/v1/projects/(\d+)$#', $path, $m)) {
+        if (!isset($P['projects'][$m[1]])) { $out(['error' => ['code' => 'not_found', 'message' => 'No such project.']], 404); }
+        if ($method === 'GET') { $pr = $P['projects'][$m[1]]; $out(['project' => ['id' => (int) $m[1], 'name' => $pr['name'], 'subjects' => array_map(static fn ($i) => ['id' => $i], $pr['subjects'])]]); }
+        if ($method === 'PATCH') { $out(['project' => ['id' => (int) $m[1]]]); }
+        if ($method === 'DELETE') { unset($P['projects'][$m[1]]); $save(); $out(['deleted' => true]); }
+    }
+    if (preg_match('#^/v1/projects/(\d+)/subjects$#', $path, $m) && $method === 'POST' && isset($P['projects'][$m[1]])) {
+        $sid = (int) ($body['subject_id'] ?? 0);
+        if (in_array($sid, $P['projects'][$m[1]]['subjects'], true)) { $out(['error' => ['code' => 'conflict', 'message' => 'Already linked.']], 409); }
+        $P['projects'][$m[1]]['subjects'][] = $sid; $save();
+        $out(['linked' => true], 201);
+    }
+    if (preg_match('#^/v1/projects/(\d+)/subjects/(\d+)$#', $path, $m) && $method === 'DELETE' && isset($P['projects'][$m[1]])) {
+        $P['projects'][$m[1]]['subjects'] = array_values(array_diff($P['projects'][$m[1]]['subjects'], [(int) $m[2]])); $save();
+        $out(['deleted' => true]);
+    }
+    if (preg_match('#^/v1/subjects/(\d+)$#', $path) && $method === 'PATCH') { $out(['updated' => true]); }
+}
 switch ($path) {
     case '/v1/whoami':
         $out(['role' => 'kn_fake', 'database' => 'fake']);

@@ -7,6 +7,9 @@
  *   POST /api/v1/agents/chat.php        → state.chat (a canned reply) or the refusal state.chat_status names, echoing the acting member it saw;
  *                                         state.chat_http (202) answers state.chat with that status; GET ?run= answers state.chat_run (else state.chat),
  *                                         or state.chat_run_http; every call is appended to "<state file>.chat"
+ *   POST /api/v1/apps/read.php          → K7 (slice 8): state.reads["<provider>.<tool>"] — a result (answered as {result, provider, tool}), {by: {"<first argument value>": result}}
+ *                                         for a tool read once per record (page_markdown), or {status, code, message?} for the kernel's refusal; no entry = 403 no_connection;
+ *                                         every request ({provider, tool, arguments}) is appended to "<state file>.reads"
  *   GET  /api/v1/ledger/periods.php     → A5, from state.ledger: no ?period= answers os.ledger-periods/1 (state.ledger.periods — the months and their status); ?period=YYYY-MM answers
  *                                         state.ledger.docs[<period>] (an os.ledger-period/1 document, as the kernel sends it), a 422 for a month it has none of; state.ledger.mode = down answers 503;
  *                                         every request is appended to "<state file>.ledger" (the period asked, or "list")
@@ -47,13 +50,22 @@ switch ($path) {
         if (isset($_GET['since'])) { $out(['schema' => 'os.directory-changes/1', 'since' => $_GET['since'], 'next' => $state['feed']['next'] ?? $_GET['since'], 'full' => false,
                                           'members' => [], 'departments' => [], 'memberships' => [], 'deleted_departments' => [], 'scopes' => [], 'access' => []]); }
         $out($state['feed'] ?? []);
+    case '/api/v1/apps/read.php':
+        $key = (string) ($input['provider'] ?? '') . '.' . (string) ($input['tool'] ?? '');
+        file_put_contents((string) getenv('FAKE_KERNEL_STATE') . '.reads', json_encode(['provider' => $input['provider'] ?? null, 'tool' => $input['tool'] ?? null, 'arguments' => $input['arguments'] ?? null]) . "\n", FILE_APPEND);
+        $r = $state['reads'][$key] ?? null;
+        if ($r === null) { $out(['error' => ['code' => 'no_connection', 'message' => 'No approved connection to that tool — a super-admin approves it in the operating system.']], 403); }
+        if (isset($r['status'], $r['code'])) { $out(['error' => ['code' => $r['code'], 'message' => $r['message'] ?? ('Refused: ' . $r['code'])]], (int) $r['status']); }
+        if (isset($r['by']) && is_array($r['by'])) { $first = (string) (array_values((array) ($input['arguments'] ?? []))[0] ?? ''); $r = $r['by'][$first] ?? null; if ($r === null) { $out(['error' => ['code' => 'invalid', 'message' => 'No such record.']], 422); } }
+        $out(['result' => $r, 'provider' => $input['provider'] ?? null, 'tool' => $input['tool'] ?? null]);
     case '/api/v1/runs/facts.php':
         $parts = explode('.', (string) ($input['token'] ?? ''));
         $run = $parts[2] ?? '';
         $out($state['facts'][$run] ?? ['valid' => false]);
     case '/api/v1/agents/chat.php':
         file_put_contents((string) getenv('FAKE_KERNEL_STATE') . '.chat', json_encode(['method' => $_SERVER['REQUEST_METHOD'], 'agent' => $_GET['agent'] ?? null, 'run' => $_GET['run'] ?? null,
-            'acting' => $_SERVER['HTTP_X_ACTING_MEMBER'] ?? null, 'utterance' => $input['utterance'] ?? null, 'context' => $input['context'] ?? null]) . "\n", FILE_APPEND);
+            'acting' => $_SERVER['HTTP_X_ACTING_MEMBER'] ?? null, 'utterance' => $input['utterance'] ?? null, 'context' => $input['context'] ?? null,
+            'wait' => $input['wait'] ?? null, 'conversation_id' => $input['conversation_id'] ?? null, 'screen' => $input['screen'] ?? null]) . "\n", FILE_APPEND);
         if (isset($_GET['run'])) {                         // A6's GET ?run=: state.chat_run (a run still going answers finished false), else state.chat
             if (($state['chat_run_http'] ?? 200) !== 200) { $out(['error' => ['code' => 'gone', 'message' => 'No such run.']], (int) $state['chat_run_http']); }
             $out($state['chat_run'] ?? ($state['chat'] ?? ['run_id' => (int) $_GET['run'], 'status' => 'succeeded', 'finished' => true, 'reply' => 'Hello from the fake expert']));

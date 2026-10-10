@@ -175,7 +175,7 @@ function kn_worker_sources(PDO $pdo, float $deadline, int $max = 10): int
     while ($n < $max && microtime(true) < $deadline) {
         $claim = $pdo->query("UPDATE sources SET status = 'extracting_text', error = NULL
                                WHERE id = (SELECT s.id FROM sources s JOIN knowledge_bases b ON b.id = s.base_id AND b.archived_at IS NULL
-                                            WHERE s.status = 'uploaded' AND s.kind IN ('file', 'text', 'url', 'note')
+                                            WHERE s.status = 'uploaded' AND s.kind IN ('file', 'text', 'url', 'note', 'feed')
                                             ORDER BY s.added_at, s.id LIMIT 1 FOR UPDATE OF s SKIP LOCKED)
                                RETURNING *")->fetch();
         if ($claim === false) {
@@ -217,9 +217,10 @@ function kn_worker_read_source(PDO $pdo, array $src, array $settings, float $dea
             break;
         case 'text':
         case 'note':
+        case 'feed':                                                   // slice 8: a fed record's Markdown is cut as pasted text is
             $raw = (string) one_value($pdo, 'SELECT text FROM source_text WHERE source_id = :s', ['s' => $id]);
             $ex = kn_extract_pasted_text($raw, (string) $src['title']);
-            $extractor = $src['kind'] === 'note' ? 'note' : 'paste';
+            $extractor = $src['kind'] === 'note' ? 'note' : ($src['kind'] === 'feed' ? 'feed' : 'paste');
             break;
         case 'url':
             if (!(bool) $settings['url_fetch_allowed'] || !kn_fetch_enabled()) {
@@ -251,7 +252,7 @@ function kn_worker_read_source(PDO $pdo, array $src, array $settings, float $dea
             $pdo->prepare('UPDATE sources SET url_etag = :e, url_checked_at = now() WHERE id = :id')->execute(['e' => $etag, 'id' => $id]);
             break;
         default:
-            return;                                                     // a feed source is slice 8's
+            return;
     }
     if (!$ex['ok']) {
         kn_worker_source_failed($pdo, $src, (string) $ex['error']);

@@ -115,7 +115,7 @@ The Archivist's duty (Monday 06:45, `maludb-os.json`) is **the kernel's schedule
 |---|---|---|---|---|
 | a source that failed extraction | `failed_source` | `source` | `{reason: 'failed', error}` (≤ 200) | **Retry** (slice 2's `retry_source()`, the writer behind `source_retry`) |
 | a source with no text | `failed_source` | `source` | `{reason: 'no_text'}` | lands on `source-view` (Replace / Remove there — OCR is Extended); accepted |
-| sources stale against the guideline version | `stale_source` | `base` (`subject_id` = the base) | `{sections, characters}` | **starts a build** of new and stale sections (slice 4's `start_build($pdo, $base, 'extract', $by)`, under the monthly limit — the estimate shown in the accept form); a build already running → accepted with "a build is already running" |
+| sources stale against the guideline version | `stale_source` | `base` (`subject_id` = the base) | `{sections, characters}` | **starts a build** of new and stale sections (slice 4's `start_build($pdo, $base, 'extract', $by)`, under the monthly limit — the estimate shown in the accept form); a build already running → left open with "a build is already running" (a field error — ruled by the planning model 2026-10-10) |
 | a URL source whose page changed or vanished | `url_changed` | `source` | `{changed_at, vanished: bool}` | lands on `source-view`'s Replace; accepted |
 | a feed that stopped | `feed_stopped` | `feed` | `{last_status, since}` | **Sync now** (`feed_sync`) |
 | the month's limit nearly spent | `limit_near` | `base` | `{used_chars, limit_chars, pct}` | lands on slice 1's `base-settings` (the limit); accepted |
@@ -310,6 +310,47 @@ the admin; Spaces' `pages_index`/`page_markdown` and Help Desk's `articles_publi
   errors; the registry reads the six screens and ten actions built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-10 by a Sonnet 5.5 worker; proven by `tests/phase3/slice8/run.sh`** — woken after the first build, asked by a person and drafts 35, polling and retries 24,
+proposals 48, effects 37, the Monday note 15, feeds 33, the worker's feed sync 41, URL checks 20, JSON and agents 31, the browser 110 (375 × 740 and 1280 × 800, JavaScript off) —
+394 checks under php -S and the same 394 under a real Apache, against the fake engine and the fake kernel (`state.reads`, the chat in each state), plus the registry and no PHP
+warning. The registry reads the 6 screens and 10 actions built. Slices 1–7, Phase 2 and Phase 0 stay green (see the build's report).
+
+Settled in the build:
+- **One additive migration, db/017** (`sources.url_failed_checks`): the URL check calls a page vanished on a 404/410 or on a fetch that failed TWO weekly checks running, and nothing in
+  db/001–016 holds a streak between two passes a week apart. db/015 had already shipped divergence 3 (drafts shape nothing) and divergence 1 (the named agents), so nothing else was added.
+- **Worker order**: forget · purge · recover · sources · builds · `dispatch_after_build` · `dispatches` · `dispatch_poll` · `feeds` · `url_checks` · key_usage — the spec's order, after the
+  slice 2 and 4 steps; a fed source is therefore cut by the NEXT pass's sources step (`kind feed` is read as pasted text now: `kn_worker_read_source()` gained the case).
+- **The clock**: `bin/worker.php` reads `KN_WORKER_NOW` (an ISO time) when `APP_ENV` is exactly `dev` and hands `$now` to every step; the steps compare against it (a due dispatch, the 30
+  minutes, a feed's next sync, the week of a URL check). Production reads the real clock. The proofs move it to prove the 2^n minutes backoff without waiting.
+- **The retry arithmetic**: the first call is attempt 1; a retryable failure sets `attempts + 1` and the next call `2^attempts` minutes later (4, 8, 16, 32 — the proof's "attempts 2, 4
+  minutes ahead"); the fifth attempt's failure is final. A new dispatch of `dispatch_after_build` is due at the very pass that inserted it (`next_attempt_at` = the pass's clock).
+- **The queue and the poll take `propose_areas` and `draft_guidelines` only**: an `ask` dispatch (slice 5) is called by its own request, and the instant between its insert and the kernel's answer is
+  not the worker's to call twice. `retry_dispatch` refuses an `ask` ("goes to the expert again from the question itself"); the screen shows Retry on the two kinds only.
+- **`dispatch_after_build` window**: only a first build that finished in the last 7 days wakes the expert (an upgrade must not wake the expert for every old base). The draft request is made in the
+  same pass as the areas request, under the same base conditions (no area, no earlier `propose_areas`), and only when every guideline is still the template's and none was drafted. `agent.fail` "no expert named" /
+  "no person to act for" is logged once per base and reason.
+- **Logging**: `agent.dispatch` on insert, on a person's request (`requested`) and on the admin's retry (`retry`, source web); every failed try is an `agent.fail` (`final` false until the last, `attempts`,
+  `detail` ≤ 200); `agent.reply` for answered and awaiting-approval runs (status, run, request, length, cost, currency). A 202'd turn logs nothing until it finishes. A cancelled run fails for good.
+- **A person's request that finds one live**: 200 with "The expert is already on it." (`existing` true), not a 422; the notice key `already` is on the areas and guidelines screens.
+- **The accept form of a stale_source and a running build**: the spec's table says "accepted with 'a build is already running'", its Accept paragraph and its Proof say the proposal stays open with the refusal as a
+  field error — the latter two (agreeing) are built, and **the planning model ruled for them (2026-10-10): accepting a proposal that did nothing would
+  tell the curator it was done**; the table's cell is corrected: a running build, the month's limit spent (`remaining_chars` 0) and the model not set up leave it open; nothing waiting for a build any more is accepted with no effect.
+  The same softness for a moot subject: a failed_source that is no longer failed and a retired pin are accepted with effect `none`; a deleted feed refuses ("dismiss the proposal").
+- **The merge form**: the groups are numbered from 1 (`merge-group-{n}`; `merge-group-{proposal}-{n}` on the admin's list, where several bases' proposals share a page); `groups_sent=1` says the form was
+  submitted, so no tick is "tick at least one group", and a call with no `groups` at all (an agent's) merges every group. A group whose aliases are already folded writes nothing.
+- **`archivist_propose` checks the subject's type against the kind** (the table: a gap is about a question, a merge about none …) and that it is a record of the base through base tables — the Archivist reads the
+  base, not every question in it, so the `mcp_*` views would answer it nothing. The gate is the reach: `kn_can_curate_base` for a person, the base's visibility for an agent.
+- **Who is told of a proposal**: `kn_base_curator_ids()` (db/012, unchanged) — the owner and the curate members — so the admin is told when named on the base; the proofs give the admin a curate share on the Manuals.
+  The Monday note keeps `kn_notify()`'s outbox dedupe and adds the bell's own week (a person with email off would otherwise be told twice).
+- **Feeds**: the followable tools are `FEED_TOOL_SPECS` ∩ `maludb-os.json` `reads[]` (page_markdown is the second read, not a feed); a field named on the form wins over a posted `arguments` (a partial update brings the old object);
+  the kernel's answer is `{result, …}` and `feed_items()` accepts `rows · items · results · candidates · pages · articles` or a bare list, and a `next`/`next_cursor`/`cursor`/`has_more`/`more`/`truncated` marker means the index
+  is not whole (nothing is forgotten as gone); more than 20 changed items in a pass leave the feed due at the next pass. A new version with the same words only moves `url_etag` (compared against the raw and the cut text's SHA-256).
+  A person's `source_remove` of a fed source is refused too ("A fed source is removed by its feed" — slice 2 refused only the replace).
+- **A record picker `base`** (`app/pickers.php`, `search_base_candidates()`) serves the admin's proposal and dispatch filters; the feed form's area and the proposals' kind are enumerations (selects).
+- **Files beyond the list**: a `handler.php` prelude in each of `app/features/{agents,proposals,feeds}` (the kit's shape), `tests/phase3/slice8/web.php` (the proof's web server on :8505 — :8507 is Apache's internal vhost
+  in `KN_APP=apache`), the `Propose areas` / `Draft guidelines from a sample` forms on slice 3's screens, the Feeds and Proposals tabs (curators') in `BASE_TABS`, `/feeds/save.php` in `PARTIAL_UPDATE_TARGETS`.
+- **The fakes**: `tests/fake_kernel.php` gained `POST /api/v1/apps/read.php` (`state.reads`) and the chat log's `wait`/`conversation_id`/`screen`; `tests/fake_kb_engine.php` gained `GET /v1/memory/config`
+  (`state.config`) and a small stateful project store (`state.projects_fake`) — both off unless a proof switches them on. The proofs' cast: the expert is Seamus (40, the Curator role on the Manuals); the Archivist a second agent
+  row, 91 "SMOKE Archivist" (role user, a Reader share on both bases).
 
 ## Open questions

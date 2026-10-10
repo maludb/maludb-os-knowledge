@@ -41,6 +41,8 @@ function area_notices(): array
         'dismissed' => ['success', 'Dismissed.'],
         'deleted'  => ['success', 'Deleted the area.'],
         'assigned' => ['success', 'Saved the areas.'],
+        'asked'    => ['success', 'The Knowledge Expert has been asked — its proposals appear here.'],
+        'already'  => ['info', 'The expert is already on it.'],
     ];
 }
 

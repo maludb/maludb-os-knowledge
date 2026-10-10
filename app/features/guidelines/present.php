@@ -76,6 +76,8 @@ function guideline_notices(array $built): array
         'deleted'     => ['success', 'Deleted the guideline.'],
         'term'        => ['success', 'Saved the term.'],
         'imported'    => ['success', 'Imported the vocabulary.'],
+        'asked'       => ['success', 'The Knowledge Expert has been asked — its drafts appear here.'],
+        'already'     => ['info', 'The expert is already on it.'],
     ];
 }
 

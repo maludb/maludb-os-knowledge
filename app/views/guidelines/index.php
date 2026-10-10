@@ -8,6 +8,13 @@ foreach ($compiled['conflicts'] as $c) { $warn[] = '"' . $c['alias'] . '" is cla
 <div class="main-content" id="guidelines-content">
     <?= view('shared/notice.php', ['notice' => $notice]) ?>
     <?= view('bases/partials/base-tabs.php', ['tabs' => $tabs, 'active' => 'guidelines']) ?>
+    <?php if ($may['manage'] && is_file(APP_ROOT . '/html/agents/draft-guidelines.php')): // slice 8: the expert is woken by a dispatch ?>
+        <form method="post" action="/agents/draft-guidelines.php" hx-post="/agents/draft-guidelines.php" hx-target="#flash" class="mb-3" id="guidelines-draft-form">
+            <?= csrf_field() ?><input type="hidden" name="base" value="<?= $id ?>">
+            <button type="submit" class="btn btn-light btn-touch" id="guidelines-draft-btn"><i class="feather-cpu me-1"></i>Draft guidelines from a sample</button>
+            <span class="fs-11 text-muted ms-1">The Knowledge Expert reads a sample of the sources and drafts guidelines — saved inactive, for you to review.</span>
+        </form>
+    <?php endif; ?>
     <div class="card mb-3" id="built-under"><div class="card-body p-3 fs-12">
         <div class="fw-semibold fs-13">The graph is built under version <?= $built['built_version'] !== null ? (int) $built['built_version'] : '—' ?>; the guidelines are at version <?= (int) $built['version'] ?>.</div>
         <div class="text-muted"><?php $parts = []; foreach ($built['by_version'] as $v => $n) { $parts[] = $n . ' section' . ($n === 1 ? '' : 's') . ' at v' . $v; } if ($built['stale'] > 0) { $parts[] = $built['stale'] . ' stale'; } if ($built['queued'] > 0) { $parts[] = $built['queued'] . ' not built yet'; } ?>

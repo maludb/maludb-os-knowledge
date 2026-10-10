@@ -4,6 +4,13 @@ $proposed = array_values(array_filter($areas, static fn (array $a): bool => $a['
 $shown = array_values(array_filter($areas, static fn (array $a): bool => $a['status'] !== 'proposed')); ?>
 <?= view('shared/header.php', ['id' => 'areas', 'title' => 'Focus areas', 'crumbs' => [['Home', '/'], ['Bases', '/bases'], [$b['name'], '/bases/' . $id], ['Areas', null]], 'back' => back_link(),
     'action' => $may['manage'] ? hx_link('/areas/new?base=' . $id, '<i class="feather-plus me-1"></i>New area', 'btn btn-primary btn-touch', 'id="areas-add-btn"') : '']) ?>
+<?php if ($may['manage'] && is_file(APP_ROOT . '/html/agents/propose-areas.php')): // slice 8: the expert is woken by a dispatch ?>
+    <form method="post" action="/agents/propose-areas.php" hx-post="/agents/propose-areas.php" hx-target="#flash" class="px-3 pb-2" id="areas-propose-form">
+        <?= csrf_field() ?><input type="hidden" name="base" value="<?= $id ?>">
+        <button type="submit" class="btn btn-light btn-touch" id="areas-propose-btn"><i class="feather-cpu me-1"></i>Propose areas</button>
+        <span class="fs-11 text-muted ms-1">The Knowledge Expert reads the graph and proposes areas; you accept or dismiss them here.</span>
+    </form>
+<?php endif; ?>
 <div class="main-content" id="areas-content">
     <?= view('shared/notice.php', ['notice' => $notice]) ?>
     <?= view('bases/partials/base-tabs.php', ['tabs' => $tabs, 'active' => 'areas']) ?>

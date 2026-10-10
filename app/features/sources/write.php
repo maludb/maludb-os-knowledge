@@ -104,6 +104,9 @@ function remove_source(PDO $pdo, int $id, int $by): array
     if ($src['status'] === 'forgotten') {
         throw new DomainException('"' . $src['title'] . '" is removed already.');
     }
+    if ($src['kind'] === 'feed') {                                   // slice 8: a fed source goes when its page does, or when the feed does (feeds/write.php forget_feed_source)
+        throw new DomainException('A fed source is removed by its feed.');
+    }
     $sections = (int) one_value($pdo, "SELECT count(*) FROM sections WHERE source_id = :id AND status <> 'forgotten'", ['id' => $id]);
     $pdo->prepare("UPDATE sources SET status = 'forgotten' WHERE id = :id")->execute(['id' => $id]);
     $file = wipe_source_content($pdo, $id);

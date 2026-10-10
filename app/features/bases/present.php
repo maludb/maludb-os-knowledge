@@ -18,6 +18,8 @@ const BASE_TABS = [
     'graph'      => ['Graph',      '/bases/{id}/graph',      '/bases/graph.php',      'read'],      // slice 6
     'questions'  => ['Questions',  '/bases/{id}/questions',  '/bases/questions.php',  'curate'],    // slice 5
     'keys'       => ['Keys',       '/bases/{id}/keys',       '/bases/keys.php',       'curate'],    // slice 7
+    'feeds'      => ['Feeds',      '/bases/{id}/feeds',      '/bases/feeds.php',      'curate'],    // slice 8
+    'proposals'  => ['Proposals',  '/bases/{id}/proposals',  '/bases/proposals.php',  'curate'],    // slice 8
     'share'      => ['Share',      '/bases/{id}/share',      '/bases/share.php',      'curate'],    // slice 1
     'settings'   => ['Settings',   '/bases/{id}/settings',   '/bases/settings.php',   'curate'],    // slice 1
 ];

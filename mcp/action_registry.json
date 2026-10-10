@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-10T14:27:06+00:00",
+    "generated_at": "2026-10-10T15:39:35+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -515,7 +515,7 @@
                 "status",
                 "kind"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-proposals": {
@@ -528,7 +528,7 @@
                 "status",
                 "kind"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "feeds": {
@@ -537,7 +537,7 @@
             "section": "Agents, proposals and feeds (slice 8)",
             "when": "the feeds a base follows from sibling applications and how each last synced",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "feed-add": {
@@ -548,7 +548,7 @@
             "params": [
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "feed-edit": {
@@ -557,7 +557,7 @@
             "section": "Agents, proposals and feeds (slice 8)",
             "when": "to change a feed's arguments, area, interval or whether it is enabled",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "dispatches": {
@@ -570,7 +570,7 @@
                 "kind",
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin": {
@@ -2295,7 +2295,7 @@
             "who": "the base's reach",
             "agent": true,
             "record_id": "the proposal",
-            "built": false
+            "built": true
         },
         "archivist_proposal_accept": {
             "action": "archivist_proposal_accept",
@@ -2346,7 +2346,7 @@
             "who": "questions.review on a curated base",
             "agent": false,
             "record_id": "the proposal",
-            "built": false
+            "built": true
         },
         "archivist_proposal_dismiss": {
             "action": "archivist_proposal_dismiss",
@@ -2373,7 +2373,7 @@
             "who": "questions.review on a curated base",
             "agent": false,
             "record_id": "the proposal",
-            "built": false
+            "built": true
         },
         "notification": {
             "action": "notification",
@@ -2412,7 +2412,7 @@
             "who": "an agent reading the base or settings.manage",
             "agent": true,
             "record_id": "the base",
-            "built": false
+            "built": true
         },
         "feed_save": {
             "action": "feed_save",
@@ -2475,7 +2475,7 @@
             "who": "feeds.manage on a curated base",
             "agent": true,
             "record_id": "the feed",
-            "built": false
+            "built": true
         },
         "feed_sync": {
             "action": "feed_sync",
@@ -2496,7 +2496,7 @@
             "who": "feeds.manage on a curated base",
             "agent": true,
             "record_id": "the feed",
-            "built": false
+            "built": true
         },
         "feed_delete": {
             "action": "feed_delete",
@@ -2517,7 +2517,7 @@
             "who": "feeds.manage on a curated base",
             "agent": true,
             "record_id": "the feed",
-            "built": false
+            "built": true
         },
         "dispatch_retry": {
             "action": "dispatch_retry",
@@ -2538,7 +2538,7 @@
             "who": "agents.settings",
             "agent": true,
             "record_id": "the dispatch",
-            "built": false
+            "built": true
         },
         "areas_propose_request": {
             "action": "areas_propose_request",
@@ -2559,7 +2559,7 @@
             "who": "base.manage on a curated base",
             "agent": false,
             "record_id": "the dispatch",
-            "built": false
+            "built": true
         },
         "guidelines_draft_request": {
             "action": "guidelines_draft_request",
@@ -2580,7 +2580,7 @@
             "who": "base.manage on a curated base",
             "agent": false,
             "record_id": "the dispatch",
-            "built": false
+            "built": true
         },
         "question_purge": {
             "action": "question_purge",

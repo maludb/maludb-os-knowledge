@@ -12,8 +12,8 @@ declare(strict_types=1);
  * Built:
  *   person   — slice 1: the people and agents a base is shared with (base-share's first form; never a guest), over mcp_members
  *   guest    — slice 1: the guests a base is shared with (base-share's guest form), over mcp_members
+ *   base     — slice 8: a knowledge base the caller reads, for the admin's filters (proposals, dispatches), over mcp_bases
  * The slices add (see docs/knowledge-design.md and the ten slice specs):
- *   base     — a form that chooses a knowledge base (copy a guideline set from, move a source to, a key's base)
  *   source   — slice 3: a live source of the area's base not yet in it (area-view's Add a source; param `area`), over mcp_sources
  *   section  — slice 2/5, a section (pin an answer to, link a guideline to)
  *   guideline— slice 3, a guideline (copy from another base, compile)
@@ -33,6 +33,11 @@ return [
         'title' => 'A guest', 'noun' => 'guest', 'roles' => ['bases.create', 'base.share'], 'params' => [],
         'search' => static fn (PDO $pdo, string $q, array $params, int $page): array => search_share_principals($pdo, $q, true, $page),
         'label' => static fn (PDO $pdo, int $id): ?string => share_principal_label($pdo, $id, true),
+    ],
+    'base' => [
+        'title' => 'A knowledge base', 'noun' => 'base', 'roles' => ['settings.manage', 'agents.settings', 'bases.create'], 'params' => [],
+        'search' => static fn (PDO $pdo, string $q, array $params, int $page): array => search_base_candidates($pdo, $q, $page),
+        'label' => static fn (PDO $pdo, int $id): ?string => ($v = one_value($pdo, 'SELECT name FROM mcp_bases WHERE base_id = :id', ['id' => $id])) === null ? null : (string) $v,
     ],
     'source' => [
         'title' => 'A source of this base', 'noun' => 'source', 'roles' => ['bases.create', 'base.manage'], 'params' => ['area'],

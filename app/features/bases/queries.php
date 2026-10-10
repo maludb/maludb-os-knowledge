@@ -141,6 +141,25 @@ function search_share_principals(PDO $pdo, string $q, bool $guests, int $page, i
     return ['rows' => $rows, 'total' => $total, 'page' => $page, 'page_size' => $pageSize, 'pages' => $pages];
 }
 
+/** The bases the caller reads, by name (the record picker's `base`): rows [id, label, detail (the owner), badge (archived)], newest-touched first. */
+function search_base_candidates(PDO $pdo, string $q, int $page, int $pageSize = 25): array
+{
+    $where = 'TRUE';
+    $args = [];
+    if ($q !== '') {
+        $where = 'name ILIKE :q';
+        $args['q'] = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $q) . '%';
+    }
+    $total = (int) one_value($pdo, "SELECT count(*) FROM mcp_bases WHERE $where", $args);
+    $pages = max(1, (int) ceil($total / $pageSize));
+    $page = max(1, min($page, $pages));
+    $st = $pdo->prepare("SELECT base_id, name, owner_name, archived_at FROM mcp_bases WHERE $where ORDER BY archived_at IS NOT NULL, lower(name), base_id LIMIT $pageSize OFFSET " . (($page - 1) * $pageSize));
+    $st->execute($args);
+    $rows = array_map(static fn (array $r): array => ['id' => (int) $r['base_id'], 'label' => (string) $r['name'], 'detail' => (string) ($r['owner_name'] ?? ''),
+        'badge' => $r['archived_at'] !== null ? 'archived' : '', 'color' => 'secondary'], $st->fetchAll());
+    return ['rows' => $rows, 'total' => $total, 'page' => $page, 'page_size' => $pageSize, 'pages' => $pages];
+}
+
 /** The name of a member the caller may see, for the picker's chosen label. $guests: only a guest; false: only a non-guest. */
 function share_principal_label(PDO $pdo, int $id, bool $guests): ?string
 {

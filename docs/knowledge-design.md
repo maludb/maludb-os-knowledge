@@ -656,3 +656,6 @@ or dismissed, sources assigned); `app/knowledge/compile.php` reproducing the spe
 `tests/phase3/slice3/run.sh`: 208 checks under php -S and Apache against the real engine. **Found: M12** — the engine refused every statement typed
 with the `general` template's own types (product, policy, place …); fixed in the MaluDB API (0.4.1, PR #19, the owner merges before the first
 build). **Next:** slice 4 (builds), slice 5 (ask, THE SECOND exemplar) — the handoff point.
+
+**2026-10-10 — M12 merged and live** (MaluDB API 0.4.1, PR #19; `maludb-api` restarted by the owner): the documents route registers an unseen
+subject type. Nothing of the engine is owed before the first build but the answer model (`PUT /v1/llm/models/answer`, at install).

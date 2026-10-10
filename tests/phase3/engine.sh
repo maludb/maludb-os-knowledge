@@ -13,9 +13,9 @@ ROOT="$(cd "$HERE/../.." && pwd)"
 STATE=${KN_ENGINE_STATE:-/tmp/kn-engine-p3}
 ENVF=${KN_DEV_ENV:-/tmp/kn-dev.env}
 PY=/home/maludb/maludb-python-api-server/.venv/bin/python
-# The API under proof: 0.4.0 + M12 (the documents route registers an unseen subject type) on its branch's worktree until the owner
-# merges it; then the main checkout. KN_ENGINE_API_DIR overrides.
-API_M1=${KN_ENGINE_API_DIR:-/home/maludb/maludb-api-m12}
+# The API under proof: the main checkout (0.4.1 since 2026-10-10 — M1 the answer route, M12 the documents route registering an unseen subject
+# type), run as a second process on its own port; the live service on :8000 is never touched. KN_ENGINE_API_DIR overrides.
+API_M1=${KN_ENGINE_API_DIR:-/home/maludb/maludb-python-api-server}
 DB=kn_engine_p3
 ROLE=kn_engine_p3
 P_API=8503; P_FAKE=8504

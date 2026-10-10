@@ -129,8 +129,8 @@ echo "   sudo systemctl restart certstudy-agent-runner        # K24 — the owne
 # 6. MANUAL — before answers are composed: M1 and the audit log.
 echo "== 6. MANUAL — the engine's API, answers and logging"
 echo "   - MaluDB API 0.4.0 (M1, the answer route) is merged and live since 2026-10-09 (PR #18)."
-echo "   - MaluDB API 0.4.1 (M12, PR #19: the documents route registers an unseen subject type) must be MERGED and maludb-api RESTARTED"
-echo "     before the first build: without it every statement typed with a template's own type (product, policy, place …) is refused."
+echo "   - MaluDB API 0.4.1 (M12, PR #19: the documents route registers an unseen subject type) is merged and live since 2026-10-10;"
+echo "     an older API refuses every statement typed with a template's own type (product, policy, place …)."
 echo "   - the memory database's 'answer' model: PUT /v1/llm/models/answer (bearer = MALUDB_KB_API_TOKEN). Until one is chosen the answer"
 echo "     route falls back to the extract choice, then each base's namespace configuration."
 echo "   - Settle pgaudit logging FIRST: the engine's calls carry the questions and the extracted text; decide what the audit log may keep"

@@ -361,8 +361,7 @@ four byte for byte on the first run. Settled in the build:
 - **Found against the real engine — M12.** The core refuses a statement whose subject type is not in its catalogue, and the `general` template's
   types (product, system, organisation, place, policy, procedure, term, document) are not in it: every statement the model typed with one was
   refused (`422 unknown subject_type product`). Fixed upstream on `feat/documents-register-types-m12` (MaluDB API 0.4.1, PR #19 — the documents
-  route registers an unseen type the way graph import does, else falls back and keeps the declared type as a predicate attribute); the Phase 3
-  proofs run the API from that branch's worktree (`tests/phase3/engine.sh`, `KN_ENGINE_API_DIR`) until it is merged. **The owner merges PR #19
-  before the first build** (`deploy/ROOT_STEPS.sh` step 6).
+  route registers an unseen type the way graph import does, else falls back and keeps the declared type as a predicate attribute); **merged and live
+  2026-10-10**; the Phase 3 proofs run the API from the main checkout (`tests/phase3/engine.sh`, `KN_ENGINE_API_DIR`).
 
 ## Open questions

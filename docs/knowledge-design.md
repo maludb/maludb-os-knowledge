@@ -684,3 +684,12 @@ agents, proposals and feeds (394, db/017 — a vanished address's streak; a prop
 3a27414), slice 9 home, admin, usage and tokens (416, 8b8917d). The registry reads 61 of 61 screens and 62 of 62 actions built; the installer's
 plan is clean. Each worker's choices are in its spec's "Built and proven"; the planning model re-ran each slice under php -S and Apache and the
 earlier suites it touched before committing. **Next:** Phase 4 (the two MCP servers) by a Sonnet 5.5 worker; Phase 5 the owner's.
+
+**2026-10-10 — Phase 4 built by a Sonnet 5.5 worker, verified by the planning model — PHASE 4 COMPLETE** (b92be89): the records server (61
+tools) and the activity server (6) over the views, the bridge for every engine-backed tool, run tokens through the kernel's run facts, the
+kernel's token to `app_roles` and the shares, the registry accepted by the kernel's own loader; `tests/phase4/run.sh` 519 checks under php -S
+and Apache. The planning model confirmed the bridge waits (65 s ask, 35 s search, 55 s a share) against the surface's 25 s. **Next — Phase 5,
+the owner's:** `deploy/ROOT_STEPS.sh` (pin the ports, the memory database and its token), `bin/app_install.php apply` twice (the roles are read
+from `app_roles` once the records server answers), the answer model (`PUT /v1/llm/models/answer`), the K24 credential, DNS and TLS for
+`knowledge.<domain>`, the hires (expert, Archivist) and their naming under Admin › Agents, and the end-to-end proof of §10 with a dozen
+documents of the owner's choosing. pgaudit's logging of every MaluDB query (the root disk) is worth settling first.

@@ -10,7 +10,7 @@
  * (unseeded); "SMOKE Valves" (private, Marco's) with "Quillon Valve" (document 601). The fake's graph (g_graph()): subjects Zorblat Pump 1 (501, 502),
  * Merrow Filter 2 (502), Quillon Valve 3 (601 only — Valves'), Zorblat Pumps 4 (503), ZP-9 5 (504); statements 9001 (501), 9003 (502), 9002 and 9004 (601).
  */
-require dirname(__DIR__) . '/slice5/lib.php';
+require_once dirname(__DIR__) . '/slice5/lib.php';
 
 /** The log of the fake engine, cleared. */
 function kb_clear(): void { file_put_contents(need('FAKE_KB_STATE') . '.log', ''); }

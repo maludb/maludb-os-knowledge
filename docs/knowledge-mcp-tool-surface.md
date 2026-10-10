@@ -110,7 +110,7 @@ Content-Type: application/json
   `subject_statements`, `path`, `god_nodes`, `surprises`, `graph_query`, `section_graph`, `source_graph`, `sections_for_subject`,
   `duplicate_subjects`, `preview`, `admin_view`, `share_ask`, `share_search`, `share_bases`. Any other op answers 404.
 - The answer is the tool's JSON, passed through verbatim (an engine failure included, as `{"ok": false, "error": …}`). The Python
-  side waits 25 s for `ask`, 7 s for a share (see the kernel's timeout below) and 15 s for anything else. A connection error or a
+  side waits 65 s for `ask`, 35 s for `search`, 55 s for `share_ask`/`share_search`, 7 s for `share_bases` and 15 s for anything else (the waits as built and confirmed in Phase 4 — § Phase 4, item 6; the approved text said 25 s and 7 s before M1's 60 s model timeout and K26). A connection error or a
   timeout becomes `bridge_unavailable` / `engine_timeout`.
 - Built by slice 5 (`ask`, `search`, `suggest`, `admin_view`), slice 3 (`preview`), slice 6 (the graph ops) and slice 7 (the share ops).
   Phase 4 wires the Python side. Engine results are cached per (op, base, arguments, guideline_version) for 60 s, and
@@ -531,3 +531,45 @@ Activity: **6 tools**. The resolve block names 13 entities. There are 3 share do
 
 ## Open questions
 (none)
+
+## Phase 4 — built and proven (2026-10-10)
+
+The two servers are built as the document specifies: `mcp/records_server.py` (**61 tools**: 58 from the tables above, `app_roles`, `records_search`, `bases_index`; 60 are offered to a person or an agent, `bases_index`
+only to the kernel's token) over `mcp/kn_{bases,sources,guidelines,builds,graph,asking,admin}.py` (each `register(mcp, q, bridge)`, shared pieces in `kn_common.py`), and `mcp/activity_server.py` (**6 tools**).
+`mcp/server_common.py` is the gate (the three token shapes, the run-facts call, fail closed, the kernel's headers); `mcp/db.py` gained the K26 context variables. `tests/phase4/run.sh` proves them (see "Proof"). No migration
+was needed (db/ is unchanged); one bridge op was added (`preview`). Decisions taken while building, each a small choice the surface left open or a correction of a sentence that no longer matched the code:
+
+1. **`extraction_preview` needed a bridge op the PHP side did not have.** `preview` is added to `app/knowledge/bridge.php` (`kn_bridge_preview`): a member caller, the section readable (`mcp_sections`), the base *curated*
+   (`curators_only` otherwise), at most 10 drafts of `{kind, title, body ≤ 4,000}`; **a draft whose kind and title match a saved guideline replaces it, any other is added** ("replacing or adding to the saved ones of that
+   kind"); nothing is saved. `documents_prompt` is the compiled prompt (`kn_compile_prompt_from`) with the section in place of `{{chunk}}`; `generic_prompt` is the engine's own dry run (`kn_engine_preview`) or `null`
+   with `engine: engine_unavailable|engine_timeout|engine_error` when the engine cannot give it; `hints[]` come from the vocabulary and the section's areas' seed terms; `lines` (EXTRACT/TERM/EXCLUDE counts) are added.
+   `tests/phase3/slice5/bridge.php` asserted that `preview` was an unknown op; it now uses `nonesuch`.
+2. **`graph_path` has no `max_depth`.** The PHP graph module (`graph_path()`) fixes the engine's search at depth 6 and Phases 2–3 are not changed; a parameter that is silently ignored would mislead an agent. The description says
+   "The search depth is fixed at 6 steps".
+3. **`get_question` is built in Python** from `mcp_questions` + `mcp_citations` + the caller's `mcp_question_feedback` row (as the surface says), with the same sentences as `app/features/ask/present.php`
+   (`ask_status_words`, the engine's error words) — and `tests/phase4/asking.php` compares it field for field with the PHP presenter's document for an answered, a `no_evidence`, an `evidence_only` and a `failed` question.
+4. **`source_excerpt`, quote not found:** `found: false`, `before` and `match` empty, and the section's first `2 × window` characters in `after`. The citation form (`question` + `n`) reads `mcp_citations.rank`.
+5. **The kernel's flat arguments:** `server_common` drops `consumer`, `consumer_agent_id` and `as_agent` (the three names the kernel strips) before wrapping the rest in `params`; the models stay `extra="forbid"`. The consumer
+   is the header alone: a call without a valid `X-OS-Consumer` (`[a-z0-9_]{1,60}`) reaches the share functions as `null` and answers `consumer_unknown` as a normal result, logged `share.read`. A person's token carrying the
+   header is still a person (door `mcp`).
+6. **Waits.** The surface said a share waits 7 s; since K26 the kernel waits 60 s for `ask` and `search` and PHP budgets the engine at 50 s, so the Python side waits **55 s** for `share_ask` / `share_search`, 7 s for
+   `share_bases`, **65 s** for a person's `ask` and 35 s for `search` (the surface said 25 s for both; the engine's own limits are 60 s for a route that calls the model — `KN_ENGINE_MODEL_TIMEOUT` — and 30 s for one that does not, and a Python wait shorter than the engine's would answer `engine_timeout` for a question PHP then stores anyway — a deviation from the approved text, **confirmed by the planning model 2026-10-10**: a wait shorter than the engine's reports a failure for an answer PHP then writes, so an agent retries, the question is stored twice and paid twice; the paragraph above is corrected to match), 20 s for `graph_query` and `duplicate_subjects`, 15 s for anything else. A timeout of an engine op is `engine_timeout` (retry), of any other `bridge_unavailable`.
+7. **The bridge's error words.** PHP's `invalid` is `invalid_argument` (with `fields`); `not_found`, `curators_only`, `not_in_base`, `no_path_in_base`, `engine_unavailable`, `engine_timeout`, `engine_error` (with `detail`) pass
+   through; a 401, an Apache 5xx or anything unrecognised is `bridge_unavailable`. `ask` and `search` answers (which are documents, even when `failed`) pass through verbatim.
+8. **`records_search` / `activity_query`:** `SEARCH_DENY` now carries `kn_section_markdown`, `kn_application_base` (both `kn_application_bases` and `kn_application_base_ids`: db/015 lets the records role call the first,
+   and it names the private bases shared with an application), `kn_base_curator_ids`, `kn_record_base_id`, `kn_key_calls_today`, `kn_key_reaches_base`; Help Desk's leftover is gone. A refusal is the one error shape
+   (`{ok:false, error:{code:"invalid_argument", …}}`), not Help Desk's `{error: "…"}`.
+9. **Reach choices the surface left to the tool.** `find_keys` without a base needs the `keys.all` right (or `q`); `find_builds` without a base is the admin's; `base_usage` without a base needs `costs.read`;
+   `find_sources` shows forgotten sources only on bases the caller curates (silently, with `include_forgotten`); `get_base` calls the bridge `admin_view` only for an admin reading a private base;
+   `get_section` and `get_focus_area` add the engine's ids (`maludb_document_id`, `maludb_project_id`) only for a curator.
+10. **`suggested_questions`** is the PHP `suggest` op (the areas' example questions, then the pinned answers' questions — the screens' own list) plus, when there is room and the engine is up, "What does the base say
+    about <subject>?" from the base's five most connected subjects (`god_nodes`, confined). **`share_reads.refused`** counts the outcomes `not_shared`, `consumer_unknown` and `invalid`.
+11. **`find_feeds` with `q` alone** answers `{feed_id, tool: "provider.tool", base_id}` (the wrapper's `label_field` is `tool`); `my_questions` with `q` alone answers `{question_id, question (80), base_id}`.
+12. **A parameter that fails validation is an answer** — `{ok:false, error:{code:"invalid_argument", fields:[…]}}`, a normal result, naming the parameters (`question`, `draft`, …) and never echoing what was sent (`server_common.invalid_argument`).
+13. **Process.** The servers are started by the proofs *without* `MALUDB_KB_API_TOKEN` in their environment and work: the Python side never holds it, never inserts a question and holds no write privilege (the roles have none).
+
+**Proof** — `tests/phase4/run.sh` (a scratch database `kn_dev_p4`, the application under `php -S`, or `KN_APP=apache` under a real Apache; the fake kernel, the fake engine, the two servers on :8504/:8505 from `mcp/venv`;
+every call through initialize, `tools/list`, `tools/call`): `gate` (the surface; the token shapes; agents under run facts, fail closed, first contact; the kernel's token; an eval run), `bridge` (the door, `preview`, `ask` with two
+citations, the graph, the engine down, the door closed), `wall` (what each kind of person reads; curators only; forgotten words; no key or hash; the guarded search), `reads`, `asking` (`get_question` equals the PHP
+document), `shares` (with and without `X-OS-Consumer`), `activity`, `registry` (the kernel's own `application_actions` loader, resolver and tool factory; an agent's `key_mint` pauses; the Archivist holds two actions
+and none that mints, deletes or shares), `coverage` (every tool called; every view and read function read). 519 checks (62 + 68 + 98 + 78 + 43 + 31 + 51 + 76 + 12), the same under `php -S` and under a real Apache; the registry proof is the kernel's own code, imported read-only.

@@ -31,11 +31,15 @@ request_is_kernel: contextvars.ContextVar[bool] = contextvars.ContextVar("is_ker
 request_run_id: contextvars.ContextVar[int | None] = contextvars.ContextVar("run_id", default=None)
 # The raw bearer the caller presented (a run token is shown to the kernel's run-facts call).
 request_token: contextvars.ContextVar[str] = contextvars.ContextVar("token", default="")
+# K26 (kernel db/173, 2026-10-06): on the kernel's K7 call, who is asking — the consuming application's key and its expert agent's member id —
+# from the headers X-OS-Consumer / X-OS-Consumer-Agent, read beside the token; never from the arguments.
+request_consumer: contextvars.ContextVar[str | None] = contextvars.ContextVar("consumer", default=None)
+request_consumer_agent: contextvars.ContextVar[int | None] = contextvars.ContextVar("consumer_agent", default=None)
 
 
 _ENV_KEYS = ("DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD", "MCP_RECORDS_DB_USER", "MCP_RECORDS_DB_PASSWORD",
              "MCP_ACTIVITY_DB_USER", "MCP_ACTIVITY_DB_PASSWORD", "ACTION_TOKEN_KEY", "ACTIONS_RELAY_KEY", "APP_KEY",
-             "OS_INTERNAL_URL", "OS_APPLICATION_TOKEN", "MALUDB_API_URL", "MALUDB_API_TOKEN", "MCP_RECORDS_PORT", "MCP_ACTIVITY_PORT")
+             "OS_INTERNAL_URL", "OS_APPLICATION_TOKEN", "MALUDB_API_URL", "MALUDB_API_TOKEN", "MCP_RECORDS_PORT", "MCP_ACTIVITY_PORT", "APP_INTERNAL_PORT", "APP_URL")
 
 
 def load_env() -> dict[str, str]:
@@ -217,7 +221,13 @@ async def fetch_scoped(pool: asyncpg.Pool, sql: str, *params, member_id: int | N
             return [dict(r) for r in rows]
 
 
-SEARCH_DENY = ("set_config", "current_setting", "mcp_admit_agent", "mcp_resolve_token", "kn_secure_link_", "next_document_number", "pg_", "dblink", "lo_import", "lo_export")
+SEARCH_DENY = ("set_config", "current_setting", "mcp_admit_agent", "mcp_resolve_token", "kn_section_markdown", "kn_application_base", "kn_base_curator_ids",
+               "kn_record_base_id", "kn_key_calls_today", "kn_key_reaches_base", "pg_", "dblink", "lo_import", "lo_export")
+
+
+def _refused(message: str, retry: bool = False) -> str:
+    """A refusal as an answer, in the tools' one shape (the surface: errors are answers, not exceptions)."""
+    return json.dumps({"ok": False, "error": {"code": "invalid_argument", "message": message, "retry": retry}})
 
 
 async def run_search(pool: asyncpg.Pool, sql: str, row_cap: int = 200) -> str:
@@ -226,18 +236,18 @@ async def run_search(pool: asyncpg.Pool, sql: str, row_cap: int = 200) -> str:
     stripped = sql.strip().rstrip(";").strip()
     low = stripped.lower()
     if not (low.startswith("select") or low.startswith("with")):
-        return json.dumps({"error": "Only a single SELECT (or WITH ... SELECT) is allowed."})
+        return _refused("Only a single SELECT (or WITH ... SELECT) is allowed.")
     if ";" in stripped:
-        return json.dumps({"error": "Only one statement is allowed."})
+        return _refused("Only one statement is allowed.")
     forbidden = (" insert ", " update ", " delete ", " drop ", " alter ", " grant ", " create ", " copy ")
     padded = f" {low} "
     if any(f in padded for f in forbidden):
-        return json.dumps({"error": "Only read queries are allowed."})
+        return _refused("Only read queries are allowed.")
     # The read role can call a few functions from a SELECT. None of these is a way to read or to act: set_config could
     # impersonate another member for the views, the others are the kernel's door, an admission, a token lookup.
     for banned in SEARCH_DENY:
         if banned in low:
-            return json.dumps({"error": f"'{banned}' is not available in records_search / activity_search — use the views and the named tools."})
+            return _refused(f"'{banned}' is not available in records_search / activity_query — use the views and the named tools.")
     mid = request_member_id.get()
     rol = request_role.get()
     async with pool.acquire() as con:
@@ -250,5 +260,5 @@ async def run_search(pool: asyncpg.Pool, sql: str, row_cap: int = 200) -> str:
             try:
                 rows = await con.fetch(f"SELECT * FROM ({stripped}) _q LIMIT {row_cap}")
             except asyncpg.PostgresError as e:
-                return json.dumps({"error": f"Query failed: {e!s}"})
+                return _refused(f"Query failed: {e!s}")
             return to_json([dict(r) for r in rows])

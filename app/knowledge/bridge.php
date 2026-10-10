@@ -9,15 +9,18 @@ declare(strict_types=1);
  * acts with the screens' own gates (app.member_id set for the request); an application caller is honoured for the share ops only (slice 7: share_ask,
  * share_search, share_bases — judged by kn_application_base_ids() alone, no member).
  *   kn_bridge_verify()    401 unless loopback, ±30 s and the HMAC verifies — the server's REMOTE_ADDR, never a header
- *   kn_bridge_dispatch()  the op table: ask, search, suggest, admin_view, and (slice 6) the graph ops; slices 3 and 7 add theirs (KN_BRIDGE_OPS)
+ *   kn_bridge_dispatch()  the op table: ask, search, suggest, admin_view, and (slice 6) the graph ops; slice 7 added the share ops and Phase 4 `preview` (extraction_preview) (KN_BRIDGE_OPS)
  */
 require_once APP_ROOT . '/app/knowledge/ask.php';
 require_once APP_ROOT . '/app/features/ask/queries.php';
 require_once APP_ROOT . '/app/features/sources/queries.php';
 require_once APP_ROOT . '/app/features/graph/queries.php';
 require_once APP_ROOT . '/app/knowledge/share.php';
+require_once APP_ROOT . '/app/knowledge/compile.php';
 
 const KN_BRIDGE_SKEW = 30;
+const KN_BRIDGE_PREVIEW_DRAFTS = 10;
+const KN_BRIDGE_PREVIEW_DRAFT_CHARS = 4000;
 /** op => [handler function, the caller kinds it admits]. Later slices append. */
 const KN_BRIDGE_OPS = [
     'ask'        => ['kn_bridge_ask', ['member']],
@@ -39,6 +42,8 @@ const KN_BRIDGE_OPS = [
     'source_graph'        => ['kn_bridge_source_graph', ['member']],
     'sections_for_subject' => ['kn_bridge_sections_for_subject', ['member']],
     'duplicate_subjects'  => ['kn_bridge_duplicate_subjects', ['member']],
+    // Phase 4 — the curator's dry run of the extraction prompt (extraction_preview): the saved guidelines, or the saved set with drafts overlaid
+    'preview'             => ['kn_bridge_preview', ['member']],
     // slice 7 — the K7 shares, for an `application` caller alone (the kernel's X-OS-Consumer, K26): app/knowledge/share.php
     'share_ask'    => ['kn_bridge_share_ask', ['application']],
     'share_search' => ['kn_bridge_share_search', ['application']],
@@ -595,4 +600,63 @@ function kn_bridge_duplicate_subjects(PDO $pdo, array $msg, array $a): array
     return [200, ['groups' => array_map(static fn (array $g): array => ['normalised' => $g['normalised'], 'subjects' => array_map(static fn (array $s): array => ['subject_id' => (int) $s['subject_id'], 'name' => $s['name'], 'type' => $s['type'] ?? null], $g['subjects'])]
         + (isset($g['vocabulary_term_id']) ? ['vocabulary_term_id' => (int) $g['vocabulary_term_id']] : []), array_slice($d['groups'], 0, kn_bridge_graph_limit($a, 'limit', 50, 50))),
         'documents_read' => (int) $d['documents_read'], 'documents_total' => (int) $d['documents_total']]];
+}
+
+/**
+ * extraction_preview (Phase 4): what the base's guidelines — or the saved set with up to ten drafts overlaid — would tell the model about this section. The curator's
+ * (kn_can_curate_base; `curators_only` otherwise), the section the caller reads (mcp_sections is the gate). A draft whose kind and title match a saved guideline replaces it,
+ * any other is added. Nothing is saved, no model is called: documents_prompt is the compiled prompt with the section in place of {{chunk}} (what a build would send), generic_prompt the
+ * engine's own dry run of its ingest contract (MaluDB M5 has no dry run of the model). The engine being down leaves generic_prompt null.
+ */
+function kn_bridge_preview(PDO $pdo, array $msg, array $a): array
+{
+    [$x, $b, $err] = kn_bridge_section_ref($pdo, $a['section'] ?? null);
+    if ($err !== null) {
+        return $err;
+    }
+    $bid = (int) $x['base_id'];
+    if (!db_bool($pdo, 'SELECT kn_can_curate_base(:b)', ['b' => $bid])) {
+        return [403, ['ok' => false, 'error' => ['code' => 'curators_only', 'message' => 'This tool is for the base\'s curators.']]];
+    }
+    if ($x['status'] === 'forgotten') {
+        return kn_bridge_not_found('Section not found.');
+    }
+    $drafts = $a['draft'] ?? [];
+    if (!is_array($drafts) || count($drafts) > KN_BRIDGE_PREVIEW_DRAFTS) {
+        return [422, ['ok' => false, 'error' => ['code' => 'invalid_argument', 'message' => 'At most ' . KN_BRIDGE_PREVIEW_DRAFTS . ' drafts.', 'fields' => ['draft' => 'At most ' . KN_BRIDGE_PREVIEW_DRAFTS . ' drafts.']]]];
+    }
+    $kinds = array_column($pdo->query('SELECT unnest(kn_guideline_kinds()) AS k')->fetchAll(PDO::FETCH_ASSOC), 'k');
+    $in = kn_compile_inputs($pdo, $bid);
+    foreach ($drafts as $d) {
+        $body = is_array($d) ? (string) ($d['body'] ?? '') : '';
+        if (!is_array($d) || !in_array((string) ($d['kind'] ?? ''), $kinds, true) || trim($body) === '' || mb_strlen($body) > KN_BRIDGE_PREVIEW_DRAFT_CHARS) {
+            return [422, ['ok' => false, 'error' => ['code' => 'invalid_argument', 'message' => 'A draft is {kind, title, body} with a body of 1 to ' . KN_BRIDGE_PREVIEW_DRAFT_CHARS . ' characters.', 'fields' => ['draft' => 'Check each draft.']]]];
+        }
+        $draft = ['kind' => (string) $d['kind'], 'title' => trim((string) ($d['title'] ?? '')), 'body' => $body];
+        foreach ($in['guidelines'] as $g) {
+            if ($g['kind'] === $draft['kind'] && mb_strtolower($g['title']) === mb_strtolower($draft['title'])) {
+                $draft['guideline_id'] = $g['id'];
+                break;
+            }
+        }
+        $in = kn_compile_with_draft($in, $draft);
+    }
+    $text = (string) $x['text'];
+    $prompt = kn_compile_prompt_from($in);
+    $seeds = [];
+    foreach ($pdo->query("SELECT a.seed_terms FROM source_focus_areas sfa JOIN focus_areas a ON a.id = sfa.focus_area_id WHERE sfa.source_id = " . (int) $x['source_id'] . " AND a.status = 'active' ORDER BY a.position, a.id")->fetchAll(PDO::FETCH_COLUMN) as $lit) {
+        foreach (kn_compile_pg_array((string) $lit) as $t) {
+            $seeds[] = $t;
+        }
+    }
+    $hints = kn_compile_section_hints(kn_compile_vocabulary_from($in['terms']), array_values(array_unique($seeds)), $text);
+    $out = ['section_id' => (int) $x['section_id'], 'documents_prompt' => str_replace(['{{chunk}}', '{{text}}'], $text, $prompt['prompt_template']), 'generic_prompt' => null, 'hints' => $hints,
+            'lines' => $prompt['lines'], 'note' => 'a dry run of the prompt, not of the model (MaluDB M5)'];
+    $e = kn_engine_preview((string) $b['namespace'], $text, $hints);
+    if ($e['ok']) {
+        $out['generic_prompt'] = trim((string) ($e['data']['system_prompt'] ?? '') . "\n\n" . (string) ($e['data']['user_message'] ?? ''));
+    } else {
+        $out['engine'] = in_array($e['code'], ['engine_unavailable', 'engine_timeout'], true) ? $e['code'] : 'engine_error';
+    }
+    return [200, $out];
 }

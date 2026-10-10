@@ -8,7 +8,7 @@
  * (document 701, page 2) and "… › Returns › Window" (document 702, page 5) — are extracted, the areas Warranty (project 71) and Returns (project 72), shared to the
  * application principal `helpdesk` (a reader); "SMOKE Contracts" (private; Marco's) with one section (document 801), shared to nothing.
  */
-require dirname(__DIR__) . '/slice5/lib.php';
+require_once dirname(__DIR__) . '/slice5/lib.php';
 
 const KEY_SENTINEL = 'AXOLOTL-SENTINEL-7719';
 

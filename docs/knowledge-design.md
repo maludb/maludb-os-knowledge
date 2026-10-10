@@ -677,3 +677,10 @@ the pinned answers; the engine bridge's PHP side (`/internal/bridge.php`: ask, s
 RAISE words for P0001/P0002/23502/23505/23514 and a P0002 is a 404; `kn_markdown_html()`. `tests/phase3/slice5/run.sh`: 231 checks under php -S,
 232 under Apache, against the fake engine (`tests/fake_kb_engine.php`). **Next:** slices 6–9 and Phase 4 by Sonnet 5.5 workers, one at a time, each
 verified by the planning model before the next; Phase 5 the owner's.
+
+**2026-10-10 — slices 6–9 built by Sonnet 5.5 workers, each verified by the planning model — PHASE 3 COMPLETE.** Slice 6 the graph explorer
+(274 checks, 8397cc8), slice 7 the token API, keys and the K7 shares (254 php -S / 259 Apache, db/016 — the share door's grant, 6b706a3), slice 8
+agents, proposals and feeds (394, db/017 — a vanished address's streak; a proposal that cannot act now stays open, the planning model's ruling,
+3a27414), slice 9 home, admin, usage and tokens (416, 8b8917d). The registry reads 61 of 61 screens and 62 of 62 actions built; the installer's
+plan is clean. Each worker's choices are in its spec's "Built and proven"; the planning model re-ran each slice under php -S and Apache and the
+earlier suites it touched before committing. **Next:** Phase 4 (the two MCP servers) by a Sonnet 5.5 worker; Phase 5 the owner's.

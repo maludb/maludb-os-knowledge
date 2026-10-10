@@ -161,6 +161,46 @@ mixes both bases' documents and subjects, a path Zorblat Pump → Merrow Filter 
   the registry reads the four screens built.
 
 ## Built and proven
-Not built.
+**Built 2026-10-10 by a Sonnet 5.5 worker from this spec; to be verified and committed by the planning model; proven by `tests/phase3/slice6/run.sh`** — overview 19,
+subject 26, confinement 11, communities 13, path 17, duplicates 15, cache 19, taught 13, the bridge 34, engine down 14, the browser 93 (375 × 740 and 1280 × 800)
+— 274 checks under php -S and 274 under a real Apache, against the fake engine (`tests/fake_kb_engine.php`, its `graph` state) and the fake kernel, plus the
+registry (4 screens built: 44 of 61 screens, 45 of 62 actions) and no PHP warning. Slices 2 and 5 and Phase 2 stay green. No migration.
+
+Settled in the build:
+- **The engine's sentence is the module's**, `kn_engine_error_message()` — "The knowledge engine is not available right now." — not the "is not reachable…" the proof
+  paraphrased; `invalid_argument` on a search says "Search with at least one word of two letters or more." The first region to fail with an unreachable engine
+  (unavailable, timeout, auth, forbidden) is every remaining region's failure at once, so a hanging engine is waited on once, not five times.
+- **Names the base does not hold are one answer.** `subject-view` (404 "Subject not found in this base."), `path` (an end that is not the base's → "There is no path between these
+  inside this base.", `withheld` true — the same words as a path through another base's document), the bridge (`not_in_base`, `no_path_in_base`). The path page echoes the
+  names a person typed; it never names a node of a path it withholds. Of several engine paths (the first 8) the **first wholly inside the base** wins; some but none inside is
+  withheld; none at all is the same sentence with `withheld` false.
+- **Statements are confined through the base's documents**, not their own neighbours: a subject's statement rows are kept only when one of the base's documents the subject
+  touches (at most 20 asked) lists the same statement, and its section is that document's. This needs document → statement edges in the unified graph, which the tool
+  surface's `section_graph` assumes already. A statement or subject node on a PATH is confined by its own neighbours (`graph_confine_nodes($ns, $kind, …)`, the generic form
+  behind `graph_confine_subjects()`, which answers `['ok', 'subjects', 'more']` and each subject's `documents`, `degree`, `doc_ids`, `rels`).
+- **The vocabulary's duplicates** are separate groups of two kinds — names that read alike, and a seeded-or-not term whose canonical name and an alias both exist as subjects —
+  and one subject may stand in both; a group is left out when every name in it is a seeded term's canonical name or alias. The suggested name of a vocabulary group is the term's
+  canonical name; of any other the subject most documents touch (ties: the shorter, then alphabetical). **Merge** goes to `/vocabulary/new?base=&canonical_name=&aliases=`; slice 3's
+  `html/vocabulary/form.php` (+ its view) now prefills from those, and when a term of that name already exists opens it for change with the aliases united (nothing is written by opening).
+- **The cache** (`graph_cache()`): a result marked `nocache` (a name that is not the base's, any failure) is never written; at most 400 files a base (the oldest go first, besides
+  the day-old rule); `graph_fresh()` is set by the screen for a curator's `?fresh=1`. The two god-node regions are two engine calls (limit 20 subjects-only, limit 10), as written. The
+  path page's name suggestions are the connected subjects (the same cached call).
+- **Communities** show the engine's `member_count` as their size; a community's members are confined (subjects: at most 40 checked, "and more"; documents as their sections).
+- **The bridge** (`app/knowledge/bridge.php`): a document node is a node of kind **`section`** with `id` = the section id and `section` = `{section_id, heading_path, source, page_no}`
+  (`subject_neighbors` accepts `kind=document` for them); a subject may be named by its id (`graph_find_subject_by_id()` asks the engine's list route `id=eq.N` through
+  `kn_engine_request()`; engine.php was not touched); neighbours carry no subject type (null); a statement's `object` is null (the neighbour row has only its text); a surprise's
+  `score` is the engine's `community_pair_edges`; `graph_stats.top_verbs` count the confined top subjects' neighbour rels; an unreachable engine is 503 `engine_unavailable` (504
+  `engine_timeout`, else 502 `engine_error` with the engine's code as `detail`), and `graph_stats` alone answers the cached counts with `engine: "unavailable"`. An op for a base
+  one may not read is `not_found` even for `duplicate_subjects` (a reader who can read it gets `curators_only`, 403). The graph ops write nothing, not even a log row.
+- **The drawing** puts at most 24 nodes — the base's sections, then subjects by degree, then statements that have a section — on one ring (two past 12: 150 × 85 and 265 × 150 around
+  the centre), sorted by name for their angle; the verb labels the edge when known; statements link to their section. A subject's JSON does not carry the drawing.
+- **Links keep the way back without nesting it**: `graph_here()` is the address of the page minus its own `back` and `fresh`, so exploring subject after subject never wraps one
+  `?back=` inside the next. `back_link()` gained the labels "the graph", "the subject", "the community" and "the path".
+- **Slice 2's JSON is unchanged** (`taught` is HTML only); a forgotten section or source shows no such region; "Not in the graph yet." is a section without a document id.
+- **Proof additions**: `taught.php` and `bridge.php` beside the spec's list (the Proof section has bullets for both); the fake engine's `GET /v1/documents` with both
+  `document_type` and `id=in.(…)` now answers the ids that are in the namespace (what `kn_engine_documents_in()` asks), its `GET /v1/graph/query` walks the neighbours when `graph.subjects` is
+  set, and `graph.labels` names non-subject nodes; slice 5's contract is untouched. The cast is the fixture's (Priya, Marco, Bea, Ann, Reid), the scratch database `kn_dev6`.
+- `.kn-row-link` (app-overrides.css) is the 44 px row of a link list.
+- **One earlier proof changed with the slice it was waiting for**: slice 5's `bridge.php` named `graph_stats` as "an op no slice has built yet" (→ 404 `unknown_op`); it names `preview` (slice 3's, still unbuilt) now.
 
 ## Open questions

@@ -1,4 +1,4 @@
-<?php /** One section, read at 375 first (screen `section-view`). Data: x, b, curate, marked (html, found), quote, neighbours, ancestors, back */
+<?php /** One section, read at 375 first (screen `section-view`). Data: x, b, curate, marked (html, found), quote, neighbours, ancestors, back, taught, here */
 $xid = (int) $x['section_id']; $sid = (int) $x['source_id']; $bid = (int) $b['base_id'];
 $title = $x['heading'] !== '' ? $x['heading'] : ($x['heading_path'] !== '' ? $x['heading_path'] : $x['source_title']);
 $crumbs = [['Home', '/'], [$b['name'], '/bases/' . $bid], [$x['source_title'], '/sources/' . $sid]];
@@ -23,6 +23,7 @@ $forgotten = $x['status'] === 'forgotten'; ?>
             <div class="kn-prewrap kn-section-text" id="section-text" lang="<?= e((string) ($b['language'] ?? 'en')) ?>"><?= $marked['html'] ?></div>
         <?php endif; ?>
     </div></div>
+    <?php if ($taught !== null): ?><?= view('graph/partials/taught.php', ['t' => $taught, 'b' => $b, 'here' => $here, 'scope' => 'section']) ?><?php endif; ?>
     <div class="d-flex gap-2 mb-3">
         <?php if ($neighbours['prev'] !== null): ?><?= hx_link('/sections/' . $neighbours['prev'], '<i class="feather-chevron-left me-1"></i>Previous', 'btn btn-light btn-touch flex-fill', 'id="section-prev"') ?><?php endif; ?>
         <?php if ($neighbours['next'] !== null): ?><?= hx_link('/sections/' . $neighbours['next'], 'Next<i class="feather-chevron-right ms-1"></i>', 'btn btn-light btn-touch flex-fill', 'id="section-next"') ?><?php endif; ?>

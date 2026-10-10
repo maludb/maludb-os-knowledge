@@ -7,6 +7,7 @@ declare(strict_types=1);
  * link here. A curator also sees the section's status, built version and error; a forgotten section shows no text.
  */
 require_once dirname(__DIR__, 2) . '/app/features/sources/handler.php';
+require_once APP_ROOT . '/app/features/graph/queries.php';
 require_right('bases.read');
 $pdo = db();
 [$x, $b] = section_from_request($pdo, 'section-view');
@@ -19,6 +20,7 @@ base_screen_view($pdo, 'section-view', $bid, ['section_id' => $xid]);
 if (wants_json()) {
     respond_screen(['section' => present_section($x, $curate), 'neighbours' => section_neighbours($pdo, $xid), 'ancestors' => section_ancestors($pdo, $xid), 'quote_found' => $marked['found']]);
 }
-render_screen($x['heading'] !== '' ? $x['heading'] : $x['source_title'], view('sections/view.php', ['x' => $x, 'b' => $b, 'curate' => $curate, 'marked' => $marked, 'quote' => $quote,
+$taught = $x['status'] === 'forgotten' ? null : section_taught($pdo, $xid);       // slice 6: what it taught the graph
+render_screen($x['heading'] !== '' ? $x['heading'] : $x['source_title'], view('sections/view.php', ['x' => $x, 'b' => $b, 'curate' => $curate, 'marked' => $marked, 'quote' => $quote, 'taught' => $taught, 'here' => graph_here(),
     'neighbours' => section_neighbours($pdo, $xid), 'ancestors' => section_ancestors($pdo, $xid), 'back' => back_link()]),
     ['activeNav' => 'bases', 'screen' => 'section-view', 'entity' => 'section', 'recordId' => (string) $xid]);

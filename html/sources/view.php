@@ -7,6 +7,7 @@ declare(strict_types=1);
  * first section on it), the curators' Edit · Replace · Remove · Retry, the timeline; a replaced source names its successor.
  */
 require_once dirname(__DIR__, 2) . '/app/features/sources/handler.php';
+require_once APP_ROOT . '/app/features/graph/queries.php';
 require_right('bases.read');
 $pdo = db();
 [$s, $b] = source_from_request($pdo, 'source-view');
@@ -32,6 +33,7 @@ if (wants_json()) {
     respond_screen(['source' => present_source($s), 'base' => ['base_id' => $bid, 'name' => $b['name']], 'outline' => $outline, 'pages' => $pages, 'may' => $may,
                     'superseded_by' => $successor === null ? null : ['source_id' => (int) $successor['source_id'], 'title' => $successor['title']]]);
 }
-render_screen($s['title'], view('sources/view.php', ['s' => $s, 'b' => $b, 'outline' => $outline, 'pages' => $pages, 'may' => $may, 'curate' => $curate, 'successor' => $successor,
+$taught = $s['status'] === 'forgotten' ? null : source_taught($pdo, $sid);        // slice 6: what its sections taught the graph
+render_screen($s['title'], view('sources/view.php', ['taught' => $taught, 'graph_here' => graph_here(), 's' => $s, 'b' => $b, 'outline' => $outline, 'pages' => $pages, 'may' => $may, 'curate' => $curate, 'successor' => $successor,
     'timeline' => source_timeline($pdo, $sid), 'activeAreas' => $activeAreas, 'tz' => member_timezone(), 'here' => here_url(), 'notice' => kn_notice(request_string('notice') ?: null, source_notices($s))]),
     ['activeNav' => 'bases', 'screen' => 'source-view', 'entity' => 'source', 'recordId' => (string) $sid]);

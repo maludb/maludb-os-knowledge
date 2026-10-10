@@ -36,8 +36,8 @@ ok(trim($v) === '[["401","unauthorized","The bridge answers a signed loopback ca
 ok($c === 403 && ($b['error']['code'] ?? '') === 'unknown_member', 'an unknown member → 403 unknown_member');
 [$c, $b] = bridge($msg(['caller' => ['kind' => 'application', 'application' => 'helpdesk']]), null, null, $internal);
 ok($c === 403 && ($b['error']['code'] ?? '') === 'caller_not_allowed', 'an application caller on ask (not share_ask) → refused');
-[$c, $b] = bridge($msg(['op' => 'graph_stats']), null, null, $internal);
-ok($c === 404 && ($b['error']['code'] ?? '') === 'unknown_op', 'an op no slice has built yet → 404');
+[$c, $b] = bridge($msg(['op' => 'preview']), null, null, $internal);
+ok($c === 404 && ($b['error']['code'] ?? '') === 'unknown_op', 'an op no slice has built yet (preview) → 404');
 [$c, $b] = bridge($msg(['op' => 'search', 'args' => ['base' => 'smoke-handbook', 'query' => 'carry-over']]), null, null, $internal);
 ok($c === 200 && ($b['schema'] ?? '') === 'os.knowledge-evidence/1', 'search (the base by its key) → os.knowledge-evidence/1');
 [$c, $b] = bridge($msg(['op' => 'suggest', 'args' => ['base' => $hb]]), null, null, $internal);

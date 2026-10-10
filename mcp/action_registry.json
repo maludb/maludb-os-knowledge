@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-10T12:34:01+00:00",
+    "generated_at": "2026-10-10T13:27:25+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -431,7 +431,7 @@
             "params": [
                 "q"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "subject-view": {
@@ -442,7 +442,7 @@
             "params": [
                 "name"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "community-view": {
@@ -453,7 +453,7 @@
             "params": [
                 "community"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "path": {
@@ -465,7 +465,7 @@
                 "from",
                 "to"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "keys": {

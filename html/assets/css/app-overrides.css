@@ -195,3 +195,4 @@ a.cite-ref { font-size: 11px; vertical-align: super; text-decoration: none; }
 .kn-down[open] { flex-basis: 100%; }
 .kn-pin[open] { flex-basis: 100%; }
 .kn-suggestion { white-space: normal; max-width: 100%; }
+.kn-row-link { min-height: 44px; display: flex; align-items: center; overflow-wrap: anywhere; }

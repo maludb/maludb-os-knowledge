@@ -1,4 +1,4 @@
-<?php /** A source (screen `source-view`). Data: s, b, outline, pages, may (manage, retry, areas), curate, successor, timeline, activeAreas, tz, here, notice */
+<?php /** A source (screen `source-view`). Data: s, b, outline, pages, may (manage, retry, areas), curate, successor, timeline, activeAreas, tz, here, notice, taught, graph_here */
 $sid = (int) $s['source_id']; $bid = (int) $b['base_id'];
 [$kindWords, $icon] = SOURCE_KINDS[$s['kind']] ?? ['Source', 'feather-file'];
 $err = source_error_words($s['error'], (string) $s['status']);
@@ -60,5 +60,6 @@ $countStale($outline); ?>
         <div class="card mb-3"><div class="card-body fs-12 text-muted" id="source-pending">Being read and cut into sections — within the minute.</div></div>
     <?php endif; ?>
     <?php if ($pages !== []): ?><?= view('sources/partials/pages.php', ['pages' => $pages]) ?><?php endif; ?>
+    <?php if ($taught !== null): ?><?= view('graph/partials/taught.php', ['t' => $taught, 'b' => $b, 'here' => $graph_here, 'scope' => 'source']) ?><?php endif; ?>
     <?= view('shared/timeline.php', ['rows' => $timeline, 'tz' => $tz, 'prefix' => 'source']) ?>
 </div>

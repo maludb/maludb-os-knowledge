@@ -194,12 +194,12 @@ console.log(`seeded bases ${openId} (internal) and ${privateId} (private)`);
   const first = await page.locator(`#home-base-${openId}`).boundingBox();
   ok(cards === 2 && first.width < 500, `the cards sit side by side on a desktop (${cards} cards, ${Math.round(first.width)} px each)`);
   await page.screenshot({ path: `${SHOTS}/desktop-home.png` });
-  await page.click('#nav-admin .nxl-link');                 // a placeholder until slice 9 — HTMX navigation pushes its URL
+  await page.click('#nav-admin .nxl-link');                 // slice 9 built it — HTMX navigation pushes its URL
   await page.waitForURL(BASE + '/admin/');
-  await page.waitForSelector('#admin-coming');
-  ok((await page.title()).startsWith('Admin') && (await page.locator('#admin-coming').innerText()).includes('slice 9'), 'HTMX navigation: /admin/ pushed, the placeholder names slice 9, title "' + (await page.title()) + '"');
+  await page.waitForSelector('#admin-pages');
+  ok((await page.title()).startsWith('Admin') && (await page.locator('#admin-pages .card').count()) === 11, 'HTMX navigation: /admin/ pushed, the Admin index (eleven cards), title "' + (await page.title()) + '"');
   ok(await page.evaluate(() => document.querySelector('#nav-admin .nxl-link').classList.contains('active') && !document.querySelector('#nav-home .nxl-link').classList.contains('active')), 'the sidebar highlights the screen, not Home');
-  await page.screenshot({ path: `${SHOTS}/desktop-placeholder-admin.png` });
+  await page.screenshot({ path: `${SHOTS}/desktop-admin.png` });
   await page.goBack();
   await page.waitForURL(BASE + '/');
   ok(true, 'the browser back button returns to /');
@@ -234,7 +234,7 @@ console.log(`seeded bases ${openId} (internal) and ${privateId} (private)`);
   const { ctx, page } = await session(urls.curator, { width: 375, height: 740 }, { javaScriptEnabled: false });
   console.log('JavaScript off');
   const text = await page.locator('#page-content').innerText();
-  ok(text.includes('Your knowledge bases') && text.includes('SMOKE Open Base') && text.includes('SMOKE Private Base'), 'the bases are in the server-rendered page');
+  ok(text.includes('My bases') && text.includes('SMOKE Open Base') && text.includes('SMOKE Private Base'), 'the bases are in the server-rendered page');
   ok(await shown(page, '#app-tabbar') && (await page.locator('#tab-bases').getAttribute('href')) === '/bases' && (await page.locator('#tab-my-settings').getAttribute('href')) === '/settings/', 'the tabs are plain links');
   ok((await page.locator(`#home-base-${openId}-link`).getAttribute('href')) === `/bases/${openId}?back=%2F`, 'a base card\'s name is a plain link carrying ?back=');
   await ctx.close();

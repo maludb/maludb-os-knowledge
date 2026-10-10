@@ -17,6 +17,7 @@ if ($path === '/v1/send' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     if (str_contains($to, 'suppressed')) { http_response_code(400); echo json_encode(['error' => 'No deliverable recipients.', 'rejected' => [['email' => $to, 'reason' => 'suppressed:bounce']]]); exit; }
     if (str_contains($to, 'flaky')) { http_response_code(502); echo '{"error":"relay refused"}'; exit; }
     if (str_contains($to, 'rejected')) { echo json_encode(['status' => 'sent', 'accepted' => [], 'rejected' => [['email' => $to, 'reason' => 'invalid_address']]]); exit; }
-    echo json_encode(['status' => 'sent', 'accepted' => [$to], 'rejected' => []]); exit;
+    // (slice 9) an accepted mail carries a message id, as the real send does: the outbox keeps it as provider_ref
+    echo json_encode(['status' => 'sent', 'accepted' => [$to], 'rejected' => [], 'message_id' => '<mm-' . substr_count((string) @file_get_contents((string) getenv('FAKE_MALUMAIL_LOG')), "\n") . '@fake.malumail>']); exit;
 }
 http_response_code(404);

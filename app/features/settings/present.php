@@ -19,21 +19,37 @@ function present_notification(array $n): array
 {
     return ['notification_id' => (int) $n['notification_id'], 'kind' => $n['kind'], 'record_type' => $n['record_type'],
             'record_id' => $n['record_id'] !== null ? (int) $n['record_id'] : null, 'title' => $n['title'], 'body' => $n['body'],
-            'read' => $n['read_at'] !== null, 'created_at' => json_ts($n['created_at'])];
+            'read' => $n['read_at'] !== null, 'created_at' => json_ts($n['created_at']), 'url' => notification_record_url($n)];
 }
 
-/** The screen a notification points at, by the record it names (null when none). Phase 3's slices add their screens. */
+/**
+ * The screen a notification points at, by the record it names (null when none): a build → its build-view, a proposal → its base's proposals, a question → question-view, a pin → the pinned
+ * answers due, a base → the base (the Monday note: its proposals), a source → source-view, an area → area-view.
+ */
 function notification_record_url(array $n): ?string
 {
     $id = ($n['record_id'] ?? null) !== null ? (int) $n['record_id'] : null;
     if ($id === null) {
         return null;
     }
-    return match ($n['record_type'] ?? null) {
+    $type = $n['record_type'] ?? null;
+    if ($type === 'base' && ($n['kind'] ?? '') === 'monday_note') {
+        return '/bases/' . $id . '/proposals';
+    }
+    if ($type === 'base' && ($n['kind'] ?? '') === 'proposal') {
+        return '/bases/' . $id . '/proposals';
+    }
+    if ($type === 'archivist_proposal') {
+        $b = one_value(db(), 'SELECT base_id FROM mcp_archivist_proposals WHERE proposal_id = :p', ['p' => $id]);
+        return $b === null ? null : '/bases/' . (int) $b . '/proposals';
+    }
+    return match ($type) {
         'base' => '/bases/' . $id,
         'source' => '/sources/' . $id,
         'build' => '/builds/' . $id,
         'question' => '/questions/' . $id,
+        'pinned_answer' => '/pinned?due=1',
+        'focus_area' => '/areas/' . $id,
         default => null,
     };
 }

@@ -10,7 +10,8 @@
     <div class="row g-3">
         <div class="col-xl-5">
             <div class="card mb-0 h-100" id="tokens-connect"><div class="card-header"><h5 class="card-title mb-0">Connect your AI to Knowledge</h5></div><div class="card-body fs-12">
-                <p>Your own AI tools (Claude Desktop, Claude Code, an agent of yours) read Knowledge's two memories with an <strong>mcp</strong> token as a Bearer token. They see exactly what you see — the bases you may read, their sources, sections and questions; nothing of another base. An API key for one base is minted on that base's Keys screen.</p>
+                <p>Your own AI tools (Claude Desktop, Claude Code, an agent of yours) read Knowledge's two memories with an <strong>mcp</strong> token as a Bearer token. They see exactly what you see — the bases you may read, their sources, sections and questions; nothing of another base.</p>
+                <p id="tokens-keys-note">A token reads what you may read. An API key for a base is minted on that base's Keys page.</p>
                 <div class="mb-2"><span class="text-muted">Records:</span> <code id="tokens-url-records" class="text-break"><?= e($base) ?>/mcp/records</code></div>
                 <div class="mb-3"><span class="text-muted">Activity:</span> <code id="tokens-url-activity" class="text-break"><?= e($base) ?>/mcp/activity</code></div>
                 <hr>
@@ -35,7 +36,7 @@
                             <td><?= e($t['scope']) ?></td><td><?= e(format_ts($t['created_at'], $tz, 'M j, Y')) ?></td>
                             <td class="d-none d-md-table-cell"><?= e(format_ts($t['last_used_at'], $tz) ?: 'never') ?></td>
                             <td class="d-none d-md-table-cell"><?= e(format_ts($t['expires_at'], $tz, 'M j, Y') ?: 'never') ?></td>
-                            <td class="text-end"><?php if ($live): ?><form method="post" action="/settings/tokens/revoke.php" hx-post="/settings/tokens/revoke.php" hx-confirm="Revoke the token <?= e($t['label']) ?>? Anything using it stops working." hx-target="#page-content" hx-swap="innerHTML"><?= csrf_field() ?><input type="hidden" name="token" value="<?= $id ?>"><button type="submit" class="avatar-text avatar-sm border-0" title="Revoke" id="token-row-<?= $id ?>-revoke-btn" aria-label="Revoke <?= e($t['label']) ?>"><i class="feather-x"></i></button></form><?php endif; ?></td>
+                            <td class="text-end"><?php if ($live): ?><form method="post" action="/settings/tokens/revoke.php" hx-post="/settings/tokens/revoke.php" hx-confirm="Revoke the token <?= e($t['label']) ?>? Anything using it stops working." hx-target="#page-content" hx-swap="innerHTML"><?= csrf_field() ?><input type="hidden" name="token" value="<?= $id ?>"><button type="submit" class="btn btn-light btn-touch btn-touch-icon" title="Revoke" id="token-row-<?= $id ?>-revoke-btn" aria-label="Revoke <?= e($t['label']) ?>"><i class="feather-x"></i></button></form><?php endif; ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

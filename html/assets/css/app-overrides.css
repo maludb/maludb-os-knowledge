@@ -65,6 +65,7 @@ html.app-skin-dark .app-tabbar { background: #1b2431; border-top-color: rgba(255
 .presence-dot.active { background: var(--bs-success, #198754); }
 .btn-touch, .form-select.btn-touch, .form-control.btn-touch { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .form-select.btn-touch, .form-control.btn-touch { display: block; }
+.btn-touch-icon { min-width: 44px; padding-left: .5rem; padding-right: .5rem; }          /* an icon-only button is 44 px wide as well as tall (slice 9: the read and revoke buttons) */
 label.btn-touch { display: flex; }
 .min-w-0 { min-width: 0; }
 .empty-state { display: flex; align-items: center; gap: 1rem; }

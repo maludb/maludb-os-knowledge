@@ -129,7 +129,8 @@ function back_link(): ?array
     $path = parse_url($back, PHP_URL_PATH) ?: '/';
     $labels = ['/' => 'Home', '/ask' => 'Ask', '/bases' => 'Bases', '/pinned' => 'Pinned', '/notifications' => 'Notifications', '/activity' => 'My activity',
                '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens', '/admin/' => 'Admin', '/admin/settings' => 'Settings', '/admin/templates' => 'Templates',
-               '/bases/new' => 'New base'];
+               '/admin/bases' => 'Every base', '/admin/keys' => 'Every key', '/admin/usage' => 'Usage', '/admin/model' => 'Model', '/admin/agents' => 'Agents', '/admin/purge' => 'Purge',
+               '/admin/proposals' => 'Proposals', '/admin/dispatches' => 'Dispatches', '/admin/connections' => 'Connections', '/bases/new' => 'New base'];
     foreach ($labels as $p => $label) {
         if ($path === $p) {
             return [$back, $label];
@@ -168,7 +169,7 @@ function with_back(string $url, string $here): string
 }
 
 /** The slice that builds each not-yet-built menu item, in words — the placeholders and the registry read it. */
-const NAV_SLICES = ['admin' => 'slice 9'];
+const NAV_SLICES = [];                          // none left: slice 9 built the Admin area (html/admin/index.php)
 
 /**
  * A screen of the manifest that its slice has not built yet (Phase 2): the shell, the page header, one card saying which

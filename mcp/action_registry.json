@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/knowledge-action-manifest.md",
-    "generated_at": "2026-10-10T15:39:35+00:00",
+    "generated_at": "2026-10-10T17:05:03+00:00",
     "screens": {
         "home": {
             "screen": "home",
@@ -579,8 +579,8 @@
             "section": "Home, admin, usage and tokens (slice 9)",
             "when": "the admin area: settings, templates, the model, usage, every base, every key, the agents, connections, proposals, dispatches, purge",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "admin-purge": {
             "screen": "admin-purge",
@@ -590,7 +590,7 @@
             "params": [
                 "days"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-model": {
@@ -601,7 +601,7 @@
             "params": [
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-usage": {
@@ -613,7 +613,7 @@
                 "month",
                 "base"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-bases": {
@@ -626,7 +626,7 @@
                 "status",
                 "archived"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-keys": {
@@ -638,7 +638,7 @@
                 "base",
                 "status"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "admin-agents": {
@@ -647,7 +647,7 @@
             "section": "Home, admin, usage and tokens (slice 9)",
             "when": "the agents this application declares, the agent members here, which is the expert and which the Archivist, their dispatches",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         }
     },
@@ -2607,7 +2607,7 @@
             "who": "retention.manage",
             "agent": true,
             "record_id": "the settings",
-            "built": false
+            "built": true
         },
         "model_config_save": {
             "action": "model_config_save",
@@ -2640,7 +2640,7 @@
             "who": "model.manage",
             "agent": true,
             "record_id": "the settings",
-            "built": false
+            "built": true
         },
         "agents_settings_save": {
             "action": "agents_settings_save",
@@ -2667,7 +2667,7 @@
             "who": "agents.settings",
             "agent": true,
             "record_id": "the settings",
-            "built": false
+            "built": true
         }
     }
 }

@@ -35,6 +35,7 @@
             </div>
             </fieldset>
             <?php if ($editable): ?><button type="submit" class="btn btn-primary btn-touch w-100 mt-3" id="admin-settings-<?= e($form) ?>-save">Save the <?= e(strtolower($title)) ?></button><?php endif; ?>
+            <?php if ($form === 'retention' && $editable): ?><?= hx_link('/admin/purge', '<i class="feather-trash-2 me-1"></i>Purge now', 'btn btn-light btn-touch w-100 mt-2', 'id="admin-settings-purge-link"') ?><div class="fs-11 text-muted mt-1">Remove questions older than a number of days before the worker would; you see how many first.</div><?php endif; ?>
         </div>
     </form>
     <?php endforeach; ?>

@@ -36,7 +36,7 @@ function find_key(PDO $pdo, int $keyId): ?array
 /** Every key of every base the caller curates (slice 9's all-keys page reads it). $f: base, live (bool), q (label). */
 function all_keys(PDO $pdo, array $f = []): array
 {
-    $st = $pdo->prepare('SELECT k.*, b.name AS base_name FROM mcp_keys k JOIN mcp_bases b ON b.base_id = k.base_id
+    $st = $pdo->prepare('SELECT k.*, b.name AS base_name, a.name AS area_name FROM mcp_keys k JOIN mcp_bases b ON b.base_id = k.base_id LEFT JOIN mcp_focus_areas a ON a.focus_area_id = k.focus_area_id
                           WHERE (CAST(:b AS bigint) IS NULL OR k.base_id = :b) AND (NOT :live OR k.is_live) AND (CAST(:q AS text) IS NULL OR k.label ILIKE :q)
                           ORDER BY b.name, k.is_live DESC, k.created_at DESC LIMIT 500');
     $st->execute(['b' => $f['base'] ?? null, 'live' => !empty($f['live']) ? 'true' : 'false', 'q' => isset($f['q']) && $f['q'] !== '' ? '%' . $f['q'] . '%' : null]);

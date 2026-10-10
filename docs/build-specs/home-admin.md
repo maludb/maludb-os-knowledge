@@ -191,6 +191,33 @@ shown to the asker (Extended).
   of `docs/knowledge-action-manifest.md` built**.
 
 ## Built and proven
-Not built.
+Built 2026-10-10 by a Sonnet 5.5 worker from this spec (the planning model verifies and commits); `tests/phase3/slice9/run.sh`, a scratch database `kn_dev9`, under php -S and under a real Apache:
+home 41 · admin 24 · model 41 · usage 17 · admin_lists 28 · agents 29 · prefs 31 · outbox 30 · steps 26 · json 21 · browser 128 (375 x 740 and 1280 x 800) = **416 checks**, plus the registry check
+(`bin/build_action_registry.php --check`) and "no PHP warning in the application's log". The registry reads **61 of 61 screens and 62 of 62 actions built** — nothing of the manifest is left unbuilt.
+No migration: the schema was enough (slice 5's two agent columns, db/005's `model_alias` and `embedding_model`, db/010's `kn_purge_questions()`, db/012's outbox and `kn_notify()`).
+Files as listed above, plus: `app/features/admin/{present,worker_steps}.php`, `app/features/home/present.php`, `app/views/admin/*` and `app/views/home/partials/*`; changed: `html/keys/revoke.php` (a local `return_to`),
+`app/features/keys/queries.php` (`all_keys()` also answers the area's name), `app/features/settings/present.php` (the notification links, `url` in JSON), `app/features/shell/nav.php` (`NAV_SLICES` is empty; the back-link labels),
+`app/views/admin/settings.php` (the Purge now link), `app/views/settings/tokens.php` (the keys sentence; Revoke 44 px), `app/views/notifications/page.php` (Read 44 px), `html/assets/css/app-overrides.css` (`.btn-touch-icon`),
+`bin/worker.php`, the fakes (`tests/fake_kb_engine.php` — a stateful `kb:0` config under `config_fake`; `tests/fake_maludb.php` — an accepted mail carries a `message_id`), and Phase 2's `gates.php` and `browser.mjs`
+(the Admin placeholder checks became checks of the built index; "Your knowledge bases" became "My bases").
+
+### Settled in the build
+1. **The two new settings forms** (`agents`, `model`) are `KN_SETTINGS_EXTRA` in `write.php`, read by `save_kn_settings()` — not rows of `KN_SETTINGS_FIELDS`, so slice 1's three forms and the admin-settings JSON are unchanged.
+2. **Once a day** is `daily_step_due()` reading `cron.run` rows by `after.day` — the local day of the pass in `kn_settings.timezone` (a key added to `cron.run`, so a proof's moved clock moves it; production's is the real day) — where the step's value is an object of counts.
+   A step not due returns `['due' => false]` and the worker lists it as `"not_due"`; one that threw is `"error"` and so due again next pass. Proven across a UTC day in Pacific/Auckland, and that `KN_WORKER_NOW` is ignored unless `APP_ENV` is exactly `dev`.
+3. **The outbox**: one row at a time under `FOR UPDATE SKIP LOCKED` (three concurrent passes sent 30 rows once each); no `MALUMAIL_API_KEY` → `skipped no_mail_key` as the spec says (not left queued); `cron.run` carries `sent`, `skipped`, `failed` and also `retried`;
+   the K6 body is `member_id` and `text` only; the kernel's own refusals (`not_held`, `no_verified_phone`, `opted_out`, `rate_limited`, `no_sender` — a 503 —, `invalid`) are final whatever the status, any other 5xx, a 401 or no answer retries with `2^attempts` minutes, the fifth failure is `failed:<code>`.
+   Preferences are not re-read at send time (the bell and the queue were written under the preferences of that moment).
+4. **`pins_due`**: the outbox's dedupe key (`review:<pin>:<date>`) cannot hold when the owner's email is off (no row), so a bell notice newer than the pin's `verified_at` also stops a second one — and Verify again, which moves `verified_at`, re-arms it. A pin of an archived base, or owned by an agent, tells nobody.
+5. **`limits_near`** uses the build step's own guard (a `limit_near` bell notice for this member and base this month) as well as the same dedupe key, so the two never tell one curator twice a month.
+6. **The model save**: `kb:0` first; refused → nothing else; accepted → the recorded choice and, for an embedding change, `kn_graph_shape_changed()` for EVERY base (an archived one too, which would otherwise come back unmarked) in one transaction; then `kn_compile_send()` for each base not archived. The failures are named once on the page that lands
+   (a session flash; JSON carries `failed_base_ids`); the log counts them. A blank or over-long model id, or a new embedding model without the box, is a field error before the engine is touched.
+7. **The home**: first-run short-circuits every other region (all null or empty); Builds running is null unless the person curates a base; Gaps also needs `questions.review`; the admin region needs `settings.manage` and its usage part `costs.read`; "Add documents" appears on an empty base only for an owner or curator;
+   Builds running refreshes the bases region through `/home/builds?region=bases` on the `baseChanged` the 286 sends.
+8. **`admin-keys`**'s Revoke is slice 7's `key_revoke` with a local `return_to=/admin/keys` (a non-local one is ignored); the admin index shows a page its viewer lacks the right for, unlinked.
+9. `agents_settings_save` takes `expert` and `archivist` as ids (the actions server resolves names), also under the column's own names `expert_member_id` / `archivist_member_id`; a left-out one keeps, an empty one clears. `admin-purge`, `admin-model` and `admin-agents` are one file each for the screen (GET) and its action (POST).
+10. The Phase 2 screens `notifications` (Read) and `tokens` (Revoke) had icon buttons under 44 px; both now use `btn-touch btn-touch-icon`. The notification links cover the nine kinds (a proposal → its base's proposals, a pin → `/pinned?due=1`, the Monday note → its base's proposals).
 
 ## Open questions
+
+None stopped the slice.

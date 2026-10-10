@@ -8,6 +8,10 @@ declare(strict_types=1);
  */
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
 require_once __DIR__ . '/write.php';
+require_once __DIR__ . '/present.php';
+require_once dirname(__DIR__) . '/bases/present.php';
+require_once dirname(__DIR__) . '/keys/present.php';
+require_once dirname(__DIR__) . '/agents/present.php';
 
 function admin_settings_handle(string $form): never
 {

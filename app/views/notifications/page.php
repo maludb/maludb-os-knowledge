@@ -27,7 +27,7 @@
                     </div>
                     <?php if ($unread): ?>
                         <form method="post" action="/settings/notifications/read.php" hx-post="/settings/notifications/read.php" hx-target="#page-content" hx-swap="innerHTML"><?= csrf_field() ?><input type="hidden" name="notification" value="<?= $id ?>">
-                            <button type="submit" class="btn btn-light btn-sm" id="notification-<?= $id ?>-read-btn" aria-label="Mark read"><i class="feather-check"></i></button></form>
+                            <button type="submit" class="btn btn-light btn-touch btn-touch-icon" id="notification-<?= $id ?>-read-btn" aria-label="Mark read"><i class="feather-check"></i></button></form>
                     <?php endif; ?>
                 </div>
             </div>

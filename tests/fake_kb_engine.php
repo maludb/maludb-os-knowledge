@@ -92,6 +92,28 @@ if ($g !== null && (str_starts_with($path, '/v1/graph/') && $path !== '/v1/graph
  *                   (its edges become subjects, a subject typed project becomes a project), DELETE /v1/documents/{id}, GET /v1/projects?name=eq., GET|PATCH|DELETE
  *                   /v1/projects/{id}, POST|DELETE /v1/projects/{id}/subjects, PATCH /v1/subjects/{id}
  */
+/*
+ * Slice 9 (docs/build-specs/home-admin.md "Proof"), OFF unless the state asks — config_fake true makes the namespace config STATEFUL ($FAKE_KB_STATE.cfg, {namespace: config}):
+ *   POST /v1/memory/config  stores {provider_name, provider_kind, model_alias, model_identifier, base_url, embedding_model, prompt_template, secret_ref (= secret_name)} for the namespace and logs as ever;
+ *                           state.config_refuse {"kb:0": "validation_failed" | "engine_error" | "engine_down"} refuses that namespace (422 | 500 | 502 with that code) and stores nothing
+ *   GET  /v1/memory/config  answers {namespace, config: stored[ns] ?? state.config ?? null}   (null = the reference namespace is not configured: kn_compile_connection() says model_not_configured)
+ */
+if (!empty($state['config_fake']) && $path === '/v1/memory/config') {
+    $cf = $stateFile . '.cfg';
+    $C = json_decode((string) @file_get_contents($cf), true) ?: [];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $ns = (string) ($body['namespace'] ?? '');
+        $refuse = $state['config_refuse'][$ns] ?? null;
+        if ($refuse !== null) { $out(['error' => ['code' => $refuse === 'validation_failed' ? 'validation_failed' : 'upstream_error', 'message' => 'Refused: ' . $refuse]], $refuse === 'validation_failed' ? 422 : 500); }
+        $C[$ns] = ['provider_name' => $body['provider']['name'] ?? null, 'provider_kind' => $body['provider']['kind'] ?? null, 'model_alias' => $body['alias']['name'] ?? null,
+                   'model_identifier' => $body['alias']['model_identifier'] ?? null, 'base_url' => $body['alias']['base_url'] ?? null, 'embedding_model' => $body['embedding_model'] ?? null,
+                   'prompt_template' => $body['prompt_template'] ?? ($C[$ns]['prompt_template'] ?? null), 'secret_ref' => $body['secret_name'] ?? null];
+        file_put_contents($cf, json_encode($C));
+        $out(['namespace' => $ns, 'configured' => true]);
+    }
+    $ns = (string) ($_GET['namespace'] ?? 'default');
+    $out(['namespace' => $ns, 'config' => $C[$ns] ?? ($state['config'] ?? null)]);
+}
 if (isset($state['config']) && $path === '/v1/memory/config' && $_SERVER['REQUEST_METHOD'] === 'GET') { $out(['config' => $state['config']]); }
 if (!empty($state['projects_fake'])) {
     $pf = $stateFile . '.proj';

@@ -9,7 +9,7 @@
  */
 require __DIR__ . '/lib.php';
 /** The menu items whose screen is still the shell's placeholder — a slice that builds one removes it here (and from NAV_SLICES). */
-const NAV_SLICES_LEFT = ['admin' => ['/admin/', 'slice 9', 'Admin']];        // ask and pinned: built by slice 5
+const NAV_SLICES_LEFT = [];        // ask and pinned: built by slice 5; admin: built by slice 9 — none is left
 $json = ['headers' => ['Accept: application/json']];
 
 echo "1. Rights per role — every screen and placeholder answers 200 or 403\n";
@@ -42,7 +42,7 @@ ok(badge_of($jAdmin) === 'Super-admin' && badge_of($jCurator) === 'Curator' && b
 [$jAvery, ] = sign_on(2);
 ok(badge_of($jAvery) === 'Knowledge admin' && page($jAvery, '/admin/')['code'] === 200, 'a second admin (the admin role, not the super-admin) reads Knowledge admin and opens Admin');
 
-echo "2. The placeholders — a page naming its slice, 501 for JSON and for a POST\n";
+echo "2. The placeholders — none is left (slice 9 built the Admin index); the mechanism stays for the shell\n";
 $stubs = trim((string) shell_exec('grep -rl "render_nav_stub(" ' . escapeshellarg(dirname(__DIR__, 2) . '/html') . ' 2>/dev/null | wc -l'));
 ok((int) $stubs === count(NAV_SLICES_LEFT), 'the controllers still calling render_nav_stub are the menu items not built yet (' . implode(', ', array_keys(NAV_SLICES_LEFT)) . "): $stubs");
 foreach (NAV_SLICES_LEFT as $id => [$url, $slice, $title]) {
@@ -52,17 +52,15 @@ foreach (NAV_SLICES_LEFT as $id => [$url, $slice, $title]) {
 $b = page($jAdmin, '/bases/')['body'];
 ok(str_contains($b, 'id="base-list"') && !str_contains($b, 'id="bases-coming"'), '/bases/ is built (slice 1): the list, not the placeholder');
 $r = page($jAdmin, '/admin/', $json);
-ok($r['code'] === 501 && (json_decode($r['body'], true)['error']['code'] ?? '') === 'not_built', 'a JSON caller on a placeholder: 501 not_built');
-$r = req('POST', '/admin/', ['jar' => $jAdmin, 'form' => ['csrf_token' => page_csrf($jAdmin)]]);
-ok($r['code'] === 501 && str_contains($r['body'], 'This is built by slice 9.'), 'a POST to a placeholder: 501, in words');
+ok($r['code'] === 200 && is_array(json_decode($r['body'], true)['data']['pages'] ?? null), 'slice 9 built the Admin index: a JSON caller gets its pages (it was a 501 not_built placeholder)');
 $r = page($jAdmin, '/admin/', ['headers' => ['HX-Request: true']]);
-ok($r['code'] === 200 && str_contains($r['body'], 'id="admin-coming"') && !str_contains($r['body'], '<html') && preg_match('/^HX-Title: Admin/mi', $r['headers']) === 1 && preg_match('/^X-Screen: admin\r?$/mi', $r['headers']) === 1, 'over HTMX a placeholder is the partial with HX-Title and X-Screen, so the tab highlight and the command bar follow');
+ok($r['code'] === 200 && str_contains($r['body'], 'id="admin-pages"') && !str_contains($r['body'], '<html') && preg_match('/^HX-Title: Admin/mi', $r['headers']) === 1 && preg_match('/^X-Screen: admin\r?$/mi', $r['headers']) === 1, 'over HTMX the Admin index is the partial with HX-Title and X-Screen, so the tab highlight and the command bar follow');
 $v = (int) one("SELECT count(*) FROM activity_log WHERE action = 'screen.view' AND screen = 'admin'");
-ok($v >= 2, "opening a placeholder logs screen.view for its screen ($v for admin)");
+ok($v >= 1, "opening the Admin index logs screen.view for its screen ($v for admin)");
 $built = json_decode((string) file_get_contents(dirname(__DIR__, 2) . '/mcp/action_registry.json'), true);
 $reg = [];
 foreach (($built['screens'] ?? []) as $s) { $reg[$s['screen'] ?? ''] = $s; }
-ok(($reg['ask']['built'] ?? null) === true && empty($reg['ask']['stub']) && ($reg['admin']['stub'] ?? null) === true && ($reg['home']['built'] ?? null) === true && ($reg['tokens']['built'] ?? null) === true, 'the registry marks admin a stub, ask (slice 5), home and tokens built, so the voice surface never offers an unbuilt screen');
+ok(($reg['ask']['built'] ?? null) === true && empty($reg['ask']['stub']) && ($reg['admin']['built'] ?? null) === true && empty($reg['admin']['stub']) && ($reg['home']['built'] ?? null) === true && ($reg['tokens']['built'] ?? null) === true, 'the registry marks admin (slice 9), ask (slice 5), home and tokens built — no stub is left');
 
 echo "3. The menu per role, and no session\n";
 $menu = fn (string $j): array => (preg_match_all('/id="nav-([a-z-]+)"/', page($j, '/')['body'], $m) ? array_values(array_filter($m[1], fn ($i) => $i !== 'base-')) : []);
